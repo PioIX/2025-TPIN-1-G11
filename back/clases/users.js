@@ -1,11 +1,16 @@
 let idUser= 1;
 class User {
-    constructor(idBestScore, name, email, password){
+    constructor(name, username, password){
         this.id = idUser;
         idUser++;
-        this.idBestScore = idBestScore;
+        this.username = username;
         this.name = name; 
-        this.email= email;
         this.password = password;
     }
+
 }
+
+const users = [];
+users.push(new User("Vitina", "vitinitaUwU1", "tuvieja123"));
+users.push(new User("Sana", "sanita12", "aguanteTwice"));
+users.push(new User("Vitina", "a", "a"));

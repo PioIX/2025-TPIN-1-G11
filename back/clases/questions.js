@@ -16,7 +16,7 @@ class Question {
     }
 
     emojiClue(){
-
+        
     }
 
     textClue(){

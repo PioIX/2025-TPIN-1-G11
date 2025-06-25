@@ -40,26 +40,6 @@ app.get('/users', async function (req, res) {
     }
 });
 
-// TRAE EL MAIL DE LOS USUARIOS CON O SIN ID
-app.get('/users', async function (req, res) {
-    try {
-        const { id } = req.query;
-        let email;
-
-        if (id) {
-            email = await realizarQuery('SELECT email FROM Users WHERE id = ?', [id]);
-
-        } else {
-            email = await realizarQuery('SELECT email FROM Users');
-        }
-
-        res.json(email);
-
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
 
 // TRAE LA CONTRASEÑA DE LOS USUARIOS CON O SIN ID
 app.get('/users', async function (req, res) {
@@ -71,7 +51,7 @@ app.get('/users', async function (req, res) {
             password = await realizarQuery('SELECT password FROM Users WHERE id = ?', [id]);
 
         } else {
-            email = await realizarQuery('SELECT password FROM Users');
+            password = await realizarQuery('SELECT password FROM Users');
         }
 
         res.json(password);
@@ -103,27 +83,6 @@ app.get('/games', async function (req, res) {
     }
 });
 
-// TRAE TODAS LAS MEJORES JUGADAS
-app.get('/bestScore', async function (req, res) {
-    try {
-        const { id } = req.query;
-        let bestScore;
-
-        if (id) {
-            bestScore = await realizarQuery('SELECT * FROM bestScore WHERE idUser = ?', [id]);
-
-        } else {
-            bestScore = await realizarQuery('SELECT * FROM bestScore');
-        }
-
-        res.json(bestScore);
-
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
 // TRAE TODAS LAS PREGUNTAS O UNA PREGUNTA CON EL ID
 app.get('/questions', async function (req, res) {
     try {
@@ -137,7 +96,7 @@ app.get('/questions', async function (req, res) {
             questions = await realizarQuery('SELECT * FROM Questions');
         }
 
-        res.json(bestScore);
+        res.json(questions);
 
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -150,15 +109,15 @@ app.get('/questions', async function (req, res) {
 // SUBE UN NUEVO USUARIO
 app.post('/users', async function (req, res) {
     try {
-        const { idBestScore, name, email, password } = req.body;
+        const { name, password } = req.body;
 
-        if (!name || !email || !password) {
-            return res.status(400).json({ error: 'Name, email, and password are required' });
+        if (!name || !password) {
+            return res.status(400).json({ error: 'Name  and password are required' });
         }
 
         const existingUser = await realizarQuery(
-            'SELECT * FROM Users WHERE email = ?',
-            [email]
+            'SELECT * FROM Users WHERE name = ?',
+            [name]
         );
 
         if (existingUser.length > 0) {
@@ -166,36 +125,14 @@ app.post('/users', async function (req, res) {
         }
 
         await realizarQuery(
-            'INSERT INTO Users (idBestScore, name, email, password) VALUES (?, ?, ?, ?)',
-            [idBestScore, name, email, password]
+            'INSERT INTO Users ( name, password) VALUES (?, ?, ?)',
+            [ name, password]
         );
 
         res.status(201).json({
             success: true,
             message: 'User created successfully',
-            user: { name, email, idBestScore }
-        });
-
-    } catch (error) {
-        console.error('Error creating user:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// INSERTAR UNA NUEVA MEJOR JUGADA
-app.post('/bestScore', async function (req, res) {
-    try {
-        const { idUser, score, win } = req.body;
-
-        await realizarQuery(
-            'INSERT INTO bestScore (idUser, score, win) VALUES (?, ?, ?)',
-            [idUser, score, win]
-        );
-
-        res.status(201).json({
-            success: true,
-            message: 'Game saved successfully into Best Scores',
-            user: { idUser, score, win }
+            user: { name }
         });
 
     } catch (error) {
@@ -210,7 +147,7 @@ app.post('/games', async function (req, res) {
         const { idUser, score } = req.body;
 
         await realizarQuery(
-            'INSERT INTO bestScore (idUser, score) VALUES (?, ?)',
+            'INSERT INTO Games (idUser, score) VALUES (?, ?)',
             [idUser, score]
         );
 
@@ -227,51 +164,6 @@ app.post('/games', async function (req, res) {
 });
 
 // RUTAS PUT /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//CAMBIAR MAIL 
-app.put("/users", async function (req, res) {
-    try {
-        const { id, newMail } = req.body;
-
-        if (!id || !newMail) {
-            return res.status(400).json({
-                success: false,
-                message: "Se requieren ID y nuevo mail"
-            });
-        }
-
-        const userExists = await realizarQuery(
-            "SELECT id FROM Users WHERE id = ?",
-            [id]
-        );
-
-        if (userExists.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "Usuario no encontrado"
-            });
-        }
-
-        await realizarQuery(
-            "UPDATE Users SET email = ? WHERE id = ?",
-            [newMail, id]
-        );
-
-        res.status(200).json({
-            success: true,
-            message: "email actualizado correctamente",
-            userId: id,
-            newName: newMail
-        });
-
-    } catch (error) {
-        console.error("Error al actualizar email:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error interno del servidor"
-        });
-    }
-});
 
 //CAMBIAR NOMBRE 
 app.put("/users", async function (req, res) {
@@ -356,51 +248,6 @@ app.put("/users", async function (req, res) {
 
     } catch (error) {
         console.error("Error al actualizar contraseña:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error interno del servidor"
-        });
-    }
-});
-
-// ACTUALIAR MEJOR JUGADA 
-app.put("/users", async function (req, res) {
-    try {
-        const { id, idNewBestScore } = req.body;
-
-        if (!id || !idNewBestScore) {
-            return res.status(400).json({
-                success: false,
-                message: "Se requieren ID y el id de la nueva mejor partida"
-            });
-        }
-
-        const userExists = await realizarQuery(
-            "SELECT id FROM Users WHERE id = ?",
-            [id]
-        );
-
-        if (userExists.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "Usuario no encontrado"
-            });
-        }
-
-        await realizarQuery(
-            "UPDATE Users SET  idBestScore = ? WHERE id = ?",
-            [idNewBestScore, id]
-        );
-
-        res.status(200).json({
-            success: true,
-            message: "Mejor Partida actualizada correctamente",
-            userId: id,
-            newName: idNewBestScore
-        });
-
-    } catch (error) {
-        console.error("Error al actualizar la mejor partida:", error);
         res.status(500).json({
             success: false,
             message: "Error interno del servidor"
