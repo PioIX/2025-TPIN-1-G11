@@ -11,46 +11,46 @@
 </head>
 
 <body>
-        <div class="video-background">
+    <div class="video-background">
             <video autoplay loop muted>
-                <source src="images/InShot_20250623_084052678.mp4" type="video/mp4">
+                <source src="images/background.mp4" type="video/mp4">
                 Tu navegador no soporta el video.
             </video>
-        </div>
+    </div>
     <nav>
         <div>
             <div>
-                <img src = "images/Picsart_25-06-23_08-46-03-581.png" width="400px" height="400px">
+                <img src = "images/logo.png" id = "logo">
             </div>
         </div>
     </nav>
     <div id="loginForm">
-        <div>
-            <legend>¡Bienvenido Dictador! Inicie sesión</legend>
-            <div>
-                <input type="username" id="username" placeholder="nombre de ususario">
+        <div id = "logIn">
+            <legend>¡Bienvenido futuro dictador! Inicie sesión</legend>
+            <div class = "logInInput">
                 <label for="username">Nombre de Usuario</label>
+                <input type="username" id="username" placeholder="Nombre de ususario">
             </div>
-            <div>
-                <input type="password" id="password" placeholder="********">
+            <div class = "logInInput">
                 <label for="password">Contraseña</label>
+                <input type="password" id="password" placeholder="********">
             </div>
-            <div>
+            <div class = "buttonContainer">
                 <button onclick="ingresar()" data-bs-toggle="tooltip"
-                    data-bs-placement="top" title="ingresar">iniciar sesión</button>
+                    data-bs-placement="top" title="ingresar">Iniciar sesión</button>
             </div>
         </div>
 
-        <div>
-            <legend>¿Nuevo dictador? ¡Registrate acá!</legend>
-            <div>
+        <div id = "signUp">
+            <legend>¿Nuevo aspirante a golpista? ¡Registrate acá!</legend>
+            <div class = "buttonContainer">
                 <a href="">Registrate</a>
             </div>
         </div>
     </div>
     <div id="notepad" style="display: none">
         <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
-        <div>
+    <div>
  
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
