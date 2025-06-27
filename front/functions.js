@@ -56,7 +56,7 @@ function signup() {
 function signUpForm(){
     document.getElementById("signUp").innerHTML = ``;
     document.getElementById("signUp").id = "";
-    document.getElementById("login").innerHTML = `
+    document.getElementById("logIn").innerHTML = `
     <legend>¡Bienvenido futuro dictador! Registresé</legend>
     <div class = "logInInput">
         <label for="username">Nombre de Usuario</label>
