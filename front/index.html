@@ -20,7 +20,7 @@
     <nav>
         <div>
             <div>
-                <img src = "images/logo.png" id = "logo">
+                <img src = "images/logo.png" id = "logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'" alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
             </div>
         </div>
     </nav>
@@ -36,15 +36,15 @@
                 <input type="password" id="password" placeholder="********">
             </div>
             <div class = "buttonContainer">
-                <button onclick="ingresar()" data-bs-toggle="tooltip"
-                    data-bs-placement="top" title="ingresar">Iniciar sesión</button>
+                <button onclick="logIn()" data-bs-toggle="tooltip"
+                    data-bs-placement="top" title="Login">Iniciar sesión</button>
             </div>
         </div>
 
         <div id = "signUp">
             <legend>¿Nuevo aspirante a golpista? ¡Registrate acá!</legend>
             <div class = "buttonContainer">
-                <a href="">Registrate</a>
+                <button onclick="signUpForm()">Registrate</button>
             </div>
         </div>
     </div>
