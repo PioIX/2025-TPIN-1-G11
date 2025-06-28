@@ -16,7 +16,7 @@ function checkLogged(username, password) {
 }
 
 
-function login() {
+function logIn() {
 
     idLoggeado = checkLogged(ui.getUsername(), ui.getPassword());
     if (idLoggeado >= 1) {
