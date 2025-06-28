@@ -1,6 +1,6 @@
 let idLoggeado = -1;
 
-// 6)
+
 function checkLogged(username, password) {
 
     for (let i = 0; i < users.length; i++) {
@@ -15,7 +15,7 @@ function checkLogged(username, password) {
 
 }
 
-//7)
+
 function login() {
 
     idLoggeado = checkLogged(ui.getUsername(), ui.getPassword());
@@ -29,7 +29,8 @@ function login() {
 
 }
 
-//8)
+
+
 function checksignup(name, username, password) {
     for (let i = 0; i < users.length; i++) {
         if (users[i].username == username) {
@@ -42,7 +43,8 @@ function checksignup(name, username, password) {
 
 }
 
-//9)
+
+
 function signup() {
     if (registrar(ui.getName(), ui.getUsername(), ui.getPassword()) > 0) {
         console.log("usuario registrado con éxito")
@@ -51,6 +53,7 @@ function signup() {
     }
 
 }
+
 
 
 function signUpForm(){
@@ -71,3 +74,4 @@ function signUpForm(){
             data-bs-placement="top" title="SignUp">Registrarse</button>
     </div>`
 }
+
