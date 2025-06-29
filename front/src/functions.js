@@ -18,35 +18,6 @@ function signUpForm(){
     </div>`;
 }
 
-
-// async function registerUser(name, password) {
-//     try {
-//         if (!name || !password) {
-//             alert("Nombre y contraseña son requeridos");
-//             return;
-//         }
-//         const response = await fetch('http://localhost:4000/registerUser', {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type": "application/json",
-//             },
-//             body: JSON.stringify({ name, password })
-//         });
-        
-//         const result = await response.json();
-        
-//         if (result.success) {
-//             alert("Registro exitoso.");
-//             location.reload();
-//         } else {
-//             alert(result.message || "Error al registrarse");
-//         }
-//     } catch (error) {
-//         console.error('Error:', error);
-//         alert("Error de conexión con el servidor");
-//     }
-// }
-
 function User(){
     const user = {
         name: ui.getUsername(),
@@ -91,14 +62,16 @@ function newUser(){
 async function registerUser(newUser){
     try {
         console.log("papo2")
-        const response = await fetch('http://localhost:4000/logUser', {
-            method: "PUT",
+        const response = await fetch('http://localhost:4000/regUser', {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(newUser) 
+            body: JSON.stringify(newUser)
         });
-        const result = await response.json()
+        console.log("papo3")
+        let result = await response.json()
+        console.log(result.message)
         if (result.message === "ok") {
             document.getElementById("loginForm").style.display = "none";
             document.getElementById("notepad").style.display = "block";
