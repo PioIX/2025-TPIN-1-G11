@@ -1,94 +1,114 @@
-let idLoggeado = -1;
-
-
-function checkLogged(username, password) {
-
-    for (let i = 0; i < users.length; i++) {
-        if ((users[i].username == username) && (users[i].password == password)) {
-            return users[i].id;
-        } else if ((users[i].username == username) && (users[i].password != password)) {
-            return 0;
-        }
-    }
-
-    return -1;
-
-}
-
-
-function logIn() {
-
-    idLoggeado = checkLogged(ui.getUsername(), ui.getPassword());
-    if (idLoggeado >= 1) {
-        console.log("has ingresado!")
-    }
-    else {
-        console.log("usuario/contraseña incorrectos o la cuenta no existe")
-    }
-
-
-}
-
-
-
-function checksignup(name, username, password) {
-    for (let i = 0; i < users.length; i++) {
-        if (users[i].username == username) {
-            return -1;
-        }
-    }
-
-    users.push(new User(name, username, password));
-    return users.length;
-
-}
-
-
-
-function signup() {
-    if (registrar(ui.getName(), ui.getUsername(), ui.getPassword()) > 0) {
-        console.log("usuario registrado con éxito")
-    } else {
-        console.log("usuario previamente registrado")
-    }
-
-}
-
-
-
 function signUpForm(){
+    console.log("papo");
     document.getElementById("signUp").innerHTML = ``;
     document.getElementById("signUp").id = "";
     document.getElementById("logIn").innerHTML = `
     <legend>¡Bienvenido futuro dictador! Registresé</legend>
     <div class = "logInInput">
-        <label for="username">Nombre de Usuario</label>
-        <input type="username" id="username" placeholder="Nombre de ususario">
+        <label for="newUsername">Nombre de Usuario</label>
+        <input type="text" id="newUsername" placeholder="Nombre de usuario">
     </div>
     <div class = "logInInput">
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" placeholder="********">
+        <label for="newPassword">Contraseña</label>
+        <input type="password" id="newPassword" placeholder="********">
     </div>
     <div class = "buttonContainer">
-        <button onclick="logIn()" data-bs-toggle="tooltip"
+        <button onclick="newUser()" data-bs-toggle="tooltip"
             data-bs-placement="top" title="SignUp">Registrarse</button>
-    </div>`
+    </div>`;
 }
 
 
+// async function registerUser(name, password) {
+//     try {
+//         if (!name || !password) {
+//             alert("Nombre y contraseña son requeridos");
+//             return;
+//         }
+//         const response = await fetch('http://localhost:4000/registerUser', {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify({ name, password })
+//         });
+        
+//         const result = await response.json();
+        
+//         if (result.success) {
+//             alert("Registro exitoso.");
+//             location.reload();
+//         } else {
+//             alert(result.message || "Error al registrarse");
+//         }
+//     } catch (error) {
+//         console.error('Error:', error);
+//         alert("Error de conexión con el servidor");
+//     }
+// }
 
-async function verificarUsuario(usuario) {
-    const response = await fetch("http://localhost:4000/verificarUsuario?correo_electronico=${usuario.email}&contraseña=${usuario.password}",{
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
+function User(){
+    const user = {
+        name: ui.getUsername(),
+        password: ui.getPassword()
+    }
+    userVerify(user)
+}
+
+async function userVerify(user) {
+    try {
+        const response = await fetch('http://localhost:4000/verifyUser', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user)
+        });
+        const result = await response.json();
+        console.log(result.message)
+        if (result.message === "ok") {
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("notepad").style.display = "block";
+            ui.setUser(result.username);
+            idLoggeado = result.userId;
+            return result;
+        } else {
+            alert(result.message || "Error al iniciar sesión");
         }
-    })
-    console.log(response)
-    let result = await response.json()
-    InOut(result)
-    ui.DoLogin(result)
-    return result
+    } catch (error) {
+        alert("Error de conexión con el servidor");
+    }
 }
 
+function newUser(){
+    const usuario = {
+        name: ui.getNewUsername(),
+        password: ui.getNewPassword()
+    }
+    registerUser(usuario) 
+}
 
+async function registerUser(newUser){
+    try {
+        console.log("papo2")
+        const response = await fetch('http://localhost:4000/logUser', {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newUser) 
+        });
+        const result = await response.json()
+        if (result.message === "ok") {
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("notepad").style.display = "block";
+            ui.setUser(result.username);
+            idLoggeado = result.userId;
+            return result;
+        } else {
+            alert(result.message || "Error al iniciar sesión");
+        }
+    } catch (error) {
+        
+    }
+}

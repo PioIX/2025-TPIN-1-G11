@@ -36,7 +36,7 @@
                 <input type="password" id="password" placeholder="********">
             </div>
             <div class = "buttonContainer">
-                <button onclick="logIn()" data-bs-toggle="tooltip"
+                <button onclick="User()" data-bs-toggle="tooltip"
                     data-bs-placement="top" title="Login">Iniciar sesión</button>
             </div>
         </div>
@@ -44,7 +44,7 @@
         <div id = "signUp">
             <legend>¿Nuevo aspirante a golpista? ¡Registrate acá!</legend>
             <div class = "buttonContainer">
-                <button onclick="signUpForm()">Registrate</button>
+                <button type="button" onclick="signUpForm()">Registrate</button>
             </div>
         </div>
     </div>
@@ -59,10 +59,6 @@
 
     <script src="../src/ui.js"></script>
     <script src="../src/functions.js"></script>
-    <script src="../../back/models/users.js"></script>
-    <script src="../../back/models/games.js"></script>
-    <script src="../../back/models/questions.js"></script>
-    <script src="../back/server.js"></script>
 </body>
 
 </html>
