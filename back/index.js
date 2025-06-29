@@ -335,7 +335,7 @@ app.get('/', function (req, res) {
 app.post("/verifyUser", async (req,res) => {
     try {
         let check = await realizarQuery(
-            `Select * From Users where name = "${req.body.name}" and password = ${req.body.password} `
+            `Select * From Users where name = "${req.body.name}" and password = "${req.body.password}" `
         )
         if(check.length>0){
             res.send({message:"ok"})
@@ -357,7 +357,7 @@ app.post("/regUser", async (req,res) => {
         if(check.length<1 && req.body.name.length>0){
             console.log("pepe")
             realizarQuery(
-                `insert Users(name,password) Values("${req.body.name}",${req.body.password});`
+                `insert Users(name,password) Values("${req.body.name}","${req.body.password}");`
             )
             res.send({message:"ok"})
         }else{
