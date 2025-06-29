@@ -302,16 +302,6 @@ app.get('/', function (req, res) {
 
 
 
-
-// app.get("/traerUsuarios", async (req,res) => {
-//     let pepe = realizarQuery(`select * from Users`)  
-//     res.send(pepe)
-// })
-
-
-
-
-
 // // Verificar datos de usuario
 // // app.post('/verifyUser', async function (req, res) {
 // //     try {
@@ -338,9 +328,13 @@ app.post("/verifyUser", async (req,res) => {
             `Select * From Users where name = "${req.body.name}" and password = "${req.body.password}" `
         )
         if(check.length>0){
-            res.send({message:"ok"})
+            res.send({
+                message:"ok",
+                username: req.body.name
+            })
         }else{
-            res.send({message:"not ok"})
+            res.send({
+                message:"Verifica si ambos campos fueron rellenados y si el usuario existe y coincide con la contraseña."})
         }
     } catch (error) {
         res.send(error)
@@ -355,13 +349,15 @@ app.post("/regUser", async (req,res) => {
         console.log(check.length)
         console.log(req.body.name.length)
         if(check.length<1 && req.body.name.length>0){
-            console.log("pepe")
             realizarQuery(
                 `insert Users(name,password) Values("${req.body.name}","${req.body.password}");`
             )
-            res.send({message:"ok"})
+            res.send({
+                message:"ok",
+                username: req.body.name
+            })
         }else{
-            res.send({message:"not ok"})
+            res.send({message:"Verifica si ambos campos fueron rellenados. Si el error persiste es posible que el nombre ya esté en uso."})
         }
     } catch (error) {
      res.send(error)   

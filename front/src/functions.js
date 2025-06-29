@@ -1,5 +1,4 @@
 function signUpForm(){
-    console.log("papo");
     document.getElementById("signUp").innerHTML = ``;
     document.getElementById("signUp").id = "";
     document.getElementById("logIn").innerHTML = `
@@ -23,7 +22,7 @@ function User(){
         name: ui.getUsername(),
         password: ui.getPassword()
     }
-    userVerify(user)
+    userVerify(user);
 }
 
 async function userVerify(user) {
@@ -56,12 +55,11 @@ function newUser(){
         name: ui.getNewUsername(),
         password: ui.getNewPassword()
     }
-    registerUser(usuario) 
+    registerUser(usuario);
 }
 
 async function registerUser(newUser){
     try {
-        console.log("papo2")
         const response = await fetch('http://localhost:4000/regUser', {
             method: "POST",
             headers: {
@@ -69,7 +67,6 @@ async function registerUser(newUser){
             },
             body: JSON.stringify(newUser)
         });
-        console.log("papo3")
         let result = await response.json()
         console.log(result.message)
         if (result.message === "ok") {
