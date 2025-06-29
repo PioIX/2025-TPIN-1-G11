@@ -21,20 +21,22 @@ const SQL_CONFIGURATION_DATA =
  */
 exports.realizarQuery = async function (queryString)
 {
-	let returnObject;
+    let returnObject = [];
 	let connection;
 	try
 	{
 		connection = await mySql.createConnection(SQL_CONFIGURATION_DATA);
-		returnObject = await connection.execute(queryString);
+		const result = await connection.execute(queryString);
+		returnObject = result[0]; 
 	}
 	catch(err)
 	{
-		console.log(err);
+		console.log("Error en la consulta SQL:", err);
+		return [];
 	}
 	finally
 	{
 		if(connection && connection.end) connection.end();
 	}
-	return returnObject[0];
+	return returnObject;
 }
