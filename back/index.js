@@ -337,9 +337,53 @@ app.post("/verifyUser", async (req,res) => {
                 message:"Verifica si ambos campos fueron rellenados y si el usuario existe y coincide con la contraseña."})
         }
     } catch (error) {
-        res.send(error)
+        console.error("Error al verificar usuario:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error interno al verificar usuario"
+        })
     }
 })
+
+app.get('/questions', async function (req, res) {
+    try {
+        const { id } = req.query;
+        let name;
+    
+        if (id) {
+            name = await realizarQuery('SELECT * FROM Questions WHERE id = ?', [id]);
+    
+        } else {
+            name = await realizarQuery('SELECT * FROM Questions');
+        }
+    
+        res.json(name);
+    
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+app.get('/games', async function (req, res) {
+    try {
+        const { id } = req.query;
+        let name;
+    
+        if (id) {
+            name = await realizarQuery('SELECT * FROM Games WHERE id = ?', [id]);
+    
+        } else {
+            name = await realizarQuery('SELECT * FROM Games');
+        }
+    
+        res.json(name);
+    
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
 
 app.post("/regUser", async (req,res) => {
     try {
@@ -360,7 +404,255 @@ app.post("/regUser", async (req,res) => {
             res.send({message:"Verifica si ambos campos fueron rellenados. Si el error persiste es posible que el nombre ya esté en uso."})
         }
     } catch (error) {
-     res.send(error)   
+        console.error("Error al registrar usuario:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error interno al registrar usuario"
+        })
     }
 })
 
+app.delete("/deleteUsers", async function (req, res) {
+    try {
+        const { name } = req.body;
+
+        if (!name) {
+            return res.status(400).json({
+                success: false,
+                message: "Se requiere el nombre de usuario"
+            })
+        }
+        const userExists = await realizarQuery(
+            "SELECT * FROM Users WHERE name = ?",
+            [name]
+        )
+
+        if (userExists.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Usuario no encontrado"
+            })
+        }
+        await realizarQuery(
+            "DELETE * From Users WHERE name=?",
+            [name]
+        )
+        res.status(200).json({
+            success: true,
+            message: "el usuario fue borrado exitosamente",
+            userId: id
+        })
+    }
+    catch (error) {
+        console.error("Error al eliminar usuario:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error interno al eliminar el usuario"
+        })
+    }
+})
+
+app.post("/addQuestion", async (req, res) => {
+    try {
+        let check = await realizarQuery(
+            `Select * From Questions where id = "${req.body.id}" `
+        )
+        console.log(check.length)
+        console.log(req.body.id.length)
+        if(check.length<1 && req.body.id.length>0){
+            realizarQuery(
+                `insert Questions(id, content, answerA, answerB, answerC, answerD, correctAnswer, emojiClue, textClue, fiftyClue, largeQuestion, image, text) Values("${req.body.id}","${req.body.content}","${req.body.answerA}","${req.body.answerB}","${req.body.answerC}","${req.body.answerD}","${req.body.correctAnswer}","${req.body.emojiClue}","${req.body.textClue}","${req.body.fiftyClue}","${req.body.image}","${req.body.text}");`
+            )
+            res.send({
+                message:"ok",
+                id: req.body.id,
+                content: req.body.content
+            })
+        }else{
+            res.send({message:"Verifica que todos los campos hayan sido completados o que la pregunta no exista dentro de la base de datos."})
+        }
+    }
+    catch (error) {
+        console.error("Error al agregar pregunta:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error interno al agregar la pregunta"
+        })
+    }
+})
+
+app.delete("/deleteQuestion", async function (req, res) {
+    try {
+        const { id } = req.body;
+
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                message: "Se requiere el id de la pregunta"
+            })
+        }
+        const userExists = await realizarQuery(
+            "SELECT * FROM Questions WHERE id = ?",
+            [id]
+        )
+
+        if (userExists.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Pregunta no encontrada"
+            })
+        }
+        await realizarQuery(
+            "DELETE * From Questions WHERE id=?",
+            [id]
+        )
+        res.status(200).json({
+            success: true,
+            message: "la pregunta fue borrada exitosamente",
+            userId: id
+        })
+    }
+    catch (error) {
+        console.error("Error al eliminar pregunta:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error interno al eliminar la pregunta"
+        })
+    }
+})
+
+
+app.put("/addAdminUser", async function (req, res) {
+    try {
+        const { id } = req.body;
+
+        if (!id ) {
+            return res.status(400).json({
+                success: false,
+                message: "Se requiere el ID del usuario"
+            })
+        }
+
+        const userExists = await realizarQuery(
+            "SELECT id FROM Users WHERE id = ?",
+            [id]
+        )
+         if (userExists.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Usuario no encontrado"
+            })
+        }
+
+        await realizarQuery(
+            "UPDATE Users SET adminUser = True WHERE id = ?",
+            [id]
+        )
+
+        res.status(200).json({
+           success: true,
+            message: "Usuario agregado como administrador",
+            userId: id
+        })
+    } catch (error) {
+        console.error("Error al actualizar admin del usuario:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error interno del servidor"
+        })
+    }
+})
+
+app.put("/delelteAdminUser", async function (req, res) {
+    try {
+        const { id } = req.body;
+
+        if (!id ) {
+            return res.status(400).json({
+                success: false,
+                message: "Se requiere el ID del usuario"
+            })
+        }
+
+        const userExists = await realizarQuery(
+            "SELECT id FROM Users WHERE id = ?",
+            [id]
+        )
+         if (userExists.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Usuario no encontrado"
+            })
+        }
+
+        await realizarQuery(
+            "UPDATE Users SET adminUser = False WHERE id = ?",
+            [id]
+        )
+
+        res.status(200).json({
+           success: true,
+            message: "Usuario eliminado como administrador",
+            userId: id
+        })
+    } catch (error) {
+        console.error("Error al actualizar admin del usuario:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error interno del servidor"
+        })
+    }
+})
+
+app.put("/editQuestion", async function (req, res) {
+    try {
+        const { id } = req.body;
+        const { content } = req.body;
+        const { answerA } = req.body;
+        const { answerB } = req.body;
+        const { answerC } = req.body;
+        const { answerD } = req.body;
+        const { correctAnswer } = req.body;
+        const { emojiClue } = req.body;
+        const { textClue } = req.body;
+        const { fiftyClue } = req.body;
+        const { largeQuestion } = req.body;
+        const { image } = req.body;
+        const { text } = req.body;
+
+        if (!id ) {
+            return res.status(400).json({
+                success: false,
+                message: "Se requiere el ID de la pregunta"
+            })
+        }
+
+        await realizarQuery(
+            "UPDATE Questions SET content = ? AND answerA = ? AND answerB = ? AND answerC = ? answerD = ? correctAnswer = ? AND emojiClue = ? AND textClue = ? AND fiftyClue = ? AND largeQuestion = ? AND image = ? AND text = ? WHERE id = ?",
+            [content], [answerA], [answerB], [answerC], [answerD], [correctAnswer], [emojiClue], [textClue], [fiftyClue], [largeQuestion], [image], [text], [id]
+        )
+
+        const isLargeQuestion = await realizarQuery(
+            "SELECT largeQuestion FROM Questions WHERE id = ?",
+            [id]
+        )
+         if (isLargeQuestion == False) {
+            await realizarQuery(
+                "UPDATE image, text FROM Questions WHERE id = ? SET image = null AND text = null",
+                [id]
+            )
+        }
+
+        res.status(200).json({
+           success: true,
+            message: "Pregunta modificada",
+            questionId: id
+        })
+    } catch (error) {
+        console.error("Error al actualizar la pregunta:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error interno del servidor"
+        })
+    }
+})
