@@ -28,9 +28,9 @@
     margin: 0px;
 }
 
-.logIn {
-    padding-top: 4%;
-    padding-bottom: 4%;
+body {
+    padding-top: 100px;
+    padding-bottom: 100px;
     padding-left: 50px;
     padding-right: 50px;
     font-family: sans-serif;
@@ -39,7 +39,7 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 2%;
+    gap: 50px;
 }
 
 #logo {
@@ -80,7 +80,7 @@ video {
 #loginForm legend {
     width: 100%;
     text-align: center;
-    margin-bottom: 5%;
+    margin-bottom: 30px;
     font-weight: 535;
 }
 
@@ -92,7 +92,7 @@ video {
 #logIn {
     background-color: rgba(0, 0, 0, 0.562);
     border-radius: 50px;
-    padding: 7%;
+    padding: 30px;
     margin-bottom: 40px;
 }
 

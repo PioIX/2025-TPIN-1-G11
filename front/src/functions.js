@@ -82,19 +82,3 @@ async function registerUser(newUser){
         
     }
 }
-
-changeScreenAdmin() 
-    {
-    const adminUser = document.getElementById("adminUser");
-    const logIn = document.getElementById("logIn");
-    if (adminUser.style.display !== "none") {
-        adminUser.style.display = "none";
-        logIn.style.display = "";
-        this.clearAllNotes();
-        this.clearSelect();
-    }
-    else {
-        adminUser.style.display = "";
-        logIn.style.display = "none";
-    }
-}
