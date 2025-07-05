@@ -14,6 +14,11 @@ const SQL_CONFIGURATION_DATA =
 	charset: 'UTF8_GENERAL_CI'
 }
 
+exports.realizarQuery = async function (query, params = []) {
+	const [rows] = await connection.execute(query, params);
+	return rows;
+}
+
 /**
  * Realiza u.
  * @returns Respuesta de la base de datos. Suele ser un vectna query a la base de datos MySQL indicada en el archivo "mysql.js".

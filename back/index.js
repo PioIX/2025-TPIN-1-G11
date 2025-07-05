@@ -16,311 +16,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
+
 app.get('/', function (req, res) {
     res.status(200).send({
         message: 'GET Home route working fine!'
     });
 });
 
-// RUTAS GET   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// TRAE DATOS DE LOS USUARIOS CON O SIN ID
-// app.get('/users', async function (req, res) {
-//     try {
-//         const { id } = req.query;
-//         let name;
-
-//         if (id) {
-//             name = await realizarQuery('SELECT * FROM Users WHERE id = ?', [id]);
-
-//         } else {
-//             name = await realizarQuery('SELECT * FROM Users');
-//         }
-
-//         res.json(name);
-
-//     } catch (error) {
-//         console.error('Error fetching users:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
-
-
-// // TRAE LOS JUEGOS DE UN USUARIO 
-// app.get('/games', async function (req, res) {
-//     try {
-
-//         const { idUser } = req.query;
-//         let games;
-
-
-//         games = await realizarQuery(
-//             'SELECT * FROM Games WHERE idUser = ?',
-//             [idUser]
-//         );
-
-//         res.send(games);
-
-//     } catch (error) {
-//         console.error('Error fetching games:', error);
-//         res.status(500).send('Internal Server Error');
-//     }
-// });
-
-// // TRAE TODAS LAS PREGUNTAS O UNA PREGUNTA CON EL ID
-// app.get('/questions', async function (req, res) {
-//     try {
-//         const { id } = req.query;
-//         let questions;
-
-//         if (id) {
-//             questions = await realizarQuery('SELECT * FROM Questions WHERE id = ?', [id]);
-
-//         } else {
-//             questions = await realizarQuery('SELECT * FROM Questions');
-//         }
-
-//         res.json(questions);
-
-//     } catch (error) {
-//         console.error('Error fetching users:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
-
-// // RUTAS POST ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// // SUBE UN NUEVO USUARIO
-// app.post('/registerUser', async function (req, res) {
-//     try {
-//         const { name, password } = req.body;
-
-//         if (!name || !password) {
-//             return res.status(400).json({ 
-//                 success: false,
-//                 message: 'Nombre y contraseña son requeridos' 
-//             });
-//         }
-
-//         const existingUser = await realizarQuery(
-//         `SELECT * FROM Users WHERE name = "${name}" `,
-//         );
-
-//         if (existingUser && existingUser[0] && existingUser[0].length > 0) {
-//             return res.status(409).json({ 
-//                 success: false,
-//                 message: 'El nombre de usuario ya existe' 
-//             });
-//         }
-
-//         const result = await realizarQuery(
-//             'INSERT INTO Users (name, password) VALUES (?, ?)',
-//             [name, password]
-//         );
-
-//         res.status(201).json({ 
-//             success: true,
-//             message: 'Usuario registrado con éxito',
-//             userId: result.insertId
-//         });
-
-//     } catch (error) {
-//         console.error('Error creating user:', error);
-//         res.status(500).json({ 
-//             success: false,
-//             error: 'Error interno del servidor',
-//             details: error.message
-//         });
-//     }
-// });
-
-// //INSERTA UNA NUEVA PARTIDA (PARA HISTORIAL)
-// app.post('/games', async function (req, res) {
-//     try {
-//         const { idUser, score } = req.body;
-
-//         await realizarQuery(
-//             'INSERT INTO Games (idUser, score) VALUES (?, ?)',
-//             [idUser, score]
-//         );
-
-//         res.status(201).json({
-//             success: true,
-//             message: 'Game saved successfully',
-//             user: { idUser, score }
-//         });
-
-//     } catch (error) {
-//         console.error('Error creating user:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
-
-// // RUTAS PUT /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// //CAMBIAR NOMBRE 
-// app.put("/users", async function (req, res) {
-//     try {
-//         const { id, newName } = req.body;
-
-//         if (!id || !newName) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: "Se requieren ID y nuevo nombre"
-//             });
-//         }
-
-//         const userExists = await realizarQuery(
-//             "SELECT id FROM Users WHERE id = ?",
-//             [id]
-//         );
-
-//         if (userExists.length === 0) {
-//             return res.status(404).json({
-//                 success: false,
-//                 message: "Usuario no encontrado"
-//             });
-//         }
-
-//         await realizarQuery(
-//             "UPDATE Users SET name = ? WHERE id = ?",
-//             [newName, id]
-//         );
-
-//         res.status(200).json({
-//             success: true,
-//             message: "Nombre actualizado correctamente",
-//             userId: id,
-//             newName: newName
-//         });
-
-//     } catch (error) {
-//         console.error("Error al actualizar nombre:", error);
-//         res.status(500).json({
-//             success: false,
-//             message: "Error interno del servidor"
-//         });
-//     }
-// });
-
-// //CAMBIAR CONTRASEÑA 
-// app.put("/users", async function (req, res) {
-//     try {
-//         const { id, newPassword } = req.body;
-
-//         if (!id || !newPassword) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: "Se requieren ID y nueva contraseña"
-//             });
-//         }
-
-//         const userExists = await realizarQuery(
-//             "SELECT id FROM Users WHERE id = ?",
-//             [id]
-//         );
-
-//         if (userExists.length === 0) {
-//             return res.status(404).json({
-//                 success: false,
-//                 message: "Usuario no encontrado"
-//             });
-//         }
-
-//         await realizarQuery(
-//             "UPDATE Users SET password = ? WHERE id = ?",
-//             [newPassword, id]
-//         );
-
-//         res.status(200).json({
-//             success: true,
-//             message: "Contraseña actualizada correctamente",
-//             userId: id,
-//             newName: newPassword
-//         });
-
-//     } catch (error) {
-//         console.error("Error al actualizar contraseña:", error);
-//         res.status(500).json({
-//             success: false,
-//             message: "Error interno del servidor"
-//         });
-//     }
-// });
-
-// // RUTAS DELETE ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// // ELIMINA USUARIO
-// app.delete("/users", async function (req, res) {
-//     try {
-//         const { password } = req.body;
-
-//         if (!password) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: "Se requiere la contraseña del usuario"
-//             });
-//         }
-
-//         const userExists = await realizarQuery(
-//             "SELECT * FROM Users WHERE password = ?",
-//             [password]
-//         );
-
-//         if (userExists.length === 0) {
-//             return res.status(404).json({
-//                 success: false,
-//                 message: "Usuario no encontrado"
-//             });
-//         }
-
-//         await realizarQuery(
-//             "DELETE * From Users WHERE password=?",
-//             [password]
-//         );
-
-//         // 4. Respuesta exitosa
-//         res.status(200).json({
-//             success: true,
-//             message: "el usuario fue borrado exitosamente",
-//             userId: id
-//         });
-//     }
-//     catch (error) {
-//         console.error("Error al eliminar usuario:", error);
-//         res.status(500).json({
-//             success: false,
-//             message: "Error interno al eliminar el usuario"
-//         });
-//     }
-// });
-
-// // Levantar servidor
-// app.listen(port, function () {
-//     console.log(`Server running in http://localhost:${port}`);
-// });
-
-
-
-// // Verificar datos de usuario
-// // app.post('/verifyUser', async function (req, res) {
-// //     try {
-// //         const { username, password } = req.body;
-        
-// //         const user = await realizarQuery(
-// //             ´SELECT * FROM Users WHERE name = "${name}" AND password = ?,
-// //         );
-
-// //         if (user.length > 0) {
-// //             res.json({ success: true, userId: user[0].id, username: user[0].name });
-// //         } else {
-// //             res.status(401).json({ success: false, message: 'Credenciales incorrectas' });
-// //         }
-// //     } catch (error) {
-// //         console.error('Error verifying user:', error);
-// //         res.status(500).json({ error: 'Internal server error' });
-// //     }
-// // });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.post("/verifyUser", async (req,res) => {
     try {
@@ -332,58 +35,21 @@ app.post("/verifyUser", async (req,res) => {
                 message:"ok",
                 username: req.body.name
             })
+        
+        }else if(req.body.adminUser == 1){
+            res.send({
+                message:"admin",
+                username: req.body.name
+            })
+
         }else{
             res.send({
                 message:"Verifica si ambos campos fueron rellenados y si el usuario existe y coincide con la contraseña."})
         }
     } catch (error) {
-        console.error("Error al verificar usuario:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error interno al verificar usuario"
-        })
+        res.send(error)
     }
 })
-
-app.get('/questions', async function (req, res) {
-    try {
-        const { id } = req.query;
-        let name;
-    
-        if (id) {
-            name = await realizarQuery('SELECT * FROM Questions WHERE id = ?', [id]);
-    
-        } else {
-            name = await realizarQuery('SELECT * FROM Questions');
-        }
-    
-        res.json(name);
-    
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
-});
-
-app.get('/games', async function (req, res) {
-    try {
-        const { id } = req.query;
-        let name;
-    
-        if (id) {
-            name = await realizarQuery('SELECT * FROM Games WHERE id = ?', [id]);
-    
-        } else {
-            name = await realizarQuery('SELECT * FROM Games');
-        }
-    
-        res.json(name);
-    
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
-});
 
 app.post("/regUser", async (req,res) => {
     try {
@@ -404,255 +70,206 @@ app.post("/regUser", async (req,res) => {
             res.send({message:"Verifica si ambos campos fueron rellenados. Si el error persiste es posible que el nombre ya esté en uso."})
         }
     } catch (error) {
-        console.error("Error al registrar usuario:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error interno al registrar usuario"
-        })
+     res.send(error)   
     }
 })
 
-app.delete("/deleteUsers", async function (req, res) {
-    try {
-        const { name } = req.body;
-
-        if (!name) {
-            return res.status(400).json({
-                success: false,
-                message: "Se requiere el nombre de usuario"
-            })
-        }
-        const userExists = await realizarQuery(
-            "SELECT * FROM Users WHERE name = ?",
-            [name]
-        )
-
-        if (userExists.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "Usuario no encontrado"
-            })
-        }
-        await realizarQuery(
-            "DELETE * From Users WHERE name=?",
-            [name]
-        )
-        res.status(200).json({
-            success: true,
-            message: "el usuario fue borrado exitosamente",
-            userId: id
-        })
-    }
-    catch (error) {
-        console.error("Error al eliminar usuario:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error interno al eliminar el usuario"
-        })
-    }
-})
-
-app.post("/addQuestion", async (req, res) => {
-    try {
+app.delete("/deleteUSer", async (req,res) =>{
+    try{
         let check = await realizarQuery(
-            `Select * From Questions where id = "${req.body.id}" `
+            `SELECT * FROM Users WHERE name = "${req.body.name}"`
         )
         console.log(check.length)
-        console.log(req.body.id.length)
-        if(check.length<1 && req.body.id.length>0){
+        if(check.length>0 && req.body.name.length>0){
             realizarQuery(
-                `insert Questions(id, content, answerA, answerB, answerC, answerD, correctAnswer, emojiClue, textClue, fiftyClue, largeQuestion, image, text) Values("${req.body.id}","${req.body.content}","${req.body.answerA}","${req.body.answerB}","${req.body.answerC}","${req.body.answerD}","${req.body.correctAnswer}","${req.body.emojiClue}","${req.body.textClue}","${req.body.fiftyClue}","${req.body.image}","${req.body.text}");`
+                `DELETE FROM Users WHERE name = "${req.body.name}"`
             )
             res.send({
-                message:"ok",
-                id: req.body.id,
-                content: req.body.content
+                message:"usuario borrado",
+                username: req.body.name
             })
         }else{
-            res.send({message:"Verifica que todos los campos hayan sido completados o que la pregunta no exista dentro de la base de datos."})
+             res.send({message:"Verifica si ambos campos fueron rellenados. Si el error persiste es posible que el usuario no exista."})
         }
-    }
-    catch (error) {
-        console.error("Error al agregar pregunta:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error interno al agregar la pregunta"
-        })
+    }catch (error){
+        res.send(error)   
     }
 })
 
-app.delete("/deleteQuestion", async function (req, res) {
-    try {
-        const { id } = req.body;
-
-        if (!id) {
-            return res.status(400).json({
-                success: false,
-                message: "Se requiere el id de la pregunta"
-            })
-        }
-        const userExists = await realizarQuery(
-            "SELECT * FROM Questions WHERE id = ?",
-            [id]
+app.delete("/deleteQuestion", async (req,res) =>{
+    try{
+        let check = await realizarQuery(
+            `SELECT * FROM Questions WHERE name = "${req.body.name}"`
         )
-
-        if (userExists.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "Pregunta no encontrada"
-            })
-        }
-        await realizarQuery(
-            "DELETE * From Questions WHERE id=?",
-            [id]
-        )
-        res.status(200).json({
-            success: true,
-            message: "la pregunta fue borrada exitosamente",
-            userId: id
-        })
-    }
-    catch (error) {
-        console.error("Error al eliminar pregunta:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error interno al eliminar la pregunta"
-        })
-    }
-})
-
-
-app.put("/addAdminUser", async function (req, res) {
-    try {
-        const { id } = req.body;
-
-        if (!id ) {
-            return res.status(400).json({
-                success: false,
-                message: "Se requiere el ID del usuario"
-            })
-        }
-
-        const userExists = await realizarQuery(
-            "SELECT id FROM Users WHERE id = ?",
-            [id]
-        )
-         if (userExists.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "Usuario no encontrado"
-            })
-        }
-
-        await realizarQuery(
-            "UPDATE Users SET adminUser = True WHERE id = ?",
-            [id]
-        )
-
-        res.status(200).json({
-           success: true,
-            message: "Usuario agregado como administrador",
-            userId: id
-        })
-    } catch (error) {
-        console.error("Error al actualizar admin del usuario:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error interno del servidor"
-        })
-    }
-})
-
-app.put("/delelteAdminUser", async function (req, res) {
-    try {
-        const { id } = req.body;
-
-        if (!id ) {
-            return res.status(400).json({
-                success: false,
-                message: "Se requiere el ID del usuario"
-            })
-        }
-
-        const userExists = await realizarQuery(
-            "SELECT id FROM Users WHERE id = ?",
-            [id]
-        )
-         if (userExists.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "Usuario no encontrado"
-            })
-        }
-
-        await realizarQuery(
-            "UPDATE Users SET adminUser = False WHERE id = ?",
-            [id]
-        )
-
-        res.status(200).json({
-           success: true,
-            message: "Usuario eliminado como administrador",
-            userId: id
-        })
-    } catch (error) {
-        console.error("Error al actualizar admin del usuario:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error interno del servidor"
-        })
-    }
-})
-
-app.put("/editQuestion", async function (req, res) {
-    try {
-        const { id } = req.body;
-        const { content } = req.body;
-        const { answerA } = req.body;
-        const { answerB } = req.body;
-        const { answerC } = req.body;
-        const { answerD } = req.body;
-        const { correctAnswer } = req.body;
-        const { emojiClue } = req.body;
-        const { textClue } = req.body;
-        const { fiftyClue } = req.body;
-        const { largeQuestion } = req.body;
-        const { image } = req.body;
-        const { text } = req.body;
-
-        if (!id ) {
-            return res.status(400).json({
-                success: false,
-                message: "Se requiere el ID de la pregunta"
-            })
-        }
-
-        await realizarQuery(
-            "UPDATE Questions SET content = ? AND answerA = ? AND answerB = ? AND answerC = ? answerD = ? correctAnswer = ? AND emojiClue = ? AND textClue = ? AND fiftyClue = ? AND largeQuestion = ? AND image = ? AND text = ? WHERE id = ?",
-            [content], [answerA], [answerB], [answerC], [answerD], [correctAnswer], [emojiClue], [textClue], [fiftyClue], [largeQuestion], [image], [text], [id]
-        )
-
-        const isLargeQuestion = await realizarQuery(
-            "SELECT largeQuestion FROM Questions WHERE id = ?",
-            [id]
-        )
-         if (isLargeQuestion == False) {
-            await realizarQuery(
-                "UPDATE image, text FROM Questions WHERE id = ? SET image = null AND text = null",
-                [id]
+        console.log(check.length)
+        if(check.length>0 && req.body.name.length>0){
+            realizarQuery(
+                `DELETE FROM Users WHERE name = "${req.body.name}"`
             )
+            res.send({
+                message:"usuario borrado",
+                username: req.body.name
+            })
+        }else{
+             res.send({message:"Verifica si ambos campos fueron rellenados. Si el error persiste es posible que el usuario no exista."})
         }
-
-        res.status(200).json({
-           success: true,
-            message: "Pregunta modificada",
-            questionId: id
-        })
-    } catch (error) {
-        console.error("Error al actualizar la pregunta:", error);
-        res.status(500).json({
-            success: false,
-            message: "Error interno del servidor"
-        })
+    }catch (error){
+        res.send(error)   
     }
 })
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// app.delete("/deleteUsers", async function (req, res) {
+//     try {
+//         const name = String(req.body.name).trim(); // ✅ Asegura que sea string
+
+//         console.log("BODY RECIBIDO:", req.body);
+
+//         if (!name) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Se requiere el nombre de usuario"
+//             });
+//         }
+
+//         const userExists = await realizarQuery(
+//             "SELECT * FROM Users WHERE name = ?",
+//             [name] // ✅ Asegurarse que esto es un array con un string
+//         );
+
+//         if (userExists.length === 0) {
+//             return res.status(404).json({
+//                 success: false,
+//                 message: "Usuario no encontrado"
+//             });
+//         }
+
+//         await realizarQuery(
+//             "DELETE FROM Users WHERE name = ?",
+//             [name]
+//         );
+
+//         res.status(200).json({
+//             success: true,
+//             message: "El usuario fue borrado exitosamente",
+//             userId: name
+//         });
+
+//     } catch (error) {
+//         console.error("Error en la consulta SQL:", error);
+//         res.status(500).json({
+//             success: false,
+//             message: "Error interno al eliminar el usuario"
+//         });
+//     }
+// });
+
+
+// app.post("/addQuestion", async (req, res) => {
+//     try {
+//         let check = await realizarQuery(
+//             `Select * From Questions where id = "${req.body.id}" `
+//         )
+//         console.log(check.length)
+//         console.log(req.body.id.length)
+//         if(check.length<1 && req.body.id.length>0){
+//             realizarQuery(
+//                 `insert Questions(id, content, answerA, answerB, answerC, answerD, correctAnswer, emojiClue, textClue, fiftyClue, largeQuestion, image, text) Values("${req.body.id}","${req.body.content}","${req.body.answerA}","${req.body.answerB}","${req.body.answerC}","${req.body.answerD}","${req.body.correctAnswer}","${req.body.emojiClue}","${req.body.textClue}","${req.body.fiftyClue}","${req.body.image}","${req.body.text}");`
+//             )
+//             res.send({
+//                 message:"ok",
+//                 id: req.body.id,
+//                 content: req.body.content
+//             })
+//         }else{
+//             res.send({message:"Verifica que todos los campos hayan sido completados o que la pregunta no exista dentro de la base de datos."})
+//         }
+//     }
+//     catch (error){
+//         res.send(error)
+//     }
+// })
+
+// app.delete("/deleteQuestion", async function (req, res) {
+//     try {
+//         const { id } = req.body;
+
+//         if (!id) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Se requiere el id de la pregunta"
+//             })
+//         }
+//         const userExists = await realizarQuery(
+//             "SELECT * FROM Questions WHERE id = ?",
+//             [id]
+//         )
+
+//         if (userExists.length === 0) {
+//             return res.status(404).json({
+//                 success: false,
+//                 message: "Pregunta no encontrada"
+//             })
+//         }
+//         await realizarQuery(
+//             "DELETE * From Questions WHERE id=?",
+//             [id]
+//         )
+//         res.status(200).json({
+//             success: true,
+//             message: "la pregunta fue borrada exitosamente",
+//             userId: id
+//         })
+//     }
+//     catch (error) {
+//         console.error("Error al eliminar pregunta:", error);
+//         res.status(500).json({
+//             success: false,
+//             message: "Error interno al eliminar la pregunta"
+//         })
+//     }
+// })
+
+
+// app.put("/addAdminUser", async function (req, res) {
+//     try {
+//         const { id } = req.body;
+
+//         if (!id ) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Se requiere el ID del usuario"
+//             })
+//         }
+
+//         const userExists = await realizarQuery(
+//             "SELECT id FROM Users WHERE id = ?",
+//             [id]
+//         )
+//          if (userExists.length === 0) {
+//             return res.status(404).json({
+//                 success: false,
+//                 message: "Usuario no encontrado"
+//             })
+//         }
+
+//         await realizarQuery(
+//             "UPDATE Users SET adminUser = True WHERE id = ?",
+//             [id]
+//         )
+
+//         res.status(200).json({
+//            success: true,
+//             message: "Usuario agregado como administrador",
+//             userId: id
+//         })
+//     } catch (error) {
+//         console.error("Error al actualizar contraseña:", error);
+//         res.status(500).json({
+//             success: false,
+//             message: "Error interno del servidor"
+//         })
+//     }
+// })
+
