@@ -1,4 +1,4 @@
-function signUpForm() {
+function signUpForm(){
     document.getElementById("signUp").innerHTML = ``;
     document.getElementById("signUp").id = "";
     document.getElementById("logIn").innerHTML = `
@@ -17,7 +17,7 @@ function signUpForm() {
     </div>`;
 }
 
-function User() {
+function User(){
     const user = {
         name: ui.getUsername(),
         password: ui.getPassword()
@@ -50,7 +50,7 @@ async function userVerify(user) {
     }
 }
 
-function newUser() {
+function newUser(){
     const usuario = {
         name: ui.getNewUsername(),
         password: ui.getNewPassword()
@@ -58,7 +58,7 @@ function newUser() {
     registerUser(usuario);
 }
 
-async function registerUser(newUser) {
+async function registerUser(newUser){
     try {
         const response = await fetch('http://localhost:4000/regUser', {
             method: "POST",
@@ -79,7 +79,6 @@ async function registerUser(newUser) {
             alert(result.message || "Error al iniciar sesión");
         }
     } catch (error) {
-
+        
     }
 }
-

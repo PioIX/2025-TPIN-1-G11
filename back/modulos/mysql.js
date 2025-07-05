@@ -45,3 +45,5 @@ exports.realizarQuery = async function (queryString)
 	}
 	return returnObject;
 }
+
+
