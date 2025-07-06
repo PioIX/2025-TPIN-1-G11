@@ -75,25 +75,39 @@ app.post("/regUser", async (req, res) => {
 
 app.delete("/deleteUser", async (req, res) => {
     try {
-        let check = await realizarQuery(
-            `SELECT * FROM Users WHERE name = "${req.body.name}"`
-        )
-        console.log(check.length)
-        if (check.length > 0 && req.body.name.length > 0) {
-            await realizarQuery(
-                `DELETE FROM Users WHERE name = "${req.body.name}"`
-            )
-            res.send({
-                message: "usuario borrado",
-                username: req.body.name
-            })
-        } else {
-            res.send({ message: "Verifica si ambos campos fueron rellenados. Si el error persiste es posible que el usuario no exista." })
+        // Validar que se recibió un ID
+        if (!req.body.name) {
+            return res.status(400).send({ message: "Se requiere el nombre de usuario" });
         }
+
+        // Verificar si la pregunta existe
+        const check = await realizarQuery(
+            `SELECT * FROM Users WHERE name = "${req.body.name}"`
+        );
+
+        if (check.length === 0) {
+            return res.status(404).send({ 
+                message: "No se encontró ningun usuario con ese nombre" 
+            });
+        }
+
+        await realizarQuery(
+            `DELETE FROM Users WHERE name = "${req.body.name}"`
+        );
+
+        res.send({
+            message: "Usuario borrado exitosamente",
+            deletedId: req.body.name
+        });
+        
     } catch (error) {
-        res.send(error)
+        console.error("Error:", error);
+        res.status(500).send({ 
+            message: "Error interno al borrar el usuario",
+            error: error.message 
+        });
     }
-})
+});
 
 app.delete("/deleteQuestion", async (req, res) => {
     try {
@@ -104,7 +118,7 @@ app.delete("/deleteQuestion", async (req, res) => {
 
         // Verificar si la pregunta existe
         const check = await realizarQuery(
-            `SELECT * FROM Questions WHERE id = "${req.body.id}"`
+            `SELECT * FROM Questions WHERE id = ${req.body.id}`
         );
 
         if (check.length === 0) {
@@ -114,7 +128,7 @@ app.delete("/deleteQuestion", async (req, res) => {
         }
 
         await realizarQuery(
-            `DELETE FROM Questions WHERE id = "${req.body.id}"`
+            `DELETE FROM Questions WHERE id = ${req.body.id}`
         );
 
         res.send({
@@ -133,51 +147,40 @@ app.delete("/deleteQuestion", async (req, res) => {
 
 app.delete("/deleteGames", async (req, res) => {
     try {
-        if (!req.body.id || isNaN(req.body.id)) {
-            return res.status(400).json({
-                success: false,
-                message: "ID de partida no válido o faltante"
-            });
+        // Validar que se recibió un ID
+        if (!req.body.id) {
+            return res.status(400).send({ message: "Se requiere el ID de la pregunta" });
         }
 
-        const gameId = parseInt(req.body.id);
-        if (isNaN(gameId)) {
-            return res.status(400).json({
-                success: false,
-                message: "El ID debe ser un número válido"
-            });
-        }
-
+        // Verificar si la pregunta existe
         const check = await realizarQuery(
-            `SELECT * FROM Games WHERE id = "${req.body.id}"`
+            `SELECT * FROM Games WHERE id = ${req.body.id}`
         );
 
         if (check.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "No se encontró una partida con ese ID"
+            return res.status(404).send({ 
+                message: "No se encontró ninguna pregunta con ese ID" 
             });
         }
 
         await realizarQuery(
-            "DELETE FROM Games WHERE id = ?",
-            [gameId]
+            `DELETE FROM Games WHERE id = ${req.body.id}`
         );
 
-        return res.status(200).json({
-            success: true,
-            message: "Partida eliminada correctamente",
-            gameId: gameId
+        res.send({
+            message: "Pregunta borrada exitosamente",
+            deletedId: req.body.id
         });
-
+        
     } catch (error) {
-        console.error("Error al eliminar partida:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Error interno del servidor al eliminar la partida"
+        console.error("Error:", error);
+        res.status(500).send({ 
+            message: "Error interno al borrar la pregunta",
+            error: error.message 
         });
     }
 });
+
 
 app.post("/addQuestion", async (req, res) => {
     try {
@@ -268,6 +271,30 @@ app.get('/getQuestion', async function (req, res) {
             largeQuestion: respuesta.largeQuestion,
             image: respuesta.image,
             text: respuesta.text
+
+        }
+        res.send({
+            response
+        });
+    } catch (error) {
+        res.send({ mensaje: "Tuviste un error", error: error.message });
+    }
+})
+
+app.get('/getGame', async function (req, res) {
+    try {
+        let respuesta;
+        if (req.query.id != undefined) {
+            [respuesta] = await realizarQuery(`SELECT * FROM Games WHERE id=${req.query.id}`)
+        } else {
+            res.send({ message: "Verifica haber puesto bien el id y si la pregunta existe." });
+        }
+        let response = {
+            message: "Pregunta traída correctamente.",
+            id: respuesta.id,
+            idUser: respuesta.idUser,
+            score: respuesta.score,
+            win: respuesta.win,
 
         }
         res.send({
