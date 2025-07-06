@@ -26,6 +26,7 @@
 * {
     padding: 0px;
     margin: 0px;
+    text-align: center;
 }
 
 #login-container {
@@ -125,6 +126,9 @@ button {
     padding-left: 20px;
     padding-right: 20px;
     border-radius: 30px;
+    background-color: white;
+    color: black;
+    border-width: 0px;
 }
 
 button:hover {
@@ -140,7 +144,7 @@ a {
     padding-left: 20px;
     padding-right: 20px;
     border-radius: 30px;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     color: black;
     text-decoration: none;
 }
@@ -153,6 +157,127 @@ a:hover {
     transform: scale(1.05);
 }
 
+#admin-ui {
+    padding-top: 50px;
+    padding-bottom: 100px;
+    color: white;
+    display: none;
+}
+
+#admin-ui header {
+    display: flex;
+    justify-content: center;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#loggedUsername {
+    font-size: 30px;
+    font-weight: 600;
+    text-shadow: 5px 3px 24px rgba(0,0,0,1);
+    font-style: oblique;
+}
+
+#admin-ui-body {
+    padding-top: 100px;
+    padding-bottom: 100px;
+    padding-left: 50px;
+    padding-right: 50px;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 50px;
+}
+
+#administrate {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.562);
+    border-radius: 50px;
+    padding-right: calc(10px + 15vw);
+    padding-left: calc(10px + 15vw);
+    padding-top: 40px;
+    padding-bottom: 40px;
+    gap: 40px;
+}
+
+#admin-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+#admin-questions, #admin-users, #admin-games {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    gap: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#question-manager, #user-manager, #game-manager {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.562);
+    border-radius: 50px;
+    padding-right: 30px;
+    padding-left: 30px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    gap: 40px;
+}
+
+#select-question, #select-user, #select-game {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#question-info, #user-info, #game-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#question-buttons, #user-buttons, #game-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+#new-question {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.562);
+    border-radius: 50px;
+    padding-right: 30px;
+    padding-left: 30px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    gap: 10px;
+}
+
+#new-question input {
+    margin-bottom: 30px;
+}
+
+#new-question h2 {
+    margin-bottom: 30px;
+}
+
+#new-question button {
+    margin-top: 30px;
+}
 
 @media (max-width: 400px) {
     #logo {
