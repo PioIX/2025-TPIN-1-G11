@@ -96,10 +96,22 @@
             <input id = "new-question-b">
             <label for = "new-question-c">Respuesta C</label>
             <input id = "new-question-c">
-            <label for = "new-question-d">Reespuesta D</label>
+            <label for = "new-question-d">Respuesta D</label>
             <input id = "new-question-d">
-            <label for = "new-correct-answer">Reespuesta correcta</label>
+            <label for = "new-correct-answer">Respuesta correcta (A, B, C o D)</label>
             <input id = "new-correct-answer">
+            <label for = "new-emoji-clue">Pista de emojis</label>
+            <input id = "new-emoji-clue">
+            <label for = "new-text-clue">Pista de texto</label>
+            <input id = "new-text-clue">
+            <label for = "new-fifty-clue">Pista 50/50</label>
+            <input id = "new-fifty-clue">
+            <label for = "new-question-length">¿La pregunta es larga? (true/false)</label>
+            <input id = "new-question-length">
+            <label for = "new-question-image">URL de la imagen (si hay)</label>
+            <input id = "new-question-image">
+            <label for = "new-question-image">URL de la imagen (si hay)</label>
+            <input id = "new-question-image">
             <button onclick="">Crear pregunta</button>
         </form>
     </div>
@@ -115,7 +127,7 @@
                 <p>Nombre: <br><span id = "user-name"></span></p>
                 <p>Contraseña: <br><span id = "user-password"></span></p>
                 <p>ID: <br><span id = "user-id"></span></p>
-                <p>ID de mejor partida: <br><span id = "best-game-id"></span></p>
+                <p>¿Es administrador: <br><span id = "user-admin-bool"></span></p>
             </section>
             <section id = "user-buttons">
                 <button onclick="">Borrar usuario</button>
@@ -134,7 +146,8 @@
             <section id = "game-info" style="display: none">
                 <p>ID: <br><span id = "game-id"></span></p>
                 <p>ID del jugador: <br><span id = "player-id"></span></p>
-                <p>Puntos: <br><span id = "game-points"></span></p>
+                <p>Puntos: <br><span id = "game-score"></span></p>
+                <p>¿Victoria?: <br><span id = "game-win-bool"></span></p>
             </section>
             <section id = "game-buttons">
                 <button onclick="">Borrar partida</button>
