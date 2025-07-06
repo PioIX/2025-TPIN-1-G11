@@ -73,20 +73,26 @@
                 <label for = "question-id">Introduzca el id de una partida existente</label>
                 <input id = "question-id">
             </section>
-            <section id = "question-info" style="display: none">
+            <form id = "question-info" >
                 <p>Enunciado: <br><span id = "question-text"></span></p>
+                <input id = "edit-text" placeholder = "Cambiar enunciado">
                 <p>Respuesta A: <br><span id = "question-a"></span></p>
+                <input id = "edit-answer-a" placeholder = "Cambiar respuesta A">
                 <p>Respuesta B: <br><span id = "question-b"></span></p>
+                <input id = "edit-answer-b" placeholder = "Cambiar respuesta B">
                 <p>Respuesta C: <br><span id = "question-c"></span></p>
+                <input id = "edit-answer-c" placeholder = "Cambiar respuesta C">
                 <p>Respuesta D: <br><span id = "question-d"></span></p>
+                <input id = "edit-answer-d" placeholder = "Cambiar respuesta D">
                 <p>Respuesta correcta: <br><span id = "correct-answer"></span></p>
-            </section>
+                <input id = "edit-correct-answer" placeholder = "Cambiar respuesta correcta (A, B, C o D)">
+            </form>
             <section id = "question-buttons">
                 <button onclick="">Borrar pregunta</button>
                 <button onclick="">Editar pregunta</button>
             </section>
         </div>
-        <form id = "new-question">
+        <form id = "new-question" style="display: none">
             <h2>Cree una nueva pregunta</h2>
             <label for = "new-question-text">Enunciado</label>
             <input id = "new-question-text">
@@ -118,7 +124,7 @@
     <div id = "admin-users" style="display: none">
         <h1>Administre usuarios</h1>
         <div id = "user-manager">
-            <h2>Edite o elimine usuarios</h2>
+            <h2>Elimine usuarios</h2>
             <section id = "select-user">
                 <label for = "user-id">Introduzca el id de un usuario existente</label>
                 <input id = "user-id">
@@ -131,14 +137,13 @@
             </section>
             <section id = "user-buttons">
                 <button onclick="">Borrar usuario</button>
-                <button onclick="">Editar usuario</button>
             </section>
         </div>
     </div>
     <div id = "admin-games" style="display: none">
         <h1>Administre partidas</h1>
         <div id = "game-manager">
-            <h2>Edite o elimine partidas</h2>
+            <h2>Elimine partidas</h2>
             <section id = "select-game">
                 <label for = "game-id">Introduzca el id de una partida existente</label>
                 <input id = "game-id">
@@ -151,7 +156,6 @@
             </section>
             <section id = "game-buttons">
                 <button onclick="">Borrar partida</button>
-                <button onclick="">Editar partida</button>
             </section>
         </div>
     </div>
