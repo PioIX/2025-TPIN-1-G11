@@ -46,7 +46,7 @@
             </div>
         </div>
     </div>
-    <div id="admin-ui" style="display: none">
+    <div id="admin-ui">
         <header>
             <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
         </header>
@@ -57,9 +57,9 @@
             <div id = "administrate">
                 <h3>¿Qué desea hacer?</h3>
                 <div id = "admin-buttons">
-                    <button onclick="">Administrar preguntas</button>
-                    <button onclick="">Administrar usuarios</button>
-                    <button onclick="">Administrar partidas</button>
+                    <button onclick="mostrarEditarPregunta()">Administrar preguntas</button>
+                    <button onclick="mostrarAdminUsuarios()">Administrar usuarios</button>
+                    <button onclick="mostrarAdminPartidas()">Administrar partidas</button>
                     <button onclick="">Jugar</button>
                 </div>
             </div>
@@ -88,8 +88,8 @@
                 <input id = "edit-correct-answer" placeholder = "Cambiar respuesta correcta (A, B, C o D)">
             </form>
             <section id = "question-buttons">
-                <button onclick="">Borrar pregunta</button>
-                <button onclick="">Editar pregunta</button>
+                <button onclick="borrarPregunta()">Borrar pregunta</button>
+                <button onclick="editarPregunta()">Editar pregunta</button>
             </section>
         </div>
         <form id = "new-question" style="display: none">
@@ -118,7 +118,7 @@
             <input id = "new-question-image">
             <label for = "new-question-image">URL de la imagen (si hay)</label>
             <input id = "new-question-image">
-            <button onclick="">Crear pregunta</button>
+            <button type="button" onclick="crearPregunta()">Crear pregunta</button>
         </form>
     </div>
     <div id = "admin-users" style="display: none">
@@ -136,7 +136,7 @@
                 <p>¿Es administrador: <br><span id = "user-admin-bool"></span></p>
             </section>
             <section id = "user-buttons">
-                <button onclick="">Borrar usuario</button>
+                <button type="button" onclick="borrarUsuario()">Borrar usuario</button>
             </section>
         </div>
     </div>
@@ -155,7 +155,7 @@
                 <p>¿Victoria?: <br><span id = "game-win-bool"></span></p>
             </section>
             <section id = "game-buttons">
-                <button onclick="">Borrar partida</button>
+                <button type="button" onclick="borrarPartida()">Borrar partida</button>
             </section>
         </div>
     </div>
