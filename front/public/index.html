@@ -12,44 +12,55 @@
 
 <body>
     <div class="video-background">
-            <video autoplay loop muted>
-                <source src="images/background.mp4" type="video/mp4">
-                Tu navegador no soporta el video.
-            </video>
+        <video autoplay loop muted>
+            <source src="images/background.mp4" type="video/mp4">
+            Tu navegador no soporta el video.
+        </video>
     </div>
-    <nav>
+    <div id = "login-container">
         <div>
+            <img src = "images/logo.png" id = "logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'" alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
+        </div>
+        <div id="loginForm">
+            <div id = "logIn">
+                <legend>¡Bienvenido futuro dictador! Inicie sesión</legend>
+                <div class = "logInInput">
+                    <label for="username">Nombre de Usuario</label>
+                    <input type="username" id="username" placeholder="Nombre de ususario">
+                </div>
+                <div class = "logInInput">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" placeholder="********">
+                </div>
+                <div class = "buttonContainer">
+                    <button onclick="User()" data-bs-toggle="tooltip"
+                        data-bs-placement="top" title="Login">Iniciar sesión</button>
+                </div>
+            </div>
+
+            <div id = "signUp">
+                <legend>¿Nuevo aspirante a golpista? ¡Registrate acá!</legend>
+                <div class = "buttonContainer">
+                    <button type="button" onclick="signUpForm()">Registrate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="admin-ui" style="display: none">
+        <header>
+            <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
+        </header>
+        <div id = "admin-ui-body">
             <div>
                 <img src = "images/logo.png" id = "logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'" alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
             </div>
-        </div>
-    </nav>
-    <div id="loginForm">
-        <div id = "logIn">
-            <legend>¡Bienvenido futuro dictador! Inicie sesión</legend>
-            <div class = "logInInput">
-                <label for="username">Nombre de Usuario</label>
-                <input type="username" id="username" placeholder="Nombre de ususario">
-            </div>
-            <div class = "logInInput">
-                <label for="password">Contraseña</label>
-                <input type="password" id="password" placeholder="********">
-            </div>
-            <div class = "buttonContainer">
-                <button onclick="User()" data-bs-toggle="tooltip"
-                    data-bs-placement="top" title="Login">Iniciar sesión</button>
+            <div id = "administrate">
+                <button onclick="">Administrar preguntas</button>
+                <button onclick="">Administrar usuarios</button>
+                <button onclick="">Administrar partidas</button>
+                <button onclick="">Jugar</button>
             </div>
         </div>
-
-        <div id = "signUp">
-            <legend>¿Nuevo aspirante a golpista? ¡Registrate acá!</legend>
-            <div class = "buttonContainer">
-                <button type="button" onclick="signUpForm()">Registrate</button>
-            </div>
-        </div>
-    </div>
-    <div id="notepad" style="display: none">
-        <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
     <div>
  
 
