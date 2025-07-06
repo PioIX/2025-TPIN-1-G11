@@ -249,7 +249,7 @@ async function borrarPregunta() {
 }
 
 function mostrarEditarPregunta() {
-    document.getElementById("admin-users").style.display = "block"
+    document.getElementById("admin-questions").style.display = "block"
 }
 
 function mostrarAdminUsuarios() {
@@ -306,7 +306,7 @@ async function crearPregunta() {
 }
 
 async function editarPregunta() {
-    const id = document.getElementById("question-id").value;
+    const id = document.getElementById("question-id-input").value;
     const content = document.getElementById("edit-text").value;
     const answerA = document.getElementById("edit-answer-a").value;
     const answerB = document.getElementById("edit-answer-b").value;
@@ -382,21 +382,57 @@ async function borrarUsuario() {
     }
 }
 
-async function borrarPartida() {
-    const id = document.getElementById("game-id-input").value.trim();
+async function cargarDatosPartida() {
+    try {
+        const gameIdInput = document.getElementById('game-id-input').value.trim();
 
-    if (!username) {
-        alert("Por favor ingresa un id de partida");
+        if (!gameIdInput || isNaN(gameIdInput)) {
+            alert('Por favor ingresa un ID válido (número)');
+            return;
+        }
+
+        const response = await fetch(`http://localhost:4000/getGame?id=${gameIdInput}`);
+        const result = await response.json();
+
+        if (result.response && result.response.id) {
+            const partida = result.response;
+
+            // Mostrar los datos en los spans (no en inputs)
+            document.getElementById('display-game-id').textContent = partida.id;
+            document.getElementById('display-player-id').textContent = partida.idUser;
+            document.getElementById('display-game-score').textContent = partida.score;
+            document.getElementById('display-game-win').textContent = partida.win ? 'Sí' : 'No';
+
+            // Mostrar la sección de información
+            document.getElementById('game-info').style.display = 'block';
+        } else {
+            alert(result.message || "No se encontró la partida con ese ID");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Error al comunicarse con el servidor. Ver consola para detalles.");
+    }
+}
+
+async function borrarPartida() {
+    const idInput = document.getElementById("game-id-input");
+    const id = idInput.value.trim();
+
+    // Validación básica
+    if (!id) {
+        alert("Por favor ingresa un ID de partida");
+        idInput.focus();
         return;
     }
 
     try {
-        const response = await fetch("http://localhost:4000/deleteGame", {
+        // Petición DELETE con el ID en el body como TÚ lo tienes configurado
+        const response = await fetch("http://localhost:4000/deleteGames", {
             method: "DELETE",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify({ id: id })
+            body: JSON.stringify({ id: id }) // Envía exactamente como espera tu backend
         });
 
         const result = await response.json();
@@ -406,13 +442,16 @@ async function borrarPartida() {
         }
 
         alert(result.message || "Partida borrada correctamente");
-
+        
         // Limpiar el campo después de borrar
-        document.getElementById("username-to-delete").value = "";
+        idInput.value = "";
+        const gameInfoSection = document.getElementById("game-info");
+        if (gameInfoSection) {
+            gameInfoSection.style.display = "none";
+        }
 
     } catch (error) {
-        console.error("Error al borrar usuario:", error);
+        console.error("Error al borrar partida:", error);
         alert(`Error: ${error.message}`);
     }
 }
-

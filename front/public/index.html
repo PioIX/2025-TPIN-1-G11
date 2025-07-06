@@ -156,6 +156,7 @@
             <section id="select-game">
                 <label for="game-id-input">Introduzca el id de una partida existente</label>
                 <input id="game-id-input" type="number">
+                <button type="button" onclick="cargarDatosPartida()">Cargar partida</button>
             </section>
             <section id="game-info" style="display: none">
                 <p>ID: <br><span id="display-game-id"></span></p>
@@ -166,13 +167,8 @@
             <section id="game-buttons">
                 <button type="button" onclick="borrarPartida()">Borrar partida</button>
             </section>
-            <!-- En tu archivo index.html -->
-            <section id="select-game">
-                <label for="game-id-input">Introduzca el id de una partida existente</label>
-                <input id="game-id-input" type="number"> <!-- Cambiado a type="number" para mejor validación -->
-                <button type="button" onclick="cargarDatosPartida()">Cargar partida</button>
-            </section>
         </div>
+    </div>
     </div>
     </div>
     </div>
