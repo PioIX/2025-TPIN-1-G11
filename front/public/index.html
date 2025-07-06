@@ -17,30 +17,31 @@
             Tu navegador no soporta el video.
         </video>
     </div>
-    <div id = "login-container">
+    <div id="login-container">
         <div>
-            <img src = "images/logo.png" id = "logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'" alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
+            <img src="images/logo.png" id="logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'"
+                alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
         </div>
         <div id="loginForm">
-            <div id = "logIn">
+            <div id="logIn">
                 <legend>¡Bienvenido futuro dictador! Inicie sesión</legend>
-                <div class = "logInInput">
+                <div class="logInInput">
                     <label for="username">Nombre de Usuario</label>
                     <input type="username" id="username" placeholder="Nombre de ususario">
                 </div>
-                <div class = "logInInput">
+                <div class="logInInput">
                     <label for="password">Contraseña</label>
                     <input type="password" id="password" placeholder="********">
                 </div>
-                <div class = "buttonContainer">
-                    <button onclick="User()" data-bs-toggle="tooltip"
-                        data-bs-placement="top" title="Login">Iniciar sesión</button>
+                <div class="buttonContainer">
+                    <button onclick="User()" data-bs-toggle="tooltip" data-bs-placement="top" title="Login">Iniciar
+                        sesión</button>
                 </div>
             </div>
 
-            <div id = "signUp">
+            <div id="signUp">
                 <legend>¿Nuevo aspirante a golpista? ¡Registrate acá!</legend>
-                <div class = "buttonContainer">
+                <div class="buttonContainer">
                     <button type="button" onclick="signUpForm()">Registrate</button>
                 </div>
             </div>
@@ -50,13 +51,14 @@
         <header>
             <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
         </header>
-        <div id = "admin-ui-body">
-            <div>
-                <img src = "images/logo.png" id = "logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'" alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
-            </div>
-            <div id = "administrate">
+        <div>
+            <img src="images/logo.png" id="logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'"
+                alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
+        </div>
+        <div id="admin-ui-body">
+            <div id="administrate">
                 <h3>¿Qué desea hacer?</h3>
-                <div id = "admin-buttons">
+                <div id="admin-buttons">
                     <button onclick="mostrarEditarPregunta()">Administrar preguntas</button>
                     <button onclick="mostrarAdminUsuarios()">Administrar usuarios</button>
                     <button onclick="mostrarAdminPartidas()">Administrar partidas</button>
@@ -65,99 +67,114 @@
             </div>
         </div>
     </div>
-    <div id = "admin-questions" style="display: none">
+    <div id="admin-questions" style="display: none">
         <h1>Administre preguntas</h1>
-        <div id = "question-manager">
+        <div id="question-manager">
             <h2>Edite o elimine preguntas</h2>
-            <section id = "select-question">
-                <label for = "question-id">Introduzca el id de una partida existente</label>
-                <input id = "question-id">
+            <section id="select-question">
+                <input id="question-id-input" placeholder="Ingrese ID de pregunta">
+                <button type="button" onclick="cargarDatosPregunta()">Cargar pregunta</button>
             </section>
-            <form id = "question-info" >
-                <p>Enunciado: <br><span id = "question-text"></span></p>
-                <input id = "edit-text" placeholder = "Cambiar enunciado">
-                <p>Respuesta A: <br><span id = "question-a"></span></p>
-                <input id = "edit-answer-a" placeholder = "Cambiar respuesta A">
-                <p>Respuesta B: <br><span id = "question-b"></span></p>
-                <input id = "edit-answer-b" placeholder = "Cambiar respuesta B">
-                <p>Respuesta C: <br><span id = "question-c"></span></p>
-                <input id = "edit-answer-c" placeholder = "Cambiar respuesta C">
-                <p>Respuesta D: <br><span id = "question-d"></span></p>
-                <input id = "edit-answer-d" placeholder = "Cambiar respuesta D">
-                <p>Respuesta correcta: <br><span id = "correct-answer"></span></p>
-                <input id = "edit-correct-answer" placeholder = "Cambiar respuesta correcta (A, B, C o D)">
+            <form id="question-info">
+                <p>ID: <span id="display-question-id"></span></p> <!-- Este queda como referencia -->
+
+                <p>Enunciado:</p>
+                <input type="text" id="edit-text" class="form-control">
+
+                <p>Respuesta A:</p>
+                <input type="text" id="edit-answer-a" class="form-control">
+
+                <p>Respuesta B:</p>
+                <input type="text" id="edit-answer-b" class="form-control">
+
+                <p>Respuesta C:</p>
+                <input type="text" id="edit-answer-c" class="form-control">
+
+                <p>Respuesta D:</p>
+                <input type="text" id="edit-answer-d" class="form-control">
+
+                <p>Respuesta correcta:</p>
+                <input type="text" id="edit-correct-answer" class="form-control" placeholder="A, B, C o D">
             </form>
-            <section id = "question-buttons">
+            <section id="question-buttons">
                 <button onclick="borrarPregunta()">Borrar pregunta</button>
                 <button onclick="editarPregunta()">Editar pregunta</button>
             </section>
         </div>
-        <form id = "new-question" style="display: none">
+        <form id="new-question" style="display: none">
             <h2>Cree una nueva pregunta</h2>
-            <label for = "new-question-text">Enunciado</label>
-            <input id = "new-question-text">
-            <label for = "new-question-a">Respuesta A</label>
-            <input id = "new-question-a">
-            <label for = "new-question-b">Respuesta B</label>
-            <input id = "new-question-b">
-            <label for = "new-question-c">Respuesta C</label>
-            <input id = "new-question-c">
-            <label for = "new-question-d">Respuesta D</label>
-            <input id = "new-question-d">
-            <label for = "new-correct-answer">Respuesta correcta (A, B, C o D)</label>
-            <input id = "new-correct-answer">
-            <label for = "new-emoji-clue">Pista de emojis</label>
-            <input id = "new-emoji-clue">
-            <label for = "new-text-clue">Pista de texto</label>
-            <input id = "new-text-clue">
-            <label for = "new-fifty-clue">Pista 50/50</label>
-            <input id = "new-fifty-clue">
-            <label for = "new-question-length">¿La pregunta es larga? (true/false)</label>
-            <input id = "new-question-length">
-            <label for = "new-question-image">URL de la imagen (si hay)</label>
-            <input id = "new-question-image">
-            <label for = "new-question-image">URL de la imagen (si hay)</label>
-            <input id = "new-question-image">
+            <label for="new-question-text">Enunciado</label>
+            <input id="new-question-text">
+            <label for="new-question-a">Respuesta A</label>
+            <input id="new-question-a">
+            <label for="new-question-b">Respuesta B</label>
+            <input id="new-question-b">
+            <label for="new-question-c">Respuesta C</label>
+            <input id="new-question-c">
+            <label for="new-question-d">Respuesta D</label>
+            <input id="new-question-d">
+            <label for="new-correct-answer">Respuesta correcta (A, B, C o D)</label>
+            <input id="new-correct-answer">
+            <label for="new-emoji-clue">Pista de emojis</label>
+            <input id="new-emoji-clue">
+            <label for="new-text-clue">Pista de texto</label>
+            <input id="new-text-clue">
+            <label for="new-fifty-clue">Pista 50/50</label>
+            <input id="new-fifty-clue">
+            <label for="new-question-length">¿La pregunta es larga? (true/false)</label>
+            <input id="new-question-length">
+            <label for="new-question-image">URL de la imagen (si hay)</label>
+            <input id="new-question-image">
+            <label for="new-question-image">URL de la imagen (si hay)</label>
+            <input id="new-question-image">
             <button type="button" onclick="crearPregunta()">Crear pregunta</button>
         </form>
     </div>
-    <div id = "admin-users" style="display: none">
+    <div id="admin-users" style="display: none">
         <h1>Administre usuarios</h1>
-        <div id = "user-manager">
+        <div id="user-manager">
             <h2>Elimine usuarios</h2>
-            <section id = "select-user">
-                <label for = "user-id">Introduzca el id de un usuario existente</label>
-                <input id = "user-id">
+            <section id="select-user">
+                <label for="username-to-delete">Introduzca el nombre de usuario a eliminar</label>
+                <input id="username-to-delete">
             </section>
-            <section id = "user-info" style="display: none">
-                <p>Nombre: <br><span id = "user-name"></span></p>
-                <p>Contraseña: <br><span id = "user-password"></span></p>
-                <p>ID: <br><span id = "user-id"></span></p>
-                <p>¿Es administrador: <br><span id = "user-admin-bool"></span></p>
+            <section id="user-info" style="display: none">
+                <p>Nombre: <br><span id="user-name"></span></p>
+                <p>Contraseña: <br><span id="user-password"></span></p>
+                <p>ID: <br><span id="user-id"></span></p>
+                <p>¿Es administrador: <br><span id="user-admin-bool"></span></p>
             </section>
-            <section id = "user-buttons">
+            <section id="user-buttons">
                 <button type="button" onclick="borrarUsuario()">Borrar usuario</button>
             </section>
         </div>
     </div>
-    <div id = "admin-games" style="display: none">
+    <div id="admin-games" style="display: none">
         <h1>Administre partidas</h1>
-        <div id = "game-manager">
+        <div id="game-manager">
             <h2>Elimine partidas</h2>
-            <section id = "select-game">
-                <label for = "game-id">Introduzca el id de una partida existente</label>
-                <input id = "game-id">
+            <section id="select-game">
+                <label for="game-id-input">Introduzca el id de una partida existente</label>
+                <input id="game-id-input" type="number">
             </section>
-            <section id = "game-info" style="display: none">
-                <p>ID: <br><span id = "game-id"></span></p>
-                <p>ID del jugador: <br><span id = "player-id"></span></p>
-                <p>Puntos: <br><span id = "game-score"></span></p>
-                <p>¿Victoria?: <br><span id = "game-win-bool"></span></p>
+            <section id="game-info" style="display: none">
+                <p>ID: <br><span id="display-game-id"></span></p>
+                <p>ID del jugador: <br><span id="display-player-id"></span></p>
+                <p>Puntos: <br><span id="display-game-score"></span></p>
+                <p>¿Victoria?: <br><span id="display-game-win"></span></p>
             </section>
-            <section id = "game-buttons">
+            <section id="game-buttons">
                 <button type="button" onclick="borrarPartida()">Borrar partida</button>
             </section>
+            <!-- En tu archivo index.html -->
+            <section id="select-game">
+                <label for="game-id-input">Introduzca el id de una partida existente</label>
+                <input id="game-id-input" type="number"> <!-- Cambiado a type="number" para mejor validación -->
+                <button type="button" onclick="cargarDatosPartida()">Cargar partida</button>
+            </section>
         </div>
+    </div>
+    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"

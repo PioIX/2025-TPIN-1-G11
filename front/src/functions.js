@@ -1,4 +1,4 @@
-function signUpForm(){
+function signUpForm() {
     document.getElementById("signUp").innerHTML = ``;
     document.getElementById("signUp").id = "";
     document.getElementById("logIn").innerHTML = `
@@ -17,7 +17,7 @@ function signUpForm(){
     </div>`;
 }
 
-function User(){
+function User() {
     const user = {
         name: ui.getUsername(),
         password: ui.getPassword()
@@ -39,18 +39,27 @@ async function userVerify(user) {
         if (result.message === "ok") {
             document.getElementById("loginForm").style.display = "none";
             document.getElementById("notepad").style.display = "block";
+            document.getElementById("logo").style.display = "none"
             ui.setUser(result.username);
             idLoggeado = result.userId;
             return result;
+        } if (result.message === "admin") {
+            document.getElementById("logo").style.display = "none"
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("admin-ui").style.display = "block";
+            ui.setUser(result.username);
+            idLoggeado = result.userId;
+            return result;
+
         } else {
             alert(result.message || "Error al iniciar sesión");
         }
     } catch (error) {
-        alert("Error de conexión con el servidor");
+
     }
 }
 
-function newUser(){
+function newUser() {
     const usuario = {
         name: ui.getNewUsername(),
         password: ui.getNewPassword()
@@ -58,7 +67,7 @@ function newUser(){
     registerUser(usuario);
 }
 
-async function registerUser(newUser){
+async function registerUser(newUser) {
     try {
         const response = await fetch('http://localhost:4000/regUser', {
             method: "POST",
@@ -67,6 +76,7 @@ async function registerUser(newUser){
             },
             body: JSON.stringify(newUser)
         });
+
         let result = await response.json()
         console.log(result.message)
         if (result.message === "ok") {
@@ -74,67 +84,172 @@ async function registerUser(newUser){
             document.getElementById("notepad").style.display = "block";
             ui.setUser(result.username);
             idLoggeado = result.userId;
+            alert("bienvenido dios dictador");
             return result;
         } else {
             alert(result.message || "Error al iniciar sesión");
         }
     } catch (error) {
-        
+
     }
 }
 
-async function getQuestion() {
-   document.getElementById("question-id").addEventListener("change", async () => {
-    const id = document.getElementById("question-id").value;
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+async function cargarDatosPregunta() {
     try {
-        const res = await fetch(`http://localhost:4000/getQuestion?id=${id}`);
-        const data = await res.json();
+        // 1. Obtener el ID de la pregunta
+        const questionIdInput = document.getElementById('question-id-input').value.trim();
 
-        if (data.response) {
-            const q = data.response;
-            document.getElementById("question-text").textContent = q.content;
-            document.getElementById("question-a").textContent = q.answerA;
-            document.getElementById("question-b").textContent = q.answerB;
-            document.getElementById("question-c").textContent = q.answerC;
-            document.getElementById("question-d").textContent = q.answerD;
-            document.getElementById("correct-answer").textContent = q.correctAnswer;
-        } else {
-            alert("No se encontró la pregunta.");
+        if (!questionIdInput || isNaN(questionIdInput)) {
+            alert('Por favor ingresa un ID válido (número)');
+            return;
         }
-    } catch (err) {
-        alert("Error al traer la pregunta.");
-        console.error(err);
-    }
-});
 
+        // 2. Hacer la petición al servidor
+        const response = await fetch(`http://localhost:4000/getQuestion?id=${questionIdInput}`);
+        const result = await response.json();
+
+        console.log("Respuesta del servidor:", result);
+
+        // 3. Mostrar los datos directamente en los inputs
+        if (result.response && result.response.id) {
+            const pregunta = result.response;
+
+            // Rellenar todos los campos del formulario con inputs
+            document.getElementById('edit-text').value = pregunta.content || pregunta.text || '';
+            document.getElementById('edit-answer-a').value = pregunta.answerA || '';
+            document.getElementById('edit-answer-b').value = pregunta.answerB || '';
+            document.getElementById('edit-answer-c').value = pregunta.answerC || '';
+            document.getElementById('edit-answer-d').value = pregunta.answerD || '';
+            document.getElementById('edit-correct-answer').value = pregunta.correctAnswer || '';
+
+            // Mostrar la sección del formulario
+            document.getElementById('question-info').style.display = 'block';
+
+            // Opcional: Mostrar el ID como referencia (pero no editable)
+            document.getElementById('display-question-id').textContent = pregunta.id;
+        } else {
+            alert(result.message || "No se encontró la pregunta con ese ID");
+        }
+    } catch (error) {
+        console.error("Error completo:", error);
+        alert("Error al comunicarse con el servidor. Ver consola para detalles.");
+    }
+}
+
+async function editarPregunta() {
+    try {
+        // 1. Obtener el ID de la pregunta
+        const questionId = document.getElementById('question-id-input').value.trim();
+
+        if (!questionId) {
+            throw new Error("Primero debes cargar una pregunta para editar");
+        }
+
+        // 2. Validar campos
+        const camposRequeridos = [
+            'edit-text', 'edit-answer-a', 'edit-answer-b',
+            'edit-answer-c', 'edit-answer-d', 'edit-correct-answer'
+        ];
+
+        for (const campoId of camposRequeridos) {
+            const campo = document.getElementById(campoId);
+            if (!campo.value.trim()) {
+                campo.focus();
+                throw new Error(`El campo ${campoId.replace('edit-', '')} no puede estar vacío`);
+            }
+        }
+
+        // 3. Preparar datos para enviar
+        const preguntaEditada = {
+            id: questionId,
+            content: document.getElementById('edit-text').value,
+            answerA: document.getElementById('edit-answer-a').value,
+            answerB: document.getElementById('edit-answer-b').value,
+            answerC: document.getElementById('edit-answer-c').value,
+            answerD: document.getElementById('edit-answer-d').value,
+            correctAnswer: document.getElementById('edit-correct-answer').value.toUpperCase(),
+            emojiClue: "", // Puedes agregar campos para estos en el HTML si son necesarios
+            textClue: "",
+            fiftyClue: "",
+            largeQuestion: 0,
+            image: null,
+            text: null
+        };
+
+        // 4. Validar respuesta correcta
+        if (!['A', 'B', 'C', 'D'].includes(preguntaEditada.correctAnswer)) {
+            throw new Error("La respuesta correcta debe ser A, B, C o D");
+        }
+
+        // 5. Enviar al servidor
+        const response = await fetch('http://localhost:4000/editQuestion', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(preguntaEditada)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Error al actualizar la pregunta");
+        }
+
+        alert(result.message || "Pregunta actualizada correctamente");
+
+    } catch (error) {
+        console.error("Error al editar pregunta:", error);
+        alert(`Error: ${error.message}`);
+    }
 }
 
 async function borrarPregunta() {
-    const id = document.getElementById("question-id").value;
-
-    if (!id) return alert("Ingresá un ID válido.");
-
     try {
-        const res = await fetch("http://localhost:4000/deleteQuestion", {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
+        // Obtener el ID de la pregunta del input correcto
+        const id = document.getElementById('question-id-input').value.trim();
+
+        if (!id) {
+            throw new Error("Ingresá un ID válido");
+        }
+
+        // Enviar solicitud DELETE al servidor
+        const response = await fetch('http://localhost:4000/deleteQuestion', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({ id })
         });
 
-        const data = await res.json();
-        alert(data.message);
-    } catch (err) {
-        alert("Error al borrar la pregunta.");
-        console.error(err);
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Error al borrar la pregunta");
+        }
+
+        alert(result.message || "Pregunta borrada correctamente");
+
+        // Limpiar el formulario después de borrar
+        document.getElementById('question-id-input').value = '';
+        document.getElementById('question-info').style.display = 'none';
+        document.getElementById('edit-text').value = '';
+        document.getElementById('edit-answer-a').value = '';
+        document.getElementById('edit-answer-b').value = '';
+        document.getElementById('edit-answer-c').value = '';
+        document.getElementById('edit-answer-d').value = '';
+        document.getElementById('edit-correct-answer').value = '';
+        document.getElementById('display-question-id').textContent = '';
+
+    } catch (error) {
+        console.error("Error al borrar pregunta:", error);
+        alert(`Error: ${error.message}`);
     }
 }
 
 function mostrarEditarPregunta() {
-    const seccion1 = document.getElementById("admin-questions");
-    const seccion2 = document.getElementById("new-question");
-    seccion1.style.display = "";
-    seccion2.style.display = "";
+    document.getElementById("admin-users").style.display = "block"
 }
 
 function mostrarAdminUsuarios() {
@@ -207,10 +322,10 @@ async function editarPregunta() {
         answerC,
         answerD,
         correctAnswer,
-        emojiClue: "",        
+        emojiClue: "",
         textClue: "",
         fiftyClue: "",
-        largeQuestion: 0,     
+        largeQuestion: 0,
         image: null,
         text: null
     };
@@ -233,41 +348,71 @@ async function editarPregunta() {
 }
 
 async function borrarUsuario() {
-    const username = document.getElementById("user-id").value;
+    const username = document.getElementById("username-to-delete").value.trim();
 
-    if (!username) return alert("Ingresá el nombre de usuario.");
+    if (!username) {
+        alert("Por favor ingresa un nombre de usuario");
+        return;
+    }
 
     try {
-        const res = await fetch("http://localhost:4000/deleteUser", {
+        const response = await fetch("http://localhost:4000/deleteUser", {
             method: "DELETE",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem('token')}` // Si usas autenticación
+            },
             body: JSON.stringify({ name: username })
         });
 
-        const data = await res.json();
-        alert(data.message);
-    } catch (err) {
-        console.error(err);
-        alert("Error al borrar el usuario.");
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Error al borrar el usuario");
+        }
+
+        alert(result.message || "Usuario borrado correctamente");
+
+        // Limpiar el campo después de borrar
+        document.getElementById("username-to-delete").value = "";
+
+    } catch (error) {
+        console.error("Error al borrar usuario:", error);
+        alert(`Error: ${error.message}`);
     }
 }
 
 async function borrarPartida() {
-    const id = document.getElementById("game-id").value;
+    const id = document.getElementById("game-id-input").value.trim();
 
-    if (!id || isNaN(id)) return alert("Ingresá un ID válido.");
+    if (!username) {
+        alert("Por favor ingresa un id de partida");
+        return;
+    }
 
     try {
-        const res = await fetch("http://localhost:4000/deleteGames", {
+        const response = await fetch("http://localhost:4000/deleteGame", {
             method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id: parseInt(id) })
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: id })
         });
 
-        const data = await res.json();
-        alert(data.message || "Partida eliminada.");
-    } catch (err) {
-        console.error(err);
-        alert("Error al eliminar la partida.");
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Error al borrar la partida");
+        }
+
+        alert(result.message || "Partida borrada correctamente");
+
+        // Limpiar el campo después de borrar
+        document.getElementById("username-to-delete").value = "";
+
+    } catch (error) {
+        console.error("Error al borrar usuario:", error);
+        alert(`Error: ${error.message}`);
     }
 }
+

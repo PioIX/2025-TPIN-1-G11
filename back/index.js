@@ -31,19 +31,16 @@ app.post("/verifyUser", async (req, res) => {
         let check = await realizarQuery(
             `Select * From Users where name = "${req.body.name}" and password = "${req.body.password}" `
         )
-        if (check.length > 0) {
-            res.send({
-                message: "ok",
-                username: req.body.name
-            })
-
-        } else if (req.body.adminUser == 1) {
+        if ((check.length > 0)&&(check.adminUser===1)){
             res.send({
                 message: "admin",
-                username: req.body.name
-            })
-
-        } else {
+                username: req.body.name,
+                adminUser:1
+            })}if(check.length > 0){
+                res.send({
+                message: "admin",
+                username: req.body.name,})
+            }else {
             res.send({
                 message: "Verifica si ambos campos fueron rellenados y si el usuario existe y coincide con la contraseña."
             })
@@ -100,24 +97,39 @@ app.delete("/deleteUser", async (req, res) => {
 
 app.delete("/deleteQuestion", async (req, res) => {
     try {
-        let check = await realizarQuery(
-            `SELECT * FROM Questions WHERE id = "${req.body.id}"`
-        )
-        console.log(check.length)
-        if (check.length > 0) {
-            await realizarQuery(
-                `DELETE FROM Questions WHERE id = "${req.body.id}"`
-            )
-            res.send({
-                message: "Pregunta borrada",
-            })
-        } else {
-            res.send({ message: "Verifica haber puesto bien el id y si la pregunta existe." })
+        // Validar que se recibió un ID
+        if (!req.body.id) {
+            return res.status(400).send({ message: "Se requiere el ID de la pregunta" });
         }
+
+        // Verificar si la pregunta existe
+        const check = await realizarQuery(
+            `SELECT * FROM Questions WHERE id = "${req.body.id}"`
+        );
+
+        if (check.length === 0) {
+            return res.status(404).send({ 
+                message: "No se encontró ninguna pregunta con ese ID" 
+            });
+        }
+
+        await realizarQuery(
+            `DELETE FROM Questions WHERE id = "${req.body.id}"`
+        );
+
+        res.send({
+            message: "Pregunta borrada exitosamente",
+            deletedId: req.body.id
+        });
+        
     } catch (error) {
-        res.send(error)
+        console.error("Error:", error);
+        res.status(500).send({ 
+            message: "Error interno al borrar la pregunta",
+            error: error.message 
+        });
     }
-})
+});
 
 app.delete("/deleteGames", async (req, res) => {
     try {
@@ -200,63 +212,36 @@ app.post("/addQuestion", async (req, res) => {
 
 app.put("/editQuestion", async (req, res) => {
     try {
-        let check = await realizarQuery(
+        const check = await realizarQuery(
             `SELECT * FROM Questions WHERE id = "${req.body.id}"`
         );
 
-        console.log(check.length);
-
-        if (check.length > 0) {
-            if (req.body.largeQuestion == 0) {
-                const sql = `UPDATE Questions 
-             SET content = "${req.body.content}",
-                 answerA = "${req.body.answerA}",
-                 answerB = "${req.body.answerB}",
-                 answerC = "${req.body.answerC}",
-                 answerD = "${req.body.answerD}",
-                 correctAnswer = "${req.body.correctAnswer}",
-                 emojiClue = "${req.body.emojiClue}",
-                 textClue = "${req.body.textClue}",
-                 fiftyClue = "${req.body.fiftyClue}",
-                 largeQuestion = "${req.body.largeQuestion}",
-                 image = null,
-                 text = null
-             WHERE id = "${req.body.id}"`;
-
-                await realizarQuery(sql);
-            } else {
-                const sql = `UPDATE Questions 
-             SET content = "${req.body.content}",
-                 answerA = "${req.body.answerA}",
-                 answerB = "${req.body.answerB}",
-                 answerC = "${req.body.answerC}",
-                 answerD = "${req.body.answerD}",
-                 correctAnswer = "${req.body.correctAnswer}",
-                 emojiClue = "${req.body.emojiClue}",
-                 textClue = "${req.body.textClue}",
-                 fiftyClue = "${req.body.fiftyClue}",
-                 largeQuestion = "${req.body.largeQuestion}",
-                 image = "${req.body.image}",
-                 text = "${req.body.text}"
-             WHERE id = "${req.body.id}"`;
-
-                await realizarQuery(sql);
-            }
-            res.send({
-                message: "Pregunta editada correctamente",
-                idQuestion: req.body.id
-            });
-        } else {
-            res.status(400).send({
-                message: "La pregunta con este ID ya existe"
-            });
+        if (check.length === 0) {
+            return res.status(404).send({ message: "Pregunta no encontrada" });
         }
+
+        // Construir la consulta SQL correctamente
+        let sql = `UPDATE Questions SET 
+            content = "${req.body.content}", 
+            answerA = "${req.body.answerA}", 
+            answerB = "${req.body.answerB}", 
+            answerC = "${req.body.answerC}", 
+            answerD = "${req.body.answerD}", 
+            correctAnswer = "${req.body.correctAnswer}",
+            emojiClue = "${req.body.emojiClue || ''}",
+            textClue = "${req.body.textClue || ''}",
+            fiftyClue = "${req.body.fiftyClue || ''}",
+            largeQuestion = ${req.body.largeQuestion || 0},
+            image = ${req.body.image ? `"${req.body.image}"` : 'NULL'},
+            text = ${req.body.text ? `"${req.body.text}"` : 'NULL'}
+            WHERE id = "${req.body.id}"`;
+
+        await realizarQuery(sql);
+
+        res.send({ message: "Pregunta editada correctamente", idQuestion: req.body.id });
     } catch (error) {
         console.error("Error:", error);
-        res.status(500).send({
-            message: "Error al insertar la pregunta",
-            error: error.message
-        });
+        res.status(500).send({ message: "Error al editar la pregunta", error: error.message });
     }
 });
 
