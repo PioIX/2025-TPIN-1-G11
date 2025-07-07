@@ -79,7 +79,7 @@
                 <p>ID: <span id="display-question-id"></span></p> <!-- Este queda como referencia -->
 
                 <p>Enunciado:</p>
-                <input type="text" id="edit-text" class="form-control">
+                <input type="text" id="edit-content" class="form-control">
 
                 <p>Respuesta A:</p>
                 <input type="text" id="edit-answer-a" class="form-control">
@@ -95,6 +95,15 @@
 
                 <p>Respuesta correcta:</p>
                 <input type="text" id="edit-correct-answer" class="form-control" placeholder="A, B, C o D">
+
+                <p>Pista emoji:</p>
+                <input type="text" id="edit-emoji-clue" class="form-control">
+
+                <p>Pista texto:</p>
+                <input type="text" id="edit-text-clue" class="form-control">
+
+                <p>Pista 50/50:</p>
+                <input type="text" id="edit-fifty-clue" class="form-control" placeholder="AB, AD, CD...">
             </form>
             <section id="question-buttons">
                 <button onclick="borrarPregunta()">Borrar pregunta</button>
