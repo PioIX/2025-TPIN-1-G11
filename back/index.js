@@ -38,7 +38,7 @@ app.post("/verifyUser", async (req, res) => {
                 adminUser:1
             })}if(check.length > 0){
                 res.send({
-                message: "admin",
+                message: "ok",
                 username: req.body.name,})
             }else {
             res.send({
@@ -290,7 +290,7 @@ app.get('/getGame', async function (req, res) {
             res.send({ message: "Verifica haber puesto bien el id y si la pregunta existe." });
         }
         let response = {
-            message: "Pregunta traída correctamente.",
+            message: "Jugada traída correctamente.",
             id: respuesta.id,
             idUser: respuesta.idUser,
             score: respuesta.score,
@@ -304,3 +304,16 @@ app.get('/getGame', async function (req, res) {
         res.send({ mensaje: "Tuviste un error", error: error.message });
     }
 })
+
+app.get('/getAllGames', async function (req, res) {
+    try {
+        let [respuesta] = await realizarQuery(`SELECT * FROM Games`);
+        
+        res.send({
+            message: "partidas",
+            data: respuesta 
+        });
+    } catch (error) {
+        res.send({ mensaje: "Tuviste un error", error: error.message });
+    }
+});

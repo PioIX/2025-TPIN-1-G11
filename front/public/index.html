@@ -171,7 +171,7 @@
             </section>
         </div>
     </div>
-    <div id = "main-menu" style="display: none">
+    <div id = "main-menu">
         <header>
             <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
         </header>
@@ -183,9 +183,9 @@
             <div id = "main-menu-options">
                 <h3>¿Qué desea hacer?</h3>
                 <div id = "main-menu-buttons">
-                    <button onclick="">Jugar</button>
-                    <button onclick="">Ver ranking</button>
-                    <button onclick="">Cerrar sesión</button>
+                    <button onclick="cambiarAJuego()">Jugar</button>
+                    <button onclick="abrirRanking()">Ver ranking</button>
+                    <button onclick="cerrarSesion()">Cerrar sesión</button>
                 </div>
             </div>
         </div>
@@ -204,16 +204,10 @@
             </div>
             <div class = "horizontal-line"></div>
             <div id = "ranking-data">
-<!-- Acá van los distintos jugadores con sus puntajes -->
-<!-- Ejemplo del html que se debería insertar mediante javascript para crear un nuevlo usuario (lógicamente lo que está entre paréntesis no va): -->
-            <!--<div class = "horizontal-line"></div>
-                    <div class = "ranking-user">
-                        <p>#1</p> (posición)
-                        <div class = "vertical-line"></div> (separador)
-                        <p>Messi</p> (nombre)
-                        <div class = "vertical-line"></div> (separador)
-                        <p>100000 pts.</p> (puntaje)
-                </div> -->
+                <ul>
+                    <li class="score"></li>
+                    <li class="win"></li>
+                </ul>
             </div>
         </div>
     </div>
