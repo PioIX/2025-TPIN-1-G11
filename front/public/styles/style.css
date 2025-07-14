@@ -180,11 +180,12 @@ a:hover {
     padding-right: 20px;
 }
 
-#loggedUsername, #ranking h2 {
-    font-size: 30px;
+#loggedUsername, #ranking h2, #game-screen h2 {
+    font-size: clamp(20px, 2vw, 35px);
     font-weight: 600;
     text-shadow: 5px 3px 24px rgba(0,0,0,1);
     font-style: oblique;
+    color: white;
 }
 
 #admin-ui-body, #main-menu-body {
@@ -380,7 +381,67 @@ a:hover {
   background-color: rgba(255, 255, 255, 1);
 }
 
+#game-screen nav {
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+}
 
+#game-screen nav button {
+    background-color: darkblue;
+    border-width: 2px;
+    border-style: solid;
+    border-color: white;
+    color: white;
+    font-size: clamp(10px, 2vw, 18px);
+}
+
+#game-screen header {
+    padding-bottom: 10px;
+}
+
+#game-screen main {
+    padding: 50px;
+    padding-bottom: 80px;
+    padding-top: 35px;
+}
+
+#question-container {
+    padding: 20px;
+    background-color: darkblue;
+    border-color: white;
+    border-style: solid;
+    border-width: 3px;
+    border-radius: 30px;
+    color: white;
+}
+
+#answers-container {
+    padding-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.answers-row {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.answer {
+    background-image: url('../images/answers/normal/respuesta-a.png');
+    background-color: transparent;
+    color: white;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 0px;
+    width: 450px;
+}
 
 @media (max-width: 400px) {
     #logo {
