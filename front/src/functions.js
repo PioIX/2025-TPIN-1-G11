@@ -37,16 +37,12 @@ async function userVerify(user) {
         const result = await response.json();
         console.log(result.message)
         if (result.message === "ok") {
-            document.getElementById("loginForm").style.display = "none";
-            document.getElementById("notepad").style.display = "block";
-            document.getElementById("logo").style.display = "none"
+            ui.userScreen();
             ui.setUser(result.username);
             idLoggeado = result.userId;
             return result;
         } if (result.message === "admin") {
-            document.getElementById("logo").style.display = "none"
-            document.getElementById("loginForm").style.display = "none";
-            document.getElementById("admin-ui").style.display = "block";
+            ui.adminScreen();
             ui.setUser(result.username);
             idLoggeado = result.userId;
             return result;
@@ -442,7 +438,7 @@ async function borrarPartida() {
         }
 
         alert(result.message || "Partida borrada correctamente");
-        
+
         // Limpiar el campo después de borrar
         idInput.value = "";
         const gameInfoSection = document.getElementById("game-info");
@@ -454,4 +450,37 @@ async function borrarPartida() {
         console.error("Error al borrar partida:", error);
         alert(`Error: ${error.message}`);
     }
+}
+
+async function abrirRanking() {
+    ui.rankingScreen();
+
+    const response = await fetch('http://localhost:4000/getAllGames', {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+
+    const result = await response.json();
+    const games = result.data;
+    console.log(games);
+
+    const contenedor = document.getElementById("ranking-data");
+    contenedor.innerHTML = "";
+
+    for (let i = 0; i < games.length; i++) {
+        contenedor.innerHTML += `
+            <ul>
+                <li class="score">Score: ${games[i].score}</li>
+                <li class="win">Win: ${games[i].win ? 'Sí' : 'No'}</li>
+            </ul>
+        `;
+    }
+}
+
+
+
+function cerrarSesion() {
+
 }

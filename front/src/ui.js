@@ -38,8 +38,36 @@ class UserInterface {
   getNewPassword() {
     return document.getElementById("newPassword").value;
   }
-}
 
+  userScreen(){
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("logo").style.display = "none";
+    document.getElementById("admin-ui").style.display = "none";
+    document.getElementById("main-menu").style.display = "block";
+  }
+
+  adminScreen(){
+    document.getElementById("logo").style.display = "none";
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("admin-ui").style.display = "block";
+    document.getElementById("main-menu").style.display = "none";
+  }
+
+  loginScreen(){
+    document.getElementById("logo").style.display = "block";
+    document.getElementById("loginForm").style.display = "block";
+    document.getElementById("admin-ui").style.display = "none";
+    document.getElementById("main-menu").style.display = "none";
+  }
+
+  rankingScreen(){
+    document.getElementById("ranking").style.display ="block";
+    document.getElementById("logo").style.display = "none";
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("admin-ui").style.display = "none";
+    document.getElementById("main-menu").style.display = "none";
+  }
+}
 /**
  * Objeto para manejar la UI en este TP, provisto por los docentes Nico Facón y Mati Marchesi.
  */

@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="./styles/style.css">
-    <title>¿quien quiere restaurar el orden conservador?</title>
+    <title>QQROC (Quién quiere restaruar el orden conservador)</title>
 </head>
 
 <body>
@@ -47,15 +47,15 @@
             </div>
         </div>
     </div>
-    <div id="admin-ui">
+    <div id="admin-ui" style="display: none">
         <header>
             <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
         </header>
-        <div>
-            <img src="images/logo.png" id="logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'"
-                alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
-        </div>
         <div id="admin-ui-body">
+            <div>
+                <img src="images/logo.png" id="logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'"
+                alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
+            </div>
             <div id="administrate">
                 <h3>¿Qué desea hacer?</h3>
                 <div id="admin-buttons">
@@ -63,6 +63,8 @@
                     <button onclick="mostrarAdminUsuarios()">Administrar usuarios</button>
                     <button onclick="mostrarAdminPartidas()">Administrar partidas</button>
                     <button onclick="">Jugar</button>
+                    <button onclick="">Ver ranking</button>
+                    <button onclick="">Cerrar sesión</button>
                 </div>
             </div>
         </div>
@@ -101,7 +103,7 @@
                 <button onclick="editarPregunta()">Editar pregunta</button>
             </section>
         </div>
-        <form id="new-question" style="display: none">
+        <form id="new-question">
             <h2>Cree una nueva pregunta</h2>
             <label for="new-question-text">Enunciado</label>
             <input id="new-question-text">
@@ -169,10 +171,46 @@
             </section>
         </div>
     </div>
+    <div id = "main-menu">
+        <header>
+            <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
+        </header>
+        <div id = "main-menu-body">
+            <div>
+                <img src="images/logo.png" id="logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'"
+                alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
+            </div>
+            <div id = "main-menu-options">
+                <h3>¿Qué desea hacer?</h3>
+                <div id = "main-menu-buttons">
+                    <button onclick="cambiarAJuego()">Jugar</button>
+                    <button onclick="abrirRanking()">Ver ranking</button>
+                    <button onclick="cerrarSesion()">Cerrar sesión</button>
+                </div>
+            </div>
+        </div>
     </div>
+    <div id = "ranking" style="display: none">
+        <header>
+            <h2>Ranking global de jugadores</h2>
+        </header>
+        <div id = "ranking-container">
+            <div id = "ranking-labels">
+                <p>Posición</p>
+                <div class = "vertical-line"></div>
+                <p>Jugador</p>
+                <div class = "vertical-line"></div>
+                <p>Mejor puntaje</p>
+            </div>
+            <div class = "horizontal-line"></div>
+            <div id = "ranking-data">
+                <ul>
+                    <li class="score"></li>
+                    <li class="win"></li>
+                </ul>
+            </div>
+        </div>
     </div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
