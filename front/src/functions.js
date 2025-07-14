@@ -1,6 +1,31 @@
+function loginForm() {
+    document.getElementById('signUp').innerHTML = `
+                <legend>¿Nuevo aspirante a golpista? ¡Registrate acá!</legend>
+                <div class="buttonContainer">
+                    <button type="button" onclick="signUpForm()">Registrate</button>
+                </div>`;
+    document.getElementById('logIn').innerHTML = `
+                    <legend>¡Bienvenido futuro dictador! Inicie sesión</legend>
+                <div class="logInInput">
+                    <label for="username">Nombre de Usuario</label>
+                    <input type="username" id="username" placeholder="Nombre de ususario">
+                </div>
+                <div class="logInInput">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" placeholder="********">
+                </div>
+                <div class="buttonContainer">
+                    <button onclick="User()" data-bs-toggle="tooltip" data-bs-placement="top" title="Login">Iniciar
+                        sesión</button>
+                </div>`;
+}
+
 function signUpForm() {
-    document.getElementById('signUp').innerHTML = ``;
-    document.getElementById('signUp').id = '';
+    document.getElementById('signUp').innerHTML = `
+                <legend>¿No es tu primer golpe? ¡Inicia sesión acá!</legend>
+                <div class="buttonContainer">
+                    <button type="button" onclick="loginForm()">Iniciar sesión</button>
+                </div>`;
     document.getElementById('logIn').innerHTML = `
     <legend>¡Bienvenido futuro dictador! Registresé</legend>
     <div class = 'logInInput'>
@@ -37,6 +62,8 @@ async function userVerify(user) {
         const result = await response.json();
         console.log(result.message)
         if (result.message === 'ok') {
+            document.getElementById('login-container').style.padding = '0';
+            document.getElementById('login-container').style.gap = '0';
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('notepad').style.display = 'block';
             document.getElementById('logo').style.display = 'none'
@@ -44,6 +71,8 @@ async function userVerify(user) {
             idLoggeado = result.userId;
             return result;
         } if (result.message === 'admin') {
+            document.getElementById('login-container').style.padding = '0';
+            document.getElementById('login-container').style.gap = '0';
             document.getElementById('logo').style.display = 'none'
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('admin-ui').style.display = 'block';
@@ -184,7 +213,7 @@ async function editarPregunta() {
         // Validar respuesta correcta
         if (!['A', 'B', 'C', 'D'].includes(preguntaEditada.correctAnswer)) {
             throw new Error('La respuesta correcta debe ser A, B, C o D');
-        } else if (!['AB', 'AC', 'AD', 'BA', 'BC', 'BD', 'CA', 'CB', 'CD', 'DA', 'DB', 'DC'].includes(preguntaEditada.fiftyClue)){
+        } else if (!['AB', 'AC', 'AD', 'BA', 'BC', 'BD', 'CA', 'CB', 'CD', 'DA', 'DB', 'DC'].includes(preguntaEditada.fiftyClue)) {
             throw new Error('La respuesta correcta debe ser AB, AC, AD...');
         }
 
