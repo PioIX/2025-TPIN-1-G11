@@ -295,8 +295,13 @@ a:hover {
 }
 
 #ranking {
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-bottom: 80px;
+}
+
+#ranking img {
+    margin-bottom: 30px;
 }
 
 #ranking-container {
