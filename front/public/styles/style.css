@@ -176,11 +176,12 @@ a:hover {
     padding-right: 20px;
 }
 
-#loggedUsername, #ranking h2 {
-    font-size: 30px;
+#loggedUsername, #ranking h2, #game-screen h2 {
+    font-size: clamp(20px, 2vw, 35px);
     font-weight: 600;
     text-shadow: 5px 3px 24px rgba(0,0,0,1);
     font-style: oblique;
+    color: white;
 }
 
 #admin-ui-body, #main-menu-body {
@@ -376,7 +377,118 @@ a:hover {
   background-color: rgba(255, 255, 255, 1);
 }
 
+#game-screen nav {
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    width: 100%;
+}
 
+#clues {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.clue {
+    background-color: transparent;
+    width: 100px;
+    height: 100px;
+    background-position: center center;
+    background-size: cover;
+}
+
+#text-clue {
+    background-image: url('../images/clues/normal/text-clue.png');
+}
+
+#emoji-clue {
+    background-image: url('../images/clues/normal/emoji-clue.png');
+}
+
+#fifty-clue {
+    background-image: url('../images/clues/normal/50-50-clue.png');
+}
+
+#return-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.return-button {
+    background-color: darkblue;
+    border-width: 2px;
+    border-style: solid;
+    border-color: white;
+    color: white;
+    font-size: clamp(10px, 2vw, 18px);
+}
+
+#game-screen header {
+    padding-top: 40px;
+    padding-bottom: 10px;
+}
+
+#game-screen main {
+    padding: 10%;
+    padding-bottom: 40px;
+    padding-top: 35px;
+}
+
+#question-container {
+    padding: 20px;
+    background-color: darkblue;
+    border-color: white;
+    border-style: solid;
+    border-width: 3px;
+    border-radius: 30px;
+    color: white;
+}
+
+#answers-container {
+    padding-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.answers-row {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.answer {
+    background-color: transparent;
+    color: white;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 0px;
+    width: 38vw;
+    height: 5vw;
+    min-width: 260px;
+    min-height: calc(260px * (5 / 38));
+}
+
+#answer-a {
+        background-image: url('../images/answers/normal/respuesta-a.png');
+}
+
+#answer-b {
+        background-image: url('../images/answers/normal/respuesta-b.png');
+}
+
+#answer-c {
+        background-image: url('../images/answers/normal/respuesta-c.png');
+}
+
+#answer-d {
+        background-image: url('../images/answers/normal/respuesta-d.png');
+}
 
 @media (max-width: 400px) {
     #logo {
