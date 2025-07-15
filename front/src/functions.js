@@ -63,7 +63,6 @@ async function userVerify(user) {
         console.log(result.message)
         if (result.message === 'ok') {
             document.getElementById('login-container').style.padding = '0';
-            document.getElementById('login-container').style.gap = '0';
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('notepad').style.display = 'block';
             document.getElementById('logo').style.display = 'none'
@@ -72,7 +71,6 @@ async function userVerify(user) {
             return result;
         } if (result.message === 'admin') {
             document.getElementById('login-container').style.padding = '0';
-            document.getElementById('login-container').style.gap = '0';
             document.getElementById('logo').style.display = 'none'
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('admin-ui').style.display = 'block';
@@ -484,6 +482,7 @@ async function borrarPartida() {
             throw new Error(result.message || 'Error al borrar la partida');
         }
 
+
         alert(result.message || 'Partida borrada correctamente');
 
         // Limpiar el campo después de borrar
@@ -497,4 +496,37 @@ async function borrarPartida() {
         console.error('Error al borrar partida:', error);
         alert(`Error: ${error.message}`);
     }
+}
+
+async function abrirRanking() {
+    ui.rankingScreen();
+
+    const response = await fetch('http://localhost:4000/getAllGames', {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+
+    const result = await response.json();
+    const games = result.data;
+    console.log(games);
+
+    const contenedor = document.getElementById("ranking-data");
+    contenedor.innerHTML = "";
+
+    for (let i = 0; i < games.length; i++) {
+        contenedor.innerHTML += `
+            <ul>
+                <li class="score">Score: ${games[i].score}</li>
+                <li class="win">Win: ${games[i].win ? 'Sí' : 'No'}</li>
+            </ul>
+        `;
+    }
+}
+
+
+
+function cerrarSesion() {
+
 }
