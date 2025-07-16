@@ -113,6 +113,7 @@ async function registerUser(newUser) {
         if (result.message === 'ok') {
             document.getElementById('login-container').style.display = 'none';
             document.getElementById('main-menu-body').style.display = 'block';
+            document.getElementById('user-registered').style.display = '';
             ui.setUser(result.username);
             idLoggeado = result.userId;
             alert('bienvenido dios dictador');
@@ -623,6 +624,7 @@ async function cargarPreguntaRandom() {
 
 
 function mostrarPistaTexto() {
+    const textImage = document.getElementById("text-clue");
     if (!preguntaActual || !preguntaActual.textClue) {
         alert("No hay pista de texto disponible.");
         return;
@@ -630,10 +632,15 @@ function mostrarPistaTexto() {
 
     alert("Pista de texto: " + preguntaActual.textClue);
 
-    document.getElementById("text-clue").disabled = true;
+    textImage.style.backgroundImage = `url('../public/images/clues/cluesUsadas/text-gris.png')`;
+    textImage.style.backgroundSize = 'cover';
+    textImage.style.backgroundRepeat = 'no-repeat';
+    textImage.style.backgroundPosition = 'center';
+    textImage.disabled = true;
 }
 
 function mostrarPistaEmoji() {
+    const emojiClueButton = document.getElementById("emoji-clue");
     if (!preguntaActual || !preguntaActual.emojiClue) {
         alert("No hay pista de emojis disponible.");
         return;
@@ -641,11 +648,16 @@ function mostrarPistaEmoji() {
 
     alert("Pista de emojis: " + preguntaActual.emojiClue);
 
-    document.getElementById("emoji-clue").disabled = true;
+    emojiClueButton.style.backgroundImage = `url('../public/images/clues/cluesUsadas/emoji-gris.png')`;
+    emojiClueButton.style.backgroundSize = 'cover';
+    emojiClueButton.style.backgroundRepeat = 'no-repeat';
+    emojiClueButton.style.backgroundPosition = 'center';
+    emojiClueButton.disabled = true;
 }
 
 
 function mostrarPistaCincuenta() {
+    const fiftyClue = document.getElementById("fifty-clue");
     if (!preguntaActual || !preguntaActual.fiftyClue) {
         alert("No hay pista 50/50 disponible.");
         return;
@@ -669,29 +681,13 @@ function mostrarPistaCincuenta() {
         }
     });
 
-    document.getElementById("fifty-clue").disabled = true;
+    fiftyClue.style.backgroundImage = `url('../public/images/clues/cluesUsadas/fifty-fifty-gris.png')`;
+    fiftyClue.style.backgroundSize = 'cover';
+    fiftyClue.style.backgroundRepeat = 'no-repeat';
+    fiftyClue.style.backgroundPosition = 'center';
+    fiftyClue.disabled = true;
 }
 
-function verificarRespuesta(letraSeleccionada) {
-    if (!preguntaActual) return;
-
-    const esCorrecta = letraSeleccionada === preguntaActual.correctAnswer;
-
-    resultadoPartida.push({
-        idPregunta: preguntaActual.id,
-        respuestaUsuario: letraSeleccionada,
-        respuestaCorrecta: preguntaActual.correctAnswer,
-        fueCorrecta: esCorrecta
-    });
-
-    if (esCorrecta) {
-        scoreActual += 10;
-        cambiarAPregunta();
-    } else {
-        alert("¡Respuesta incorrecta! Fin del juego.");
-        finalizarJuego(false);
-    }
-}
 
 async function cambiarAPregunta() {
     try {
@@ -773,7 +769,7 @@ function verificarRespuesta(letraSeleccionada) {
             boton.style.backgroundImage = `url('../public/images/answers/incorrect/incorrecta-${letra}.png')`;
         }
     });
-    
+
     setTimeout(() => {
         if (resultadoPartida.length >= 20) {
             finalizarJuego();
@@ -793,12 +789,10 @@ function finalizarJuego() {
         <h2>¡Juego finalizado!</h2>
         <p>Tu puntaje final fue: ${scoreActual} puntos.</p>
         <button onclick="back()">Volver al menú</button>
-        <button onclick="nuevojuego()">Volver a Jugar</button>
+        <button onclick="nuevojuego()">Volver a Jugar</button
     `;
 
-    guardarMejorPartida();
     subirPartida(scoreActual, 1);
-
 }
 
 function cambiarAJuego() {
@@ -846,24 +840,23 @@ function nuevojuego() {
     cargarPreguntaRandom();
 }
 
-async function guardarMejorPartida() {
-    try {
-        const response = await fetch('http://localhost:4000/saveBestGame', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                idUser: idLoggeado,
-                score: scoreActual
-            })
-        });
+function reiniciarJuego() {
+    scoreActual = 0;
+    preguntasUsadas = [];
+    preguntaActual = null;
+    resultadoPartida = [];
 
-        const result = await response.json();
-        console.log(result.message);
-    } catch (error) {
-        console.error("Error al guardar partida:", error);
-    }
+    document.getElementById("win").style.display = "none";
+    document.getElementById("game-screen").style.display = "block";
+    ["a", "b", "c", "d"].forEach(letra => {
+        const boton = document.getElementById(`answer-${letra}`);
+        boton.disabled = false;
+        boton.style.backgroundImage = ""; 
+    });
+    document.getElementById("text-clue").disabled = false;
+    document.getElementById("emoji-clue").disabled = false;
+    document.getElementById("fifty-clue").disabled = false;
+    cargarPreguntaRandom();
 }
 
 async function subirPartida(score, win) {
@@ -877,7 +870,7 @@ async function subirPartida(score, win) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                idUser: idLoggeado,
+                idUser: idUser,
                 score: score,
                 win: win
             })

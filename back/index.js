@@ -83,9 +83,11 @@ app.delete("/deleteUser", async (req, res) => {
         if (!req.body.name) {
             return res.status(400).send({ message: "Se requiere el nombre de usuario" });
         }
-
         const check = await realizarQuery(
             `SELECT * FROM Users WHERE name = "${req.body.name}"`
+        );
+        let findUserId = await realizarQuery(
+            `Select id From Users where name = "${req.body.name}" `
         );
 
         if (check.length === 0) {
@@ -95,7 +97,11 @@ app.delete("/deleteUser", async (req, res) => {
         }
 
         await realizarQuery(
-            `DELETE FROM Users WHERE name = "${req.body.name}"`
+            `DELETE FROM Games WHERE idUser = ${findUserId[0].id}`
+        );
+
+        await realizarQuery(
+            `DELETE FROM Users WHERE name = "${req.body.name}" `
         );
 
         res.send({
