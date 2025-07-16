@@ -11,7 +11,7 @@ const SQL_CONFIGURATION_DATA =
 	password: process.env.MYSQL_PASSWORD, 
 	database: process.env.MYSQL_DB,	
 	port: 3306,
-	charset: 'UTF8_GENERAL_CI'
+	charset: 'utf8mb4'
 }
 
 exports.realizarQuery = async function (query, params = []) {
