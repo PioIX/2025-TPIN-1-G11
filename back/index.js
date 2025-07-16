@@ -12,7 +12,6 @@ app.listen(port, function () {
     console.log(`Server running in http://localhost:${port}`);
 });
 
-// Convierte una petición recibida (POST-GET...) a objeto JSON
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
@@ -29,30 +28,32 @@ app.get('/', function (req, res) {
 app.post("/verifyUser", async (req, res) => {
     try {
         let check = await realizarQuery(
-            `Select * From Users where name = "${req.body.name}" and password = "${req.body.password}" `
-        )
-        if (check.length > 0 && req.body.adminUser == 1) {
-            res.send({
+            `SELECT * FROM Users WHERE name = "${req.body.name}" AND password = "${req.body.password}"`
+        );
+
+        if (check.length > 0 && check[0].adminUser == 1) {
+            return res.send({
                 message: "admin",
                 username: req.body.name,
                 adminUser: 1,
-                userId: check[0].id   
+                userId: check[0].id
             });
-        }if (check.length > 0) {
-        res.send({
-            message: "ok",
-            username: req.body.name,
-            userId: check[0].id   
-        })
-    } else {
-    res.send({
-        message: "Verifica si ambos campos fueron rellenados y si el usuario existe y coincide con la contraseña."
-    })
-}
+        } else if (check.length > 0) {
+            return res.send({
+                message: "ok",
+                username: req.body.name,
+                userId: check[0].id
+            });
+        } else {
+            return res.send({
+                message: "Verifica si ambos campos fueron rellenados y si el usuario existe y coincide con la contraseña."
+            });
+        }
+
     } catch (error) {
-    res.send(error)
-}
-})
+        return res.send(error);
+    }
+});
 
 app.post("/regUser", async (req, res) => {
     try {
@@ -79,12 +80,10 @@ app.post("/regUser", async (req, res) => {
 
 app.delete("/deleteUser", async (req, res) => {
     try {
-        // Validar que se recibió un ID
         if (!req.body.name) {
             return res.status(400).send({ message: "Se requiere el nombre de usuario" });
         }
 
-        // Verificar si la pregunta existe
         const check = await realizarQuery(
             `SELECT * FROM Users WHERE name = "${req.body.name}"`
         );
@@ -115,12 +114,10 @@ app.delete("/deleteUser", async (req, res) => {
 
 app.delete("/deleteQuestion", async (req, res) => {
     try {
-        // Validar que se recibió un ID
         if (!req.body.id) {
             return res.status(400).send({ message: "Se requiere el ID de la pregunta" });
         }
 
-        // Verificar si la pregunta existe
         const check = await realizarQuery(
             `SELECT * FROM Questions WHERE id = ${req.body.id}`
         );
@@ -151,12 +148,11 @@ app.delete("/deleteQuestion", async (req, res) => {
 
 app.delete("/deleteGames", async (req, res) => {
     try {
-        // Validar que se recibió un ID
+
         if (!req.body.id) {
             return res.status(400).send({ message: "Se requiere el ID de la pregunta" });
         }
 
-        // Verificar si la pregunta existe
         const check = await realizarQuery(
             `SELECT * FROM Games WHERE id = ${req.body.id}`
         );
@@ -227,7 +223,6 @@ app.put("/editQuestion", async (req, res) => {
             return res.status(404).send({ message: "Pregunta no encontrada" });
         }
 
-        // Construir la consulta SQL correctamente
         let sql = `UPDATE Questions SET 
             content = "${req.body.content}", 
             answerA = "${req.body.answerA}", 
@@ -391,4 +386,22 @@ app.post("/addGame", async (req, res) => {
     }
 });
 
+app.get("/checkAdminStatus/:id", async (req, res) => {
+    try {
+        const userId = req.params.id;
 
+        const check = await realizarQuery(`SELECT adminUser FROM Users WHERE id = ${userId}`);
+
+        if (check.length > 0) {
+            return res.send({
+                isAdmin: check[0].adminUser === 1
+            });
+        } else {
+            return res.send({
+                message: "Usuario no encontrado"
+            });
+        }
+    } catch (error) {
+        return res.status(500).send({ error: "Error del servidor", details: error });
+    }
+});

@@ -41,11 +41,12 @@ class UserInterface {
 
   userScreen() {
     document.getElementById("main-menu").style.display = "block";
+    document.getElementById("main-menu-body").style.display = "block";
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("logo").style.display = "none";
     document.getElementById("admin-ui").style.display = "none";
     document.getElementById("ranking").style.display = "none";
-
+    document.getElementById("game").style.display = "none";
   }
 
   adminScreen() {
@@ -53,13 +54,38 @@ class UserInterface {
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("admin-ui").style.display = "block";
     document.getElementById("main-menu").style.display = "none";
+    document.getElementById("game").style.display = "none";
+  }
+
+  adminQuestionsScreen(){
+    document.getElementById("logo").style.display = "none";
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("admin-ui").style.display = "none";
+    document.getElementById("main-menu").style.display = "none";
+    document.getElementById('admin-questions').style.display = 'block'
+  }
+
+  adminUsersScreen(){
+    document.getElementById("logo").style.display = "none";
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("admin-ui").style.display = "none";
+    document.getElementById("main-menu").style.display = "none";
+    document.getElementById('admin-users').style.display = 'block'
+  }
+
+  adminGamesScreen(){
+    document.getElementById("logo").style.display = "none";
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("admin-ui").style.display = "none";
+    document.getElementById("main-menu").style.display = "none";
+    document.getElementById('admin-games').style.display = 'block'
   }
 
   loginScreen() {
-    document.getElementById("logo").style.display = "block";
+    document.getElementById("login-container").style.display = "block";
     document.getElementById("loginForm").style.display = "block";
-    document.getElementById("admin-ui").style.display = "none";
-    document.getElementById("main-menu").style.display = "none";
+    document.getElementById('admin-ui').style.display = "none";
+    document.getElementById('main-menu').style.display = "none";
   }
 
   rankingScreen() {
@@ -72,12 +98,14 @@ class UserInterface {
 
   juegoScreen() {
     document.getElementById("game").style.display = "block";
+    document.getElementById("game-screen").style.display = "block";
+    document.getElementById("win").style.display = "none";
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("logo").style.display = "none";
     document.getElementById("admin-ui").style.display = "none";
     document.getElementById("main-menu").style.display = "none";
     document.getElementById("ranking").style.display = "none";
-  }
+}
 
 
 

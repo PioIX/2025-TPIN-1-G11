@@ -63,14 +63,15 @@
                         <button onclick="mostrarEditarPregunta()">Administrar preguntas</button>
                         <button onclick="mostrarAdminUsuarios()">Administrar usuarios</button>
                         <button onclick="mostrarAdminPartidas()">Administrar partidas</button>
-                        <button onclick="">Jugar</button>
-                        <button onclick="">Ver ranking</button>
+                        <button onclick="cambiarAJuego()">Jugar</button>
+                        <button onclick="abrirRanking()">Ver ranking</button>
                         <button onclick="logOut()">Cerrar sesión</button>
                     </div>
                 </div>
             </div>
         </div>
         <div id="admin-questions" style="display: none">
+            <button onclick="back()" class="return-button">Volver al menu</button>
             <h1>Administre preguntas</h1>
             <div id="question-manager">
                 <h2>Edite o elimine preguntas</h2>
@@ -143,6 +144,7 @@
             </form>
         </div>
         <div id="admin-users" style="display: none">
+            <button onclick="back()" class="return-button">Volver al menu</button>
             <h1>Administre usuarios</h1>
             <div id="user-manager">
                 <h2>Elimine usuarios</h2>
@@ -162,6 +164,7 @@
             </div>
         </div>
         <div id="admin-games" style="display: none">
+            <button onclick="back()" class="return-button">Volver al menu</button>
             <h1>Administre partidas</h1>
             <div id="game-manager">
                 <h2>Elimine partidas</h2>
@@ -233,14 +236,14 @@
                         <li class="win"></li>
                     </ul>
                 </div>
-                <button onclick="ui.userScreen()">VOLVER</button>
+                <button onclick="back()">VOLVER</button>
             </div>
         </div>
         <div id="game" style="display: none">
             <div id="game-screen">
                 <nav>
                     <div id="return-buttons">
-                        <button onclick="ui.userScreen();" class="return-button">Volver al menu</button>
+                        <button onclick="back()" class="return-button">Volver al menu</button>
                         <button onclick="" class="return-button" id="volverEnunciado">Volver al enunciado</button>
                     </div>
                     <div id="clues">
