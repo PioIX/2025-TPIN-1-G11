@@ -30,29 +30,33 @@ app.post("/verifyUser", async (req, res) => {
     try {
         let check = await realizarQuery(
             `Select * From Users where name = "${req.body.name}" and password = "${req.body.password}" `
-        )
-        if (check.length > 0 && req.body.adminUser == 1) {
-            res.send({
+        );
+        let checkAdmin = await realizarQuery(
+            `Select adminUser From Users where name = "${req.body.name}" and password = "${req.body.password}" `
+        );
+
+        if (check.length === 0) {
+            return res.send({
+                message: "Verifica si ambos campos fueron rellenados y si el usuario existe y coincide con la contraseña."
+            });
+        }
+
+        if (checkAdmin[0].adminUser == 1) {
+            return res.send({
                 message: "admin",
                 username: req.body.name,
-                adminUser: 1,
-                userId: check[0].id   
+                adminUser: 1
             });
-        }if (check.length > 0) {
-        res.send({
-            message: "ok",
-            username: req.body.name,
-            userId: check[0].id   
-        })
-    } else {
-    res.send({
-        message: "Verifica si ambos campos fueron rellenados y si el usuario existe y coincide con la contraseña."
-    })
-}
+        } else {
+            return res.send({
+                message: "ok",
+                username: req.body.name,
+            });
+        }
     } catch (error) {
-    res.send(error)
-}
-})
+        res.status(500).send(error);
+    }
+});
 
 app.post("/regUser", async (req, res) => {
     try {
@@ -79,14 +83,17 @@ app.post("/regUser", async (req, res) => {
 
 app.delete("/deleteUser", async (req, res) => {
     try {
-        // Validar que se recibió un ID
+        // Validar que se recibió un nombre
         if (!req.body.name) {
             return res.status(400).send({ message: "Se requiere el nombre de usuario" });
         }
 
-        // Verificar si la pregunta existe
+        // Verificar si el usuario existe
         const check = await realizarQuery(
             `SELECT * FROM Users WHERE name = "${req.body.name}"`
+        );
+        let findUserId = await realizarQuery(
+            `Select id From Users where name = "${req.body.name}" `
         );
 
         if (check.length === 0) {
@@ -96,7 +103,11 @@ app.delete("/deleteUser", async (req, res) => {
         }
 
         await realizarQuery(
-            `DELETE FROM Users WHERE name = "${req.body.name}"`
+            `DELETE FROM Games WHERE idUser = ${findUserId[0].id}`
+        );
+
+        await realizarQuery(
+            `DELETE FROM Users WHERE name = "${req.body.name}" `
         );
 
         res.send({
