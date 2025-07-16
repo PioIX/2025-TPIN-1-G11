@@ -707,26 +707,6 @@ function mostrarPistaCincuenta() {
     fiftyClue.disabled = true;
 }
 
-function verificarRespuesta(letraSeleccionada) {
-    if (!preguntaActual) return;
-
-    const esCorrecta = letraSeleccionada === preguntaActual.correctAnswer;
-
-    resultadoPartida.push({
-        idPregunta: preguntaActual.id,
-        respuestaUsuario: letraSeleccionada,
-        respuestaCorrecta: preguntaActual.correctAnswer,
-        fueCorrecta: esCorrecta
-    });
-
-    if (esCorrecta) {
-        scoreActual += 10;
-        cambiarAPregunta();
-    } else {
-        alert("¡Respuesta incorrecta! Fin del juego.");
-        finalizarJuego(false);
-    }
-}
 
 async function cambiarAPregunta() {
     try {
