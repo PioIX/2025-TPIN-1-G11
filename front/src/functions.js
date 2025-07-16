@@ -117,7 +117,7 @@ async function registerUser(newUser) {
         if (result.message === 'ok') {
             document.getElementById('login-container').style.display = 'none';
             document.getElementById('main-menu-body').style.display = 'block';
-                        document.getElementById('user-registered').style.display = '';
+            document.getElementById('user-registered').style.display = '';
             ui.setUser(result.username);
             idLoggeado = result.userId;
             alert('bienvenido dios dictador');
@@ -816,40 +816,37 @@ function finalizarJuego() {
     document.getElementById("win").innerHTML = `
         <h2>¡Juego finalizado!</h2>
         <p>Tu puntaje final fue: ${scoreActual} puntos.</p>
+        <button onclick="reiniciarJuego()">Volver a jugar</button>
         <button onclick="ui.userScreen()">Volver al menú</button>
     `;
 
-    guardarMejorPartida();
     subirPartida(scoreActual, 1);
-
 }
 
 
-async function guardarMejorPartida() {
-    try {
-        const response = await fetch('http://localhost:4000/saveBestGame', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                idUser: idLoggeado,
-                score: scoreActual
-            })
-        });
+function reiniciarJuego() {
+    scoreActual = 0;
+    preguntasUsadas = [];
+    preguntaActual = null;
+    resultadoPartida = [];
 
-        const result = await response.json();
-        console.log(result.message);
-    } catch (error) {
-        console.error("Error al guardar partida:", error);
-    }
+    document.getElementById("win").style.display = "none";
+    document.getElementById("game-screen").style.display = "block";
+    ["a", "b", "c", "d"].forEach(letra => {
+        const boton = document.getElementById(`answer-${letra}`);
+        boton.disabled = false;
+        boton.style.backgroundImage = ""; 
+    });
+    document.getElementById("text-clue").disabled = false;
+    document.getElementById("emoji-clue").disabled = false;
+    document.getElementById("fifty-clue").disabled = false;
+    cargarPreguntaRandom();
 }
 
-async function subirPartida(score, win) {
-    try {
-        let idLoggeado = result.userId;
 
-        console.log("Subiendo partida con:", { idLoggeado, score, win });
+async function subirPartida(idUser, score, win) {
+    try {
+        console.log("Subiendo partida con:", { idUser, score, win });
 
         const response = await fetch("http://localhost:4000/addGame", {
             method: "POST",
@@ -857,7 +854,7 @@ async function subirPartida(score, win) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                idUser: idLoggeado,
+                idUser: idUser,
                 score: score,
                 win: win
             })
