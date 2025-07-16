@@ -643,6 +643,7 @@ async function cargarPreguntaRandom() {
 
 
 function mostrarPistaTexto() {
+    const textImage = document.getElementById("text-clue");
     if (!preguntaActual || !preguntaActual.textClue) {
         alert("No hay pista de texto disponible.");
         return;
@@ -650,10 +651,15 @@ function mostrarPistaTexto() {
 
     alert("Pista de texto: " + preguntaActual.textClue);
 
-    document.getElementById("text-clue").disabled = true;
+    textImage.style.backgroundImage = `url('../public/images/clues/cluesUsadas/text-gris.png')`;
+    textImage.style.backgroundSize = 'cover';
+    textImage.style.backgroundRepeat = 'no-repeat';
+    textImage.style.backgroundPosition = 'center';
+    textImage.disabled = true;
 }
 
 function mostrarPistaEmoji() {
+    const emojiClueButton = document.getElementById("emoji-clue");
     if (!preguntaActual || !preguntaActual.emojiClue) {
         alert("No hay pista de emojis disponible.");
         return;
@@ -661,11 +667,16 @@ function mostrarPistaEmoji() {
 
     alert("Pista de emojis: " + preguntaActual.emojiClue);
 
-    document.getElementById("emoji-clue").disabled = true;
+    emojiClueButton.style.backgroundImage = `url('../public/images/clues/cluesUsadas/emoji-gris.png')`;
+    emojiClueButton.style.backgroundSize = 'cover';
+    emojiClueButton.style.backgroundRepeat = 'no-repeat';
+    emojiClueButton.style.backgroundPosition = 'center';
+    emojiClueButton.disabled = true;
 }
 
 
 function mostrarPistaCincuenta() {
+    const fiftyClue = document.getElementById("fifty-clue");
     if (!preguntaActual || !preguntaActual.fiftyClue) {
         alert("No hay pista 50/50 disponible.");
         return;
@@ -689,7 +700,11 @@ function mostrarPistaCincuenta() {
         }
     });
 
-    document.getElementById("fifty-clue").disabled = true;
+    fiftyClue.style.backgroundImage = `url('../public/images/clues/cluesUsadas/fifty-fifty-gris.png')`;
+    fiftyClue.style.backgroundSize = 'cover';
+    fiftyClue.style.backgroundRepeat = 'no-repeat';
+    fiftyClue.style.backgroundPosition = 'center';
+    fiftyClue.disabled = true;
 }
 
 function verificarRespuesta(letraSeleccionada) {
@@ -798,7 +813,7 @@ function verificarRespuesta(letraSeleccionada) {
         boton.style.backgroundRepeat = 'no-repeat';
         boton.style.backgroundPosition = 'center';
     });
-    
+
     setTimeout(() => {
         if (resultadoPartida.length >= 20) {
             finalizarJuego();
