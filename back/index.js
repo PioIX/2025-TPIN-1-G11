@@ -307,13 +307,39 @@ app.get('/getGame', async function (req, res) {
 
 app.get('/getAllGames', async function (req, res) {
     try {
-        let [respuesta] = await realizarQuery(`SELECT * FROM Games`);
-        
+        const respuesta = await realizarQuery(`SELECT * FROM Games`);
+
         res.send({
             message: "partidas",
-            data: respuesta 
+            response: respuesta 
         });
     } catch (error) {
         res.send({ mensaje: "Tuviste un error", error: error.message });
     }
 });
+
+app.post('/randomQuestion', async function (req, res) {
+    try {
+        const { excludedIds = [] } = req.body; 
+        const condition = excludedIds.length > 0
+            ? `WHERE id NOT IN (${excludedIds.join(',')})`
+            : '';
+
+        const query = `SELECT * FROM Questions ${condition} ORDER BY RAND() LIMIT 1`;
+
+        const [pregunta] = await realizarQuery(query);
+
+        if (!pregunta) {
+            return res.send({ message: "No hay más preguntas disponibles", response: null });
+        }
+
+        res.send({
+            message: "Pregunta aleatoria obtenida correctamente",
+            response: pregunta
+        });
+    } catch (error) {
+        res.send({ message: "Error al obtener pregunta aleatoria", error: error.message });
+    }
+});
+
+

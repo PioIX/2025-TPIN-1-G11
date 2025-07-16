@@ -44,6 +44,8 @@ class UserInterface {
     document.getElementById("logo").style.display = "none";
     document.getElementById("admin-ui").style.display = "none";
     document.getElementById("main-menu").style.display = "block";
+    document.getElementById("ranking").style.display ="none";
+  
   }
 
   adminScreen(){
@@ -67,5 +69,17 @@ class UserInterface {
     document.getElementById("admin-ui").style.display = "none";
     document.getElementById("main-menu").style.display = "none";
   }
+
+  juegoScreen(){
+    document.getElementById("game").style.display="block";
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("logo").style.display = "none";
+    document.getElementById("admin-ui").style.display = "none";
+    document.getElementById("main-menu").style.display = "none";
+    document.getElementById("ranking").style.display ="none";
+  }
+
+
+
 }
 const ui = new UserInterface();

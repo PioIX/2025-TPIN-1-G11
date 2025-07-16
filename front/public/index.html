@@ -233,6 +233,7 @@
                         <li class="win"></li>
                     </ul>
                 </div>
+                <button onclick="ui.userScreen()">VOLVER</button>
             </div>
         </div>
         <div id="game" style="display: none">
@@ -240,12 +241,12 @@
                 <nav>
                     <div id="return-buttons">
                         <button onclick="" class="return-button">Volver al menu</button>
-                        <button onclick="" class="return-button">Volver al enunciado</button>
+                        <button onclick="" class="return-button" id="volverEnunciado">Volver al enunciado</button>
                     </div>
                     <div id="clues">
-                        <button onclick="" class="clue" id="text-clue"></button>
-                        <button onclick="" class="clue" id="emoji-clue"></button>
-                        <button onclick="" class="clue" id="fifty-clue"></button>
+                        <button onclick="mostrarPistaTexto()" class="clue" id="text-clue"></button>
+                        <button onclick="mostrarPistaEmoji()" class="clue" id="emoji-clue"></button>
+                        <button onclick="mostrarPistaCincuenta()" class="clue" id="fifty-clue"></button>
                     </div>
                 </nav>
                 <header>
