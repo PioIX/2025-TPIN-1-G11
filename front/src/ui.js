@@ -42,6 +42,7 @@ class UserInterface {
   userScreen() {
     document.getElementById("main-menu").style.display = "block";
     document.getElementById("main-menu-body").style.display = "block";
+    document.getElementById("user-registered").style.display = "block";
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("logo").style.display = "none";
     document.getElementById("admin-ui").style.display = "none";
@@ -53,6 +54,7 @@ class UserInterface {
     document.getElementById("logo").style.display = "none";
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("admin-ui").style.display = "block";
+    document.getElementById("user-registered").style.display = "block";
     document.getElementById("main-menu").style.display = "none";
     document.getElementById("game").style.display = "none";
   }
