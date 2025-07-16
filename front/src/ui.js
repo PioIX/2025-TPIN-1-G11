@@ -68,7 +68,4 @@ class UserInterface {
     document.getElementById("main-menu").style.display = "none";
   }
 }
-/**
- * Objeto para manejar la UI en este TP, provisto por los docentes Nico Facón y Mati Marchesi.
- */
 const ui = new UserInterface();

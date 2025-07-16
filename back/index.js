@@ -31,7 +31,7 @@ app.post("/verifyUser", async (req, res) => {
         let check = await realizarQuery(
             `Select * From Users where name = "${req.body.name}" and password = "${req.body.password}" `
         )
-        if ((check.length > 0)&&(check.adminUser===1)){
+        if ((check.length > 0)&&(req.body.adminUser==1)){
             res.send({
                 message: "admin",
                 username: req.body.name,
