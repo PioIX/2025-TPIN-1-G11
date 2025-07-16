@@ -64,7 +64,7 @@ async function userVerify(user) {
         if (result.message === 'ok') {
                         alert("user")
             document.getElementById('login-container').style.display = 'none';
-            document.getElementById('main-menu-body').style.display = 'block';
+            document.getElementById('main-menu').style.display = 'block';
             document.getElementById('user-registered').style.display = '';
             ui.setUser(result.username);
             idLoggeado = result.userId;
@@ -108,7 +108,7 @@ async function registerUser(newUser) {
         console.log(result.message)
         if (result.message === 'ok') {
             document.getElementById('login-container').style.display = 'none';
-            document.getElementById('main-menu-body').style.display = 'block';
+            document.getElementById('main-menu').style.display = 'block';
                         document.getElementById('user-registered').style.display = '';
             ui.setUser(result.username);
             idLoggeado = result.userId;
@@ -529,8 +529,10 @@ async function abrirRanking() {
 
 
 function logOut() {
+    document.getElementById('username').value = ''
+    document.getElementById('password').value = ''
     document.getElementById('admin-ui').style.display = 'none'
-    document.getElementById('main-menu-body').style.display = 'none'
+    document.getElementById('main-menu').style.display = 'none'
     document.getElementById('user-registered').style.display = 'none';
     document.getElementById('login-container').style.display = 'flex';
 }
