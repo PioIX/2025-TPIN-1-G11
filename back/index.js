@@ -31,23 +31,27 @@ app.post("/verifyUser", async (req, res) => {
         let check = await realizarQuery(
             `Select * From Users where name = "${req.body.name}" and password = "${req.body.password}" `
         )
-        if ((check.length > 0)&&(req.body.adminUser==1)){
+        if (check.length > 0 && req.body.adminUser == 1) {
             res.send({
                 message: "admin",
                 username: req.body.name,
-                adminUser:1
-            })}if(check.length > 0){
-                res.send({
-                message: "ok",
-                username: req.body.name,})
-            }else {
-            res.send({
-                message: "Verifica si ambos campos fueron rellenados y si el usuario existe y coincide con la contraseña."
-            })
-        }
+                adminUser: 1,
+                userId: check[0].id   
+            });
+        }if (check.length > 0) {
+        res.send({
+            message: "ok",
+            username: req.body.name,
+            userId: check[0].id   
+        })
+    } else {
+    res.send({
+        message: "Verifica si ambos campos fueron rellenados y si el usuario existe y coincide con la contraseña."
+    })
+}
     } catch (error) {
-        res.send(error)
-    }
+    res.send(error)
+}
 })
 
 app.post("/regUser", async (req, res) => {
@@ -86,8 +90,8 @@ app.delete("/deleteUser", async (req, res) => {
         );
 
         if (check.length === 0) {
-            return res.status(404).send({ 
-                message: "No se encontró ningun usuario con ese nombre" 
+            return res.status(404).send({
+                message: "No se encontró ningun usuario con ese nombre"
             });
         }
 
@@ -99,12 +103,12 @@ app.delete("/deleteUser", async (req, res) => {
             message: "Usuario borrado exitosamente",
             deletedId: req.body.name
         });
-        
+
     } catch (error) {
         console.error("Error:", error);
-        res.status(500).send({ 
+        res.status(500).send({
             message: "Error interno al borrar el usuario",
-            error: error.message 
+            error: error.message
         });
     }
 });
@@ -122,8 +126,8 @@ app.delete("/deleteQuestion", async (req, res) => {
         );
 
         if (check.length === 0) {
-            return res.status(404).send({ 
-                message: "No se encontró ninguna pregunta con ese ID" 
+            return res.status(404).send({
+                message: "No se encontró ninguna pregunta con ese ID"
             });
         }
 
@@ -135,12 +139,12 @@ app.delete("/deleteQuestion", async (req, res) => {
             message: "Pregunta borrada exitosamente",
             deletedId: req.body.id
         });
-        
+
     } catch (error) {
         console.error("Error:", error);
-        res.status(500).send({ 
+        res.status(500).send({
             message: "Error interno al borrar la pregunta",
-            error: error.message 
+            error: error.message
         });
     }
 });
@@ -158,8 +162,8 @@ app.delete("/deleteGames", async (req, res) => {
         );
 
         if (check.length === 0) {
-            return res.status(404).send({ 
-                message: "No se encontró ninguna pregunta con ese ID" 
+            return res.status(404).send({
+                message: "No se encontró ninguna pregunta con ese ID"
             });
         }
 
@@ -171,12 +175,12 @@ app.delete("/deleteGames", async (req, res) => {
             message: "Pregunta borrada exitosamente",
             deletedId: req.body.id
         });
-        
+
     } catch (error) {
         console.error("Error:", error);
-        res.status(500).send({ 
+        res.status(500).send({
             message: "Error interno al borrar la pregunta",
-            error: error.message 
+            error: error.message
         });
     }
 });
@@ -311,7 +315,7 @@ app.get('/getAllGames', async function (req, res) {
 
         res.send({
             message: "partidas",
-            response: respuesta 
+            response: respuesta
         });
     } catch (error) {
         res.send({ mensaje: "Tuviste un error", error: error.message });
@@ -320,7 +324,7 @@ app.get('/getAllGames', async function (req, res) {
 
 app.post('/randomQuestion', async function (req, res) {
     try {
-        const { excludedIds = [] } = req.body; 
+        const { excludedIds = [] } = req.body;
         const condition = excludedIds.length > 0
             ? `WHERE id NOT IN (${excludedIds.join(',')})`
             : '';
@@ -339,6 +343,51 @@ app.post('/randomQuestion', async function (req, res) {
         });
     } catch (error) {
         res.send({ message: "Error al obtener pregunta aleatoria", error: error.message });
+    }
+});
+
+app.post('/saveBestGame', async function (req, res) {
+    try {
+        const { idUser, score } = req.body;
+
+        if (!idUser || score == null) {
+            return res.status(400).send({ message: "Faltan datos requeridos." });
+        }
+
+        const result = await realizarQuery(`SELECT MAX(score) AS maxScore FROM Games WHERE idUser = ${idUser}`);
+        const maxScore = result[0].maxScore || 0;
+
+        if (score > maxScore) {
+            await realizarQuery(`INSERT INTO Games (idUser, score, win) VALUES (${idUser}, ${score}, true)`);
+            return res.send({ message: "¡Nuevo mejor puntaje guardado!" });
+        } else {
+            return res.send({ message: "No es mejor que el puntaje anterior. No se guardó." });
+        }
+
+    } catch (error) {
+        console.error("Error al guardar partida:", error);
+        res.status(500).send({ message: "Error interno al guardar el juego.", error: error.message });
+    }
+});
+
+app.post("/addGame", async (req, res) => {
+    try {
+        const { idUser, score, win } = req.body;
+
+        if (!idUser || score == null) {
+            return res.status(400).send({ message: "Faltan datos requeridos." });
+        }
+
+        await realizarQuery(`
+            INSERT INTO Games (idUser, score, win)
+            VALUES (${idUser}, ${score}, ${win ? 1 : 0})
+        `);
+
+        res.send({ message: "Partida guardada correctamente." });
+
+    } catch (error) {
+        console.error("Error al guardar partida:", error);
+        res.status(500).send({ message: "Error interno", error: error.message });
     }
 });
 

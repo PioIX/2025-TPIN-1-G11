@@ -2,7 +2,7 @@
 let scoreActual = 0;
 let preguntasUsadas = [];
 let preguntaActual = null;
-let resultadoPartida = []; 
+let resultadoPartida = [];
 let respuestaCorrecta = "";
 
 
@@ -706,7 +706,7 @@ function verificarRespuesta(letraSeleccionada) {
 
     if (esCorrecta) {
         scoreActual += 10;
-        cambiarAPregunta(); 
+        cambiarAPregunta();
     } else {
         alert("¡Respuesta incorrecta! Fin del juego.");
         finalizarJuego(false);
@@ -723,7 +723,7 @@ async function cambiarAPregunta() {
 
         const result = await response.json();
         if (!result.response) {
-            alert("¡No hay más preguntas! Has ganado.");
+            alert("¡No hay más preguntas! ");
             finalizarJuego(true);
             return;
         }
@@ -740,27 +740,19 @@ async function cambiarAPregunta() {
             : pregunta.content;
         document.getElementById("question-text").textContent = textoPregunta;
 
-        const respuestas = {
-            a: pregunta.answerA,
-            b: pregunta.answerB,
-            c: pregunta.answerC,
-            d: pregunta.answerD
-        };
+        ["A", "B", "C", "D"].forEach(letra => {
+            const boton = document.getElementById(`answer-${letra.toLowerCase()}`);
+            const texto = document.getElementById(`answer-${letra.toLowerCase()}-text`);
 
-        for (const letra in respuestas) {
-            const boton = document.getElementById(`answer-${letra}`);
-            const texto = document.getElementById(`answer-${letra}-text`);
             boton.disabled = false;
             boton.style.backgroundImage = "";
-            texto.textContent = respuestas[letra];
-        }
+            boton.style.backgroundColor = "";
+            texto.textContent = pregunta[`answer${letra}`];
+        });
 
         const botonEnunciado = document.querySelector(".return-button:nth-child(2)");
-        if (pregunta.largeQuestion) {
-            botonEnunciado.style.display = "inline-block";
-        } else {
-            botonEnunciado.style.display = "none";
-        }
+        botonEnunciado.style.display = pregunta.largeQuestion ? "inline-block" : "none";
+
 
         ["text-clue", "emoji-clue", "fifty-clue"].forEach(id => {
             document.getElementById(id).disabled = false;
@@ -771,3 +763,106 @@ async function cambiarAPregunta() {
     }
 }
 
+
+function verificarRespuesta(letraSeleccionada) {
+    if (!preguntaActual) return;
+
+    const esCorrecta = letraSeleccionada === preguntaActual.correctAnswer;
+
+    resultadoPartida.push({
+        idPregunta: preguntaActual.id,
+        respuestaUsuario: letraSeleccionada,
+        respuestaCorrecta: preguntaActual.correctAnswer,
+        fueCorrecta: esCorrecta
+    });
+
+    if (esCorrecta) {
+        scoreActual += preguntaActual.largeQuestion ? 10 : 5;
+    }
+
+    ["A", "B", "C", "D"].forEach(letra => {
+        const boton = document.getElementById(`answer-${letra.toLowerCase()}`);
+        boton.disabled = true;
+
+        if (letra === preguntaActual.correctAnswer) {
+            boton.style.backgroundImage = `url('../public/images/answers/correct/correcta-${letraSeleccionada.toUpperCase()}.png')`;
+        } else {
+            boton.style.backgroundImage = `url('../public/images/answers/incorrect/incorrecta-${letraSeleccionada.toUpperCase()}.png')`;
+        }
+
+        boton.style.backgroundSize = 'cover';
+        boton.style.backgroundRepeat = 'no-repeat';
+        boton.style.backgroundPosition = 'center';
+    });
+
+    setTimeout(() => {
+        if (resultadoPartida.length >= 20) {
+            finalizarJuego();
+        } else {
+            cambiarAPregunta();
+        }
+    }, 1500);
+}
+
+
+
+function finalizarJuego() {
+    document.getElementById("game-screen").style.display = "none";
+    document.getElementById("win").style.display = "block";
+
+    document.getElementById("win").innerHTML = `
+        <h2>¡Juego finalizado!</h2>
+        <p>Tu puntaje final fue: ${scoreActual} puntos.</p>
+        <button onclick="ui.userScreen()">Volver al menú</button>
+    `;
+
+    guardarMejorPartida();
+    subirPartida(scoreActual, 1); 
+
+}
+
+
+async function guardarMejorPartida() {
+    try {
+        const response = await fetch('http://localhost:4000/saveBestGame', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idUser: idLoggeado,
+                score: scoreActual
+            })
+        });
+
+        const result = await response.json();
+        console.log(result.message);
+    } catch (error) {
+        console.error("Error al guardar partida:", error);
+    }
+}
+
+async function subirPartida(score, win) {
+    try {
+        let idLoggeado = result.userId;
+
+        console.log("Subiendo partida con:", { idLoggeado, score, win });
+
+        const response = await fetch("http://localhost:4000/addGame", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idUser: idLoggeado,
+                score: score,
+                win: win
+            })
+        });
+
+        const result = await response.json();
+        console.log(result.message);
+    } catch (error) {
+        console.error("Error al subir partida:", error);
+    }
+}
