@@ -778,7 +778,11 @@ function verificarRespuesta(letraSeleccionada) {
 
     if (esCorrecta) {
         scoreActual += preguntaActual.largeQuestion ? 10 : 5;
+        alert(`muy bien! acertaste`);
+    } else {
+        alert(`lo siento, la respuesta correcta era : '${preguntaActual.correctAnswer}' `);
     }
+
 
     ["A", "B", "C", "D"].forEach(letra => {
         const boton = document.getElementById(`answer-${letra.toLowerCase()}`);
@@ -787,14 +791,14 @@ function verificarRespuesta(letraSeleccionada) {
         if (letra === preguntaActual.correctAnswer) {
             boton.style.backgroundImage = `url('../public/images/answers/correct/correcta-${letraSeleccionada.toUpperCase()}.png')`;
         } else {
-            boton.style.backgroundImage = `url('../public/images/answers/incorrect/incorrecta-${letraSeleccionada.toUpperCase()}.png')`;
+            boton.style.backgroundImage = `url('../public/images/answers/incorrect/incorrecta-${preguntaActual.correctAnswer.toUpperCase()}.png')`;
         }
 
         boton.style.backgroundSize = 'cover';
         boton.style.backgroundRepeat = 'no-repeat';
         boton.style.backgroundPosition = 'center';
     });
-
+    
     setTimeout(() => {
         if (resultadoPartida.length >= 20) {
             finalizarJuego();
@@ -817,7 +821,7 @@ function finalizarJuego() {
     `;
 
     guardarMejorPartida();
-    subirPartida(scoreActual, 1); 
+    subirPartida(scoreActual, 1);
 
 }
 
