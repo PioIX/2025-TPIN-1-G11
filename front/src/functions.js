@@ -65,6 +65,7 @@ async function userVerify(user) {
                         alert("user")
             document.getElementById('login-container').style.display = 'none';
             document.getElementById('main-menu-body').style.display = 'block';
+            document.getElementById('user-registered').style.display = '';
             ui.setUser(result.username);
             idLoggeado = result.userId;
             return result;
@@ -72,6 +73,7 @@ async function userVerify(user) {
             alert("admin")
             document.getElementById('login-container').style.display = 'none';
             document.getElementById('admin-ui').style.display = 'block';
+            document.getElementById('user-registered').style.display = '';
             ui.setUser(result.username);
             idLoggeado = result.userId;
             return result;
@@ -107,6 +109,7 @@ async function registerUser(newUser) {
         if (result.message === 'ok') {
             document.getElementById('login-container').style.display = 'none';
             document.getElementById('main-menu-body').style.display = 'block';
+                        document.getElementById('user-registered').style.display = '';
             ui.setUser(result.username);
             idLoggeado = result.userId;
             alert('bienvenido dios dictador');
@@ -526,7 +529,8 @@ async function abrirRanking() {
 
 
 function logOut() {
-    console.log("hola")
+    document.getElementById('admin-ui').style.display = 'none'
+    document.getElementById('main-menu-body').style.display = 'none'
     document.getElementById('user-registered').style.display = 'none';
     document.getElementById('login-container').style.display = 'flex';
 }
