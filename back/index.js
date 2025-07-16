@@ -322,13 +322,84 @@ app.get('/getGame', async function (req, res) {
 
 app.get('/getAllGames', async function (req, res) {
     try {
-        let [respuesta] = await realizarQuery(`SELECT * FROM Games`);
+        const respuesta = await realizarQuery(`SELECT * FROM Games`);
 
         res.send({
             message: "partidas",
-            data: respuesta
+            response: respuesta
         });
     } catch (error) {
         res.send({ mensaje: "Tuviste un error", error: error.message });
     }
 });
+
+app.post('/randomQuestion', async function (req, res) {
+    try {
+        const { excludedIds = [] } = req.body;
+        const condition = excludedIds.length > 0
+            ? `WHERE id NOT IN (${excludedIds.join(',')})`
+            : '';
+
+        const query = `SELECT * FROM Questions ${condition} ORDER BY RAND() LIMIT 1`;
+
+        const [pregunta] = await realizarQuery(query);
+
+        if (!pregunta) {
+            return res.send({ message: "No hay más preguntas disponibles", response: null });
+        }
+
+        res.send({
+            message: "Pregunta aleatoria obtenida correctamente",
+            response: pregunta
+        });
+    } catch (error) {
+        res.send({ message: "Error al obtener pregunta aleatoria", error: error.message });
+    }
+});
+
+app.post('/saveBestGame', async function (req, res) {
+    try {
+        const { idUser, score } = req.body;
+
+        if (!idUser || score == null) {
+            return res.status(400).send({ message: "Faltan datos requeridos." });
+        }
+
+        const result = await realizarQuery(`SELECT MAX(score) AS maxScore FROM Games WHERE idUser = ${idUser}`);
+        const maxScore = result[0].maxScore || 0;
+
+        if (score > maxScore) {
+            await realizarQuery(`INSERT INTO Games (idUser, score, win) VALUES (${idUser}, ${score}, true)`);
+            return res.send({ message: "¡Nuevo mejor puntaje guardado!" });
+        } else {
+            return res.send({ message: "No es mejor que el puntaje anterior. No se guardó." });
+        }
+
+    } catch (error) {
+        console.error("Error al guardar partida:", error);
+        res.status(500).send({ message: "Error interno al guardar el juego.", error: error.message });
+    }
+});
+
+app.post("/addGame", async (req, res) => {
+    try {
+        const { idUser, score, win } = req.body;
+
+        if (!idUser || score == null) {
+            return res.status(400).send({ message: "Faltan datos requeridos." });
+        }
+
+        await realizarQuery(`
+            INSERT INTO Games (idUser, score, win)
+            VALUES (${idUser}, ${score}, ${win ? 1 : 0})
+        `);
+
+        res.send({ message: "Partida guardada correctamente." });
+
+    } catch (error) {
+        console.error("Error al guardar partida:", error);
+        res.status(500).send({ message: "Error interno", error: error.message });
+    }
+});
+
+

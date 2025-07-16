@@ -1,3 +1,11 @@
+
+let scoreActual = 0;
+let preguntasUsadas = [];
+let preguntaActual = null;
+let resultadoPartida = [];
+let respuestaCorrecta = "";
+
+
 function loginForm() {
     document.getElementById('signUp').innerHTML = `
                 <legend>¿Nuevo aspirante a golpista? ¡Registrate acá!</legend>
@@ -62,7 +70,7 @@ async function userVerify(user) {
         const result = await response.json();
         console.log(result.message)
         if (result.message === 'ok') {
-                        alert("user")
+            alert("user")
             document.getElementById('login-container').style.display = 'none';
             document.getElementById('main-menu-body').style.display = 'block';
             document.getElementById('user-registered').style.display = '';
@@ -502,29 +510,58 @@ async function borrarPartida() {
 async function abrirRanking() {
     ui.rankingScreen();
 
-    const response = await fetch('http://localhost:4000/getAllGames', {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
+    try {
+        const response = await fetch('http://localhost:4000/getAllGames', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        const result = await response.json();
+        console.log(result);
+        const games = result.response;
+
+        if (!Array.isArray(games) || games.length === 0) {
+            alert("No hay partidas registradas.");
+            return;
         }
-    });
+        const mejoresPartidas = new Map();
 
-    const result = await response.json();
-    const games = result.data;
-    console.log(games);
+        for (let game of games) {
+            if (!mejoresPartidas.has(game.idUser) || game.score > mejoresPartidas.get(game.idUser).score) {
+                mejoresPartidas.set(game.idUser, game);
+            }
+        }
 
-    const contenedor = document.getElementById("ranking-data");
-    contenedor.innerHTML = "";
+        const rankingOrdenado = Array.from(mejoresPartidas.values()).sort((a, b) => b.score - a.score);
 
-    for (let i = 0; i < games.length; i++) {
-        contenedor.innerHTML += `
-            <ul>
-                <li class="score">Score: ${games[i].score}</li>
-                <li class="win">Win: ${games[i].win ? 'Sí' : 'No'}</li>
-            </ul>
-        `;
+        const contenedor = document.getElementById("ranking-data");
+        contenedor.innerHTML = "";
+
+        rankingOrdenado.forEach((game, index) => {
+            const div = document.createElement("div");
+            div.className = "ranking-user";
+            div.innerHTML = `
+                <p>#${index + 1}</p>
+                <div class="vertical-line"></div>
+                <p>Jugador ID: ${game.idUser}</p>
+                <div class="vertical-line"></div>
+                <p>${game.score} pts.</p>
+            `;
+            contenedor.appendChild(div);
+
+            const linea = document.createElement("div");
+            linea.className = "horizontal-line";
+            contenedor.appendChild(linea);
+        });
+
+    } catch (error) {
+        console.error("Error al cargar el ranking:", error);
+        alert("Hubo un problema al cargar el ranking.");
     }
 }
+
 
 
 
@@ -533,4 +570,307 @@ function logOut() {
     document.getElementById('main-menu-body').style.display = 'none'
     document.getElementById('user-registered').style.display = 'none';
     document.getElementById('login-container').style.display = 'flex';
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+}
+
+
+function cambiarAJuego() {
+    ui.juegoScreen();
+    cargarPreguntaRandom();
+}
+
+async function cargarPreguntaRandom() {
+    try {
+        document.getElementById("text-clue").disabled = false;
+        document.getElementById("emoji-clue").disabled = false;
+        document.getElementById("fifty-clue").disabled = false;
+
+        const response = await fetch('http://localhost:4000/randomQuestion', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ excludedIds: preguntasUsadas })
+        });
+
+        const result = await response.json();
+
+        if (!result.response) {
+            alert("No hay más preguntas disponibles.");
+            return;
+        }
+
+        const pregunta = result.response;
+        preguntaActual = pregunta;
+        preguntasUsadas.push(pregunta.id);
+
+        document.getElementById("question-number").textContent = preguntasUsadas.length;
+        document.getElementById("question-text").textContent = pregunta.content;
+
+        document.getElementById("answer-a-text").textContent = pregunta.answerA;
+        document.getElementById("answer-b-text").textContent = pregunta.answerB;
+        document.getElementById("answer-c-text").textContent = pregunta.answerC;
+        document.getElementById("answer-d-text").textContent = pregunta.answerD;
+        document.getElementById("volverEnunciado").style.display = "none";
+
+        if (pregunta.largeQuestion) {
+            document.getElementById("question-text").textContent = pregunta.text;
+
+        }
+        if (pregunta.image) {
+            const img = document.createElement("img");
+            img.src = pregunta.image;
+            document.getElementById("question-container").appendChild(img);
+        }
+
+        ["a", "b", "c", "d"].forEach(letra => {
+            const texto = document.getElementById(`answer-${letra}-text`);
+            texto.innerHTML = "";
+
+            switch (letra) {
+                case 'a': texto.textContent = pregunta.answerA; break;
+                case 'b': texto.textContent = pregunta.answerB; break;
+                case 'c': texto.textContent = pregunta.answerC; break;
+                case 'd': texto.textContent = pregunta.answerD; break;
+            }
+
+            document.getElementById(`answer-${letra}`).style.display = "inline-block";
+        });
+
+        document.getElementById("fifty-clue").disabled = false;
+
+
+    } catch (error) {
+        console.error("Error al traer pregunta aleatoria:", error);
+        alert("Error al traer pregunta.");
+    }
+}
+
+
+function mostrarPistaTexto() {
+    if (!preguntaActual || !preguntaActual.textClue) {
+        alert("No hay pista de texto disponible.");
+        return;
+    }
+
+    alert("Pista de texto: " + preguntaActual.textClue);
+
+    document.getElementById("text-clue").disabled = true;
+}
+
+function mostrarPistaEmoji() {
+    if (!preguntaActual || !preguntaActual.emojiClue) {
+        alert("No hay pista de emojis disponible.");
+        return;
+    }
+
+    alert("Pista de emojis: " + preguntaActual.emojiClue);
+
+    document.getElementById("emoji-clue").disabled = true;
+}
+
+
+function mostrarPistaCincuenta() {
+    if (!preguntaActual || !preguntaActual.fiftyClue) {
+        alert("No hay pista 50/50 disponible.");
+        return;
+    }
+
+    const letrasDisponibles = preguntaActual.fiftyClue.toUpperCase().split('');
+
+    ["A", "B", "C", "D"].forEach(letra => {
+        const boton = document.getElementById(`answer-${letra.toLowerCase()}`);
+        const texto = document.getElementById(`answer-${letra.toLowerCase()}-text`);
+
+        if (!letrasDisponibles.includes(letra)) {
+            texto.textContent = "";
+
+            boton.style.backgroundImage = `url('../public/images/answers/fifty-fifty/50-50-${letra}.png')`;
+            boton.style.backgroundSize = 'cover';
+            boton.style.backgroundRepeat = 'no-repeat';
+            boton.style.backgroundPosition = 'center';
+
+            boton.disabled = true;
+        }
+    });
+
+    document.getElementById("fifty-clue").disabled = true;
+}
+
+function verificarRespuesta(letraSeleccionada) {
+    if (!preguntaActual) return;
+
+    const esCorrecta = letraSeleccionada === preguntaActual.correctAnswer;
+
+    resultadoPartida.push({
+        idPregunta: preguntaActual.id,
+        respuestaUsuario: letraSeleccionada,
+        respuestaCorrecta: preguntaActual.correctAnswer,
+        fueCorrecta: esCorrecta
+    });
+
+    if (esCorrecta) {
+        scoreActual += 10;
+        cambiarAPregunta();
+    } else {
+        alert("¡Respuesta incorrecta! Fin del juego.");
+        finalizarJuego(false);
+    }
+}
+
+async function cambiarAPregunta() {
+    try {
+        const response = await fetch('http://localhost:4000/randomQuestion', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ excludedIds: preguntasUsadas })
+        });
+
+        const result = await response.json();
+        if (!result.response) {
+            alert("¡No hay más preguntas! ");
+            finalizarJuego(true);
+            return;
+        }
+
+        const pregunta = result.response;
+        preguntaActual = pregunta;
+        preguntasUsadas.push(pregunta.id);
+        respuestaCorrecta = pregunta.correctAnswer;
+
+        document.getElementById("question-number").textContent = preguntasUsadas.length;
+
+        const textoPregunta = pregunta.largeQuestion
+            ? pregunta.text || pregunta.content
+            : pregunta.content;
+        document.getElementById("question-text").textContent = textoPregunta;
+
+        ["A", "B", "C", "D"].forEach(letra => {
+            const boton = document.getElementById(`answer-${letra.toLowerCase()}`);
+            const texto = document.getElementById(`answer-${letra.toLowerCase()}-text`);
+
+            boton.disabled = false;
+            boton.style.backgroundImage = "";
+            boton.style.backgroundColor = "";
+            texto.textContent = pregunta[`answer${letra}`];
+        });
+
+        const botonEnunciado = document.querySelector(".return-button:nth-child(2)");
+        botonEnunciado.style.display = pregunta.largeQuestion ? "inline-block" : "none";
+
+
+        ["text-clue", "emoji-clue", "fifty-clue"].forEach(id => {
+            document.getElementById(id).disabled = false;
+        });
+
+    } catch (error) {
+        console.error("Error al cambiar pregunta:", error);
+    }
+}
+
+
+function verificarRespuesta(letraSeleccionada) {
+    if (!preguntaActual) return;
+
+    const esCorrecta = letraSeleccionada === preguntaActual.correctAnswer;
+
+    resultadoPartida.push({
+        idPregunta: preguntaActual.id,
+        respuestaUsuario: letraSeleccionada,
+        respuestaCorrecta: preguntaActual.correctAnswer,
+        fueCorrecta: esCorrecta
+    });
+
+    if (esCorrecta) {
+        scoreActual += preguntaActual.largeQuestion ? 10 : 5;
+        alert(`muy bien! acertaste`);
+    } else {
+        alert(`lo siento, la respuesta correcta era : '${preguntaActual.correctAnswer}' `);
+    }
+
+
+    ["A", "B", "C", "D"].forEach(letra => {
+        const boton = document.getElementById(`answer-${letra.toLowerCase()}`);
+        boton.disabled = true;
+
+        if (letra === preguntaActual.correctAnswer) {
+            boton.style.backgroundImage = `url('../public/images/answers/correct/correcta-${letraSeleccionada.toUpperCase()}.png')`;
+        } else {
+            boton.style.backgroundImage = `url('../public/images/answers/incorrect/incorrecta-${preguntaActual.correctAnswer.toUpperCase()}.png')`;
+        }
+
+        boton.style.backgroundSize = 'cover';
+        boton.style.backgroundRepeat = 'no-repeat';
+        boton.style.backgroundPosition = 'center';
+    });
+    
+    setTimeout(() => {
+        if (resultadoPartida.length >= 20) {
+            finalizarJuego();
+        } else {
+            cambiarAPregunta();
+        }
+    }, 1500);
+}
+
+
+
+function finalizarJuego() {
+    document.getElementById("game-screen").style.display = "none";
+    document.getElementById("win").style.display = "block";
+
+    document.getElementById("win").innerHTML = `
+        <h2>¡Juego finalizado!</h2>
+        <p>Tu puntaje final fue: ${scoreActual} puntos.</p>
+        <button onclick="ui.userScreen()">Volver al menú</button>
+    `;
+
+    guardarMejorPartida();
+    subirPartida(scoreActual, 1);
+
+}
+
+
+async function guardarMejorPartida() {
+    try {
+        const response = await fetch('http://localhost:4000/saveBestGame', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idUser: idLoggeado,
+                score: scoreActual
+            })
+        });
+
+        const result = await response.json();
+        console.log(result.message);
+    } catch (error) {
+        console.error("Error al guardar partida:", error);
+    }
+}
+
+async function subirPartida(score, win) {
+    try {
+        let idLoggeado = result.userId;
+
+        console.log("Subiendo partida con:", { idLoggeado, score, win });
+
+        const response = await fetch("http://localhost:4000/addGame", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idUser: idLoggeado,
+                score: score,
+                win: win
+            })
+        });
+
+        const result = await response.json();
+        console.log(result.message);
+    } catch (error) {
+        console.error("Error al subir partida:", error);
+    }
 }
