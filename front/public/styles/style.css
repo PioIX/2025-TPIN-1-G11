@@ -495,6 +495,54 @@ a:hover {
         background-image: url('../images/answers/normal/respuesta-d.png');
 }
 
+#return-menu-ranking {
+    border-radius: 0px;
+}
+
+#win {
+    background-image: url('../images/final/win.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 70vw;
+    height: calc(70vw * 0.5625);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 2%;
+    justify-content: end;
+    align-items: center;
+    border-radius: 50px;
+    border-color: white;
+    border-width: 2px;
+    border-style: solid;
+}
+
+#lose {
+    background-image: url('../images/final/lose.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 70vw;
+    height: calc(70vw * 0.5625);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 2%;
+    justify-content: end;
+    align-items: center;
+    border-radius: 50px;
+    border-color: white;
+    border-width: 2px;
+    border-style: solid;
+}
+
 @media (max-width: 400px) {
     #logo {
         width: 230px;

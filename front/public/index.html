@@ -181,7 +181,7 @@
                 </section>
             </div>
         </div>
-        <div id="main-menu">
+        <div id="main-menu" style="display: none">
             <header>
                 <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
             </header>
@@ -233,7 +233,7 @@
                         <li class="win"></li>
                     </ul>
                 </div>
-                <button onclick="ui.userScreen()">VOLVER</button>
+                <button onclick="ui.userScreen()" id = "return-menu-ranking">VOLVER</button>
             </div>
         </div>
         <div id="game" style="display: none">
@@ -281,11 +281,17 @@
                     </div>
                 </main>
             </div>
-            <div id="lose" style="display: none">
+            <div id = "correct-answer">
 
             </div>
-            <div id="win" style="display: none">
+            <div id = "incorrect-answer">
 
+            </div>
+            <div id="lose" style="display: none">
+                <button class = "return-to-menu-end">Volver al menú</button>
+            </div>
+            <div id="win" style="display: none">
+                <button class = "return-to-menu-end">Volver al menú</button>
             </div>
         </div>
     </div>
