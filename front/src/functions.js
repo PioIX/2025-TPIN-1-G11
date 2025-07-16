@@ -62,18 +62,18 @@ async function userVerify(user) {
         const result = await response.json();
         console.log(result.message)
         if (result.message === 'ok') {
-            document.getElementById('login-container').style.padding = '0';
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('notepad').style.display = 'block';
-            document.getElementById('logo').style.display = 'none'
+                        alert("user")
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('main-menu-body').style.display = 'block';
+            document.getElementById('user-registered').style.display = '';
             ui.setUser(result.username);
             idLoggeado = result.userId;
             return result;
         } if (result.message === 'admin') {
-            document.getElementById('login-container').style.padding = '0';
-            document.getElementById('logo').style.display = 'none'
-            document.getElementById('loginForm').style.display = 'none';
+            alert("admin")
+            document.getElementById('login-container').style.display = 'none';
             document.getElementById('admin-ui').style.display = 'block';
+            document.getElementById('user-registered').style.display = '';
             ui.setUser(result.username);
             idLoggeado = result.userId;
             return result;
@@ -107,8 +107,9 @@ async function registerUser(newUser) {
         let result = await response.json()
         console.log(result.message)
         if (result.message === 'ok') {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('notepad').style.display = 'block';
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('main-menu-body').style.display = 'block';
+                        document.getElementById('user-registered').style.display = '';
             ui.setUser(result.username);
             idLoggeado = result.userId;
             alert('bienvenido dios dictador');
@@ -363,12 +364,12 @@ async function editarPregunta() {
         answerC,
         answerD,
         correctAnswer,
-        emojiClue: '',
-        textClue: '',
-        fiftyClue: '',
-        largeQuestion: 0,
-        image: null,
-        text: null
+        emojiClue,
+        textClue,
+        fiftyClue,
+        largeQuestion,
+        image,
+        text
     };
 
     try {
@@ -527,6 +528,9 @@ async function abrirRanking() {
 
 
 
-function cerrarSesion() {
-
+function logOut() {
+    document.getElementById('admin-ui').style.display = 'none'
+    document.getElementById('main-menu-body').style.display = 'none'
+    document.getElementById('user-registered').style.display = 'none';
+    document.getElementById('login-container').style.display = 'flex';
 }

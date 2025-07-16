@@ -30,25 +30,33 @@ app.post("/verifyUser", async (req, res) => {
     try {
         let check = await realizarQuery(
             `Select * From Users where name = "${req.body.name}" and password = "${req.body.password}" `
-        )
-        if ((check.length > 0)&&(check.adminUser===1)){
-            res.send({
+        );
+        let checkAdmin = await realizarQuery(
+            `Select adminUser From Users where name = "${req.body.name}" and password = "${req.body.password}" `
+        );
+
+        if (check.length === 0) {
+            return res.send({
+                message: "Verifica si ambos campos fueron rellenados y si el usuario existe y coincide con la contraseña."
+            });
+        }
+
+        if (checkAdmin[0].adminUser == 1) {
+            return res.send({
                 message: "admin",
                 username: req.body.name,
-                adminUser:1
-            })}if(check.length > 0){
-                res.send({
+                adminUser: 1
+            });
+        } else {
+            return res.send({
                 message: "ok",
-                username: req.body.name,})
-            }else {
-            res.send({
-                message: "Verifica si ambos campos fueron rellenados y si el usuario existe y coincide con la contraseña."
-            })
+                username: req.body.name,
+            });
         }
     } catch (error) {
-        res.send(error)
+        res.status(500).send(error);
     }
-})
+});
 
 app.post("/regUser", async (req, res) => {
     try {
@@ -75,36 +83,43 @@ app.post("/regUser", async (req, res) => {
 
 app.delete("/deleteUser", async (req, res) => {
     try {
-        // Validar que se recibió un ID
+        // Validar que se recibió un nombre
         if (!req.body.name) {
             return res.status(400).send({ message: "Se requiere el nombre de usuario" });
         }
 
-        // Verificar si la pregunta existe
+        // Verificar si el usuario existe
         const check = await realizarQuery(
             `SELECT * FROM Users WHERE name = "${req.body.name}"`
         );
+        let findUserId = await realizarQuery(
+            `Select id From Users where name = "${req.body.name}" `
+        );
 
         if (check.length === 0) {
-            return res.status(404).send({ 
-                message: "No se encontró ningun usuario con ese nombre" 
+            return res.status(404).send({
+                message: "No se encontró ningun usuario con ese nombre"
             });
         }
 
         await realizarQuery(
-            `DELETE FROM Users WHERE name = "${req.body.name}"`
+            `DELETE FROM Games WHERE idUser = ${findUserId[0].id}`
+        );
+
+        await realizarQuery(
+            `DELETE FROM Users WHERE name = "${req.body.name}" `
         );
 
         res.send({
             message: "Usuario borrado exitosamente",
             deletedId: req.body.name
         });
-        
+
     } catch (error) {
         console.error("Error:", error);
-        res.status(500).send({ 
+        res.status(500).send({
             message: "Error interno al borrar el usuario",
-            error: error.message 
+            error: error.message
         });
     }
 });
@@ -122,8 +137,8 @@ app.delete("/deleteQuestion", async (req, res) => {
         );
 
         if (check.length === 0) {
-            return res.status(404).send({ 
-                message: "No se encontró ninguna pregunta con ese ID" 
+            return res.status(404).send({
+                message: "No se encontró ninguna pregunta con ese ID"
             });
         }
 
@@ -135,12 +150,12 @@ app.delete("/deleteQuestion", async (req, res) => {
             message: "Pregunta borrada exitosamente",
             deletedId: req.body.id
         });
-        
+
     } catch (error) {
         console.error("Error:", error);
-        res.status(500).send({ 
+        res.status(500).send({
             message: "Error interno al borrar la pregunta",
-            error: error.message 
+            error: error.message
         });
     }
 });
@@ -158,8 +173,8 @@ app.delete("/deleteGames", async (req, res) => {
         );
 
         if (check.length === 0) {
-            return res.status(404).send({ 
-                message: "No se encontró ninguna pregunta con ese ID" 
+            return res.status(404).send({
+                message: "No se encontró ninguna pregunta con ese ID"
             });
         }
 
@@ -171,12 +186,12 @@ app.delete("/deleteGames", async (req, res) => {
             message: "Pregunta borrada exitosamente",
             deletedId: req.body.id
         });
-        
+
     } catch (error) {
         console.error("Error:", error);
-        res.status(500).send({ 
+        res.status(500).send({
             message: "Error interno al borrar la pregunta",
-            error: error.message 
+            error: error.message
         });
     }
 });
@@ -308,10 +323,10 @@ app.get('/getGame', async function (req, res) {
 app.get('/getAllGames', async function (req, res) {
     try {
         let [respuesta] = await realizarQuery(`SELECT * FROM Games`);
-        
+
         res.send({
             message: "partidas",
-            data: respuesta 
+            data: respuesta
         });
     } catch (error) {
         res.send({ mensaje: "Tuviste un error", error: error.message });
