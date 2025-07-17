@@ -59,7 +59,7 @@ class UserInterface {
     document.getElementById("game").style.display = "none";
   }
 
-  adminQuestionsScreen(){
+  adminQuestionsScreen() {
     document.getElementById("logo").style.display = "none";
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("admin-ui").style.display = "none";
@@ -67,7 +67,7 @@ class UserInterface {
     document.getElementById('admin-questions').style.display = 'block'
   }
 
-  adminUsersScreen(){
+  adminUsersScreen() {
     document.getElementById("logo").style.display = "none";
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("admin-ui").style.display = "none";
@@ -75,7 +75,7 @@ class UserInterface {
     document.getElementById('admin-users').style.display = 'block'
   }
 
-  adminGamesScreen(){
+  adminGamesScreen() {
     document.getElementById("logo").style.display = "none";
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("admin-ui").style.display = "none";
@@ -101,13 +101,12 @@ class UserInterface {
   juegoScreen() {
     document.getElementById("game").style.display = "block";
     document.getElementById("game-screen").style.display = "block";
-    document.getElementById("win").style.display = "none";
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("logo").style.display = "none";
     document.getElementById("admin-ui").style.display = "none";
     document.getElementById("main-menu").style.display = "none";
     document.getElementById("ranking").style.display = "none";
-}
+  }
 
 
 

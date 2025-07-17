@@ -351,8 +351,8 @@ async function editarPregunta() {
     const textClue = getValOrNull('edit-text-clue');
     const fiftyClue = getValOrNull('edit-fifty-clue');
 
-    const largeQuestion = getValOrNull('edit-large-question'); 
-    const image = getValOrNull('edit-image'); 
+    const largeQuestion = getValOrNull('edit-large-question');
+    const image = getValOrNull('edit-image');
     const text = getValOrNull('edit-text');
 
     const preguntaEditada = {
@@ -779,17 +779,14 @@ function verificarRespuesta(letraSeleccionada) {
     }, 1500);
 }
 
-
-
 function finalizarJuego() {
     document.getElementById("game-screen").style.display = "none";
-    document.getElementById("win").style.display = "block";
-
-    document.getElementById("win").innerHTML = `
+    const gameDiv = document.getElementById("game");
+    gameDiv.innerHTML = `
         <h2>¡Juego finalizado!</h2>
         <p>Tu puntaje final fue: ${scoreActual} puntos.</p>
         <button onclick="back()">Volver al menú</button>
-        <button onclick="nuevojuego()">Volver a Jugar</button
+        <button onclick="nuevojuego()">Volver a Jugar</button>
     `;
 
     subirPartida(scoreActual, 1);
@@ -852,7 +849,7 @@ function reiniciarJuego() {
     ["a", "b", "c", "d"].forEach(letra => {
         const boton = document.getElementById(`answer-${letra}`);
         boton.disabled = false;
-        boton.style.backgroundImage = ""; 
+        boton.style.backgroundImage = "";
     });
     document.getElementById("text-clue").disabled = false;
     document.getElementById("emoji-clue").disabled = false;
