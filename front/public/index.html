@@ -47,7 +47,7 @@
             </div>
         </div>
     </div>
-    <div id="user-registered" style="display: none">
+    <div id="user-registered">
         <div id="admin-ui" style="display: none">
             <header>
                 <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
@@ -185,7 +185,7 @@
             <header>
                 <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
             </header>
-            <div id="main-menu-body" style="display: none">
+            <div id="main-menu-body">
                 <div>
                     <img src="images/logo.png" id="logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'"
                         alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
@@ -233,11 +233,11 @@
                         <li class="win"></li>
                     </ul>
                 </div>
-                <button onclick="ui.userScreen()" id = "return-menu-ranking">VOLVER</button>
+                <button onclick="ui.userScreen()" id = "return-menu-ranking">Volver</button>
             </div>
         </div>
         <div id="game" style="display: none">
-            <div id="game-screen">
+            <div id="game-screen" style="display: none">
                 <nav>
                     <div id="return-buttons">
                         <button onclick="ui.userScreen();" class="return-button">Volver al menu</button>
@@ -281,18 +281,30 @@
                     </div>
                 </main>
             </div>
-            <div id = "correct-answer">
-
+            <div id = "correct-answer" style="display: none">
+                <h3>¡Enhorabuena! :)</h3>
+                <h4>Respuesta correcta</h4>
+                <button onclick = "" class = "continue-playing">Continuar</button>
             </div>
-            <div id = "incorrect-answer">
-
+            <div id = "incorrect-answer" style="display: none">
+                <h3>Enhoramala :(</h3>
+                <h4>Respuesta incorrecta</h4>
+                <p>La respuesta correcta era:<br><b><span id = "correct-answer-span">acá va la respuesta correcta</span></b></p>
+                <button onclick = "" class = "continue-playing">Continuar</button>
             </div>
-            <div id="lose" style="display: none">
-                <button class = "return-to-menu-end">Volver al menú</button>
+            <div id="emoji-clue-modal" style="display: none">
+                <h3>Pista de emojis:</h3>
+                <h4 id = "emoji-clue-span">Acá va la pista de emojis</h4>
+                <button onclick = "" class = "continue-playing">Continuar</button>
             </div>
-            <div id="win" style="display: none">
-                <button class = "return-to-menu-end">Volver al menú</button>
+            <div id="text-clue-modal" style="display: none">
+                <h3>Pista de texto:</h3>
+                <h4 id = "text-clue-span">Acá va la pista de texto</h4>
+                <button onclick = "" class = "continue-playing">Continuar</button>
             </div>
+            <div id = "modal-blur" style="display: none"></div> <!-- Esto es un filtro que oscurece lo que está atrás del modal y no te deja tocarlo. 
+            La idea es que se muestre y cierre al mismo tiempo que el propio modal.
+            Tenganlo en cuenta al crear las funciones. -->
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
