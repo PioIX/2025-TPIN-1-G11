@@ -799,6 +799,7 @@ function cambiarAJuego() {
     reiniciarEstadoJuego();
     ui.juegoScreen();
     cargarPreguntaRandom();
+    document.getElementById("main-menu-body").style.display = "none";
 }
 
 function reiniciarEstadoJuego() {
