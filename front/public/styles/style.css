@@ -557,6 +557,10 @@ a:hover {
 #long-question-image {
     width: 30%;
     height: auto;
+    border-color: white;
+    border-radius: 20px;
+    border-width: 3px;
+    border-style: solid;
 }
 
 #long-question-modal {
@@ -584,9 +588,15 @@ a:hover {
     justify-content: end;
 }
 
-#text-clue-modal, #emoji-clue-modal, #long-question-modal {
+#text-clue-modal, #emoji-clue-modal {
     background-color: darkblue;
     justify-content: center;
+    gap: 2vw;
+}
+
+#long-question-modal {
+    background-color: darkblue;
+    justify-content: top;
     gap: 2vw;
 }
 
