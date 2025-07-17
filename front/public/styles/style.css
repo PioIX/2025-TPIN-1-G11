@@ -382,6 +382,29 @@ a:hover {
   background-color: rgba(255, 255, 255, 1);
 }
 
+#long-question-modal::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  #long-question-modal::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  #long-question-modal::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  
+  #long-question-modal::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  
+  #long-question-modal::-webkit-scrollbar-thumb:active {
+    background-color: rgba(255, 255, 255, 1);
+  }
+
 #game-screen nav {
     padding-right: cacl(4vw - 40px);
     padding-left: 4vw;
@@ -512,7 +535,7 @@ a:hover {
     border-radius: 0px;
 }
 
-#win, #lose, #emoji-clue-modal, #text-clue-modal {
+#win, #lose, #emoji-clue-modal, #text-clue-modal, #long-question-modal {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
@@ -531,6 +554,26 @@ a:hover {
     border-style: solid;
 }
 
+#long-question-image {
+    width: 30%;
+    height: auto;
+}
+
+#long-question-modal {
+    padding: 30px;
+    padding-right: calc(20px + 4vw);
+    padding-left: calc(20px + 4vw);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    color: white;
+    border-radius: 20px;
+    justify-content: bottom;
+}
+
+#long-question-modal h3 {
+    padding-top: 30px;
+}
+
 #win {
     background-image: url('../images/modals/win.png');
     justify-content: end;
@@ -541,14 +584,8 @@ a:hover {
     justify-content: end;
 }
 
-#emoji-clue-modal {
-    background-image: url('../images/modals/emoji-background.jpg');
-    justify-content: center;
-    gap: 2vw;
-}
-
-#text-clue-modal {
-    background-image: url('../images/modals/text-background.jpeg');
+#text-clue-modal, #emoji-clue-modal, #long-question-modal {
+    background-color: darkblue;
     justify-content: center;
     gap: 2vw;
 }
@@ -556,6 +593,7 @@ a:hover {
 #emoji-clue-modal h3, #emoji-clue-modal h4, #text-clue-modal h3, #text-clue-modal h4 {
     padding: 10px;
     border-radius: 30px;
+    color: white;
 }
 
 #emoji-clue-modal h4 {
@@ -564,18 +602,13 @@ a:hover {
     margin-top: -1.5vw;
 }
 
-#emoji-clue-modal h3, #emoji-clue-modal button {
-    background-color: rgb(255, 208, 0);
-    color: rgb(87, 32, 0);
-}
-
-#text-clue-modal h3, #text-clue-modal h4, #text-clue-modal button {
-    background-color: rgba(238, 230, 212, 0.829);
+#emoji-clue-modal button, #text-clue-modal button {
     color: black;
 }
 
 #text-clue-modal h4 {
     font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
     margin-top: -1.5vw;
 }
 
@@ -599,7 +632,7 @@ a:hover {
     padding-bottom: 20px;
 }
 
-#incorrect-answer h3, #correct-answer h3, #emoji-clue-modal h4, #text-clue-modal h3 {
+#incorrect-answer h3, #correct-answer h3, #emoji-clue-modal h4, #text-clue-modal h3, #long-question-modal h3 {
     font-size: clamp(15px, 2vw, 70px);
 }
 
@@ -607,7 +640,7 @@ a:hover {
     font-size: clamp(13px, 2vw, 20px);
 }
 
-#incorrect-answer p, #correct-answer p {
+#incorrect-answer p, #correct-answer p, #long-question-modal p {
     font-size: clamp(10px, 2vw, 17px);
 }
 
@@ -637,7 +670,7 @@ a:hover {
     color: #ff3c00;
 }
 
-#incorrect-answer, #correct-answer, #win, #lose, #emoji-clue-modal, #text-clue-modal {
+#incorrect-answer, #correct-answer, #win, #lose, #emoji-clue-modal, #text-clue-modal, #long-question-modal {
     z-index: 10;
 }
 
