@@ -12,7 +12,6 @@ app.listen(port, function () {
     console.log(`Server running in http://localhost:${port}`);
 });
 
-// Convierte una petición recibida (POST-GET...) a objeto JSON
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
@@ -29,32 +28,30 @@ app.get('/', function (req, res) {
 app.post("/verifyUser", async (req, res) => {
     try {
         let check = await realizarQuery(
-            `Select * From Users where name = "${req.body.name}" and password = "${req.body.password}" `
-        );
-        let checkAdmin = await realizarQuery(
-            `Select adminUser From Users where name = "${req.body.name}" and password = "${req.body.password}" `
+            `SELECT * FROM Users WHERE name = "${req.body.name}" AND password = "${req.body.password}"`
         );
 
-        if (check.length === 0) {
+        if (check.length > 0 && check[0].adminUser == 1) {
+            return res.send({
+                message: "admin",
+                username: req.body.name,
+                adminUser: 1,
+                userId: check[0].id
+            });
+        } else if (check.length > 0) {
+            return res.send({
+                message: "ok",
+                username: req.body.name,
+                userId: check[0].id
+            });
+        } else {
             return res.send({
                 message: "Verifica si ambos campos fueron rellenados y si el usuario existe y coincide con la contraseña."
             });
         }
 
-        if (checkAdmin[0].adminUser == 1) {
-            return res.send({
-                message: "admin",
-                username: req.body.name,
-                adminUser: 1
-            });
-        } else {
-            return res.send({
-                message: "ok",
-                username: req.body.name,
-            });
-        }
     } catch (error) {
-        res.status(500).send(error);
+        return res.send(error);
     }
 });
 
@@ -83,12 +80,9 @@ app.post("/regUser", async (req, res) => {
 
 app.delete("/deleteUser", async (req, res) => {
     try {
-        // Validar que se recibió un nombre
         if (!req.body.name) {
             return res.status(400).send({ message: "Se requiere el nombre de usuario" });
         }
-
-        // Verificar si el usuario existe
         const check = await realizarQuery(
             `SELECT * FROM Users WHERE name = "${req.body.name}"`
         );
@@ -126,12 +120,10 @@ app.delete("/deleteUser", async (req, res) => {
 
 app.delete("/deleteQuestion", async (req, res) => {
     try {
-        // Validar que se recibió un ID
         if (!req.body.id) {
             return res.status(400).send({ message: "Se requiere el ID de la pregunta" });
         }
 
-        // Verificar si la pregunta existe
         const check = await realizarQuery(
             `SELECT * FROM Questions WHERE id = ${req.body.id}`
         );
@@ -162,12 +154,11 @@ app.delete("/deleteQuestion", async (req, res) => {
 
 app.delete("/deleteGames", async (req, res) => {
     try {
-        // Validar que se recibió un ID
+
         if (!req.body.id) {
             return res.status(400).send({ message: "Se requiere el ID de la pregunta" });
         }
 
-        // Verificar si la pregunta existe
         const check = await realizarQuery(
             `SELECT * FROM Games WHERE id = ${req.body.id}`
         );
@@ -238,7 +229,6 @@ app.put("/editQuestion", async (req, res) => {
             return res.status(404).send({ message: "Pregunta no encontrada" });
         }
 
-        // Construir la consulta SQL correctamente
         let sql = `UPDATE Questions SET 
             content = "${req.body.content}", 
             answerA = "${req.body.answerA}", 
@@ -322,13 +312,102 @@ app.get('/getGame', async function (req, res) {
 
 app.get('/getAllGames', async function (req, res) {
     try {
-        let [respuesta] = await realizarQuery(`SELECT * FROM Games`);
+        const respuesta = await realizarQuery(`SELECT * FROM Games`);
 
         res.send({
             message: "partidas",
-            data: respuesta
+            response: respuesta
         });
     } catch (error) {
         res.send({ mensaje: "Tuviste un error", error: error.message });
+    }
+});
+
+app.post('/randomQuestion', async function (req, res) {
+    try {
+        const { excludedIds = [] } = req.body;
+        const condition = excludedIds.length > 0
+            ? `WHERE id NOT IN (${excludedIds.join(',')})`
+            : '';
+
+        const query = `SELECT * FROM Questions ${condition} ORDER BY RAND() LIMIT 1`;
+
+        const [pregunta] = await realizarQuery(query);
+
+        if (!pregunta) {
+            return res.send({ message: "No hay más preguntas disponibles", response: null });
+        }
+
+        res.send({
+            message: "Pregunta aleatoria obtenida correctamente",
+            response: pregunta
+        });
+    } catch (error) {
+        res.send({ message: "Error al obtener pregunta aleatoria", error: error.message });
+    }
+});
+
+app.post('/saveBestGame', async function (req, res) {
+    try {
+        const { idUser, score } = req.body;
+
+        if (!idUser || score == null) {
+            return res.status(400).send({ message: "Faltan datos requeridos." });
+        }
+
+        const result = await realizarQuery(`SELECT MAX(score) AS maxScore FROM Games WHERE idUser = ${idUser}`);
+        const maxScore = result[0].maxScore || 0;
+
+        if (score > maxScore) {
+            await realizarQuery(`INSERT INTO Games (idUser, score, win) VALUES (${idUser}, ${score}, true)`);
+            return res.send({ message: "¡Nuevo mejor puntaje guardado!" });
+        } else {
+            return res.send({ message: "No es mejor que el puntaje anterior. No se guardó." });
+        }
+
+    } catch (error) {
+        console.error("Error al guardar partida:", error);
+        res.status(500).send({ message: "Error interno al guardar el juego.", error: error.message });
+    }
+});
+
+app.post("/addGame", async (req, res) => {
+    try {
+        const { idUser, score, win } = req.body;
+
+        if (!idUser || score == null) {
+            return res.status(400).send({ message: "Faltan datos requeridos." });
+        }
+
+        await realizarQuery(`
+            INSERT INTO Games (idUser, score, win)
+            VALUES (${idUser}, ${score}, ${win ? 1 : 0})
+        `);
+
+        res.send({ message: "Partida guardada correctamente." });
+
+    } catch (error) {
+        console.error("Error al guardar partida:", error);
+        res.status(500).send({ message: "Error interno", error: error.message });
+    }
+});
+
+app.get("/checkAdminStatus/:id", async (req, res) => {
+    try {
+        const userId = req.params.id;
+
+        const check = await realizarQuery(`SELECT adminUser FROM Users WHERE id = ${userId}`);
+
+        if (check.length > 0) {
+            return res.send({
+                isAdmin: check[0].adminUser === 1
+            });
+        } else {
+            return res.send({
+                message: "Usuario no encontrado"
+            });
+        }
+    } catch (error) {
+        return res.status(500).send({ error: "Error del servidor", details: error });
     }
 });

@@ -1,3 +1,11 @@
+
+let scoreActual = 0;
+let preguntasUsadas = [];
+let preguntaActual = null;
+let resultadoPartida = [];
+let respuestaCorrecta = "";
+
+
 function loginForm() {
     document.getElementById('signUp').innerHTML = `
                 <legend>¿Nuevo aspirante a golpista? ¡Registrate acá!</legend>
@@ -62,7 +70,6 @@ async function userVerify(user) {
         const result = await response.json();
         console.log(result.message)
         if (result.message === 'ok') {
-                        alert("user")
             document.getElementById('login-container').style.display = 'none';
             document.getElementById('main-menu').style.display = 'block';
             document.getElementById('user-registered').style.display = '';
@@ -70,10 +77,7 @@ async function userVerify(user) {
             idLoggeado = result.userId;
             return result;
         } if (result.message === 'admin') {
-            alert("admin")
-            document.getElementById('login-container').style.display = 'none';
-            document.getElementById('admin-ui').style.display = 'block';
-            document.getElementById('user-registered').style.display = '';
+            ui.adminScreen();
             ui.setUser(result.username);
             idLoggeado = result.userId;
             return result;
@@ -109,7 +113,7 @@ async function registerUser(newUser) {
         if (result.message === 'ok') {
             document.getElementById('login-container').style.display = 'none';
             document.getElementById('main-menu').style.display = 'block';
-                        document.getElementById('user-registered').style.display = '';
+            document.getElementById('user-registered').style.display = '';
             ui.setUser(result.username);
             idLoggeado = result.userId;
             alert('bienvenido dios dictador');
@@ -125,25 +129,20 @@ async function registerUser(newUser) {
 
 async function cargarDatosPregunta() {
     try {
-        // Obtener el ID de la pregunta
         const questionIdInput = document.getElementById('question-id-input').value.trim();
 
         if (!questionIdInput || isNaN(questionIdInput)) {
             alert('Por favor ingresa un ID válido (número)');
             return;
         }
-
-        // Hacer la petición al servidor
         const response = await fetch(`http://localhost:4000/getQuestion?id=${questionIdInput}`);
         const result = await response.json();
 
         console.log('Respuesta del servidor:', result);
 
-        // Mostrar los datos directamente en los inputs
         if (result.response && result.response.id) {
             const pregunta = result.response;
 
-            // Rellenar todos los campos del formulario con inputs
             document.getElementById('edit-content').value = pregunta.content || '';
             document.getElementById('edit-answer-a').value = pregunta.answerA || '';
             document.getElementById('edit-answer-b').value = pregunta.answerB || '';
@@ -154,10 +153,8 @@ async function cargarDatosPregunta() {
             document.getElementById('edit-text-clue').value = pregunta.textClue || '';
             document.getElementById('edit-fifty-clue').value = pregunta.fiftyClue || '';
 
-            // Mostrar la sección del formulario
             document.getElementById('question-info').style.display = 'block';
 
-            // Mostrar el ID como referencia
             document.getElementById('display-question-id').textContent = pregunta.id;
         } else {
             alert(result.message || 'No se encontró la pregunta con ese ID');
@@ -170,14 +167,12 @@ async function cargarDatosPregunta() {
 
 async function editarPregunta() {
     try {
-        // Obtener el ID de la pregunta
         const questionId = document.getElementById('question-id-input').value.trim();
 
         if (!questionId) {
             throw new Error('Primero debes cargar una pregunta para editar');
         }
 
-        // Validar campos
         const camposRequeridos = [
             'edit-content', 'edit-answer-a', 'edit-answer-b',
             'edit-answer-c', 'edit-answer-d', 'edit-correct-answer',
@@ -192,7 +187,6 @@ async function editarPregunta() {
             }
         }
 
-        // Preparar datos para enviar
         const preguntaEditada = {
             id: questionId,
             content: document.getElementById('edit-content').value,
@@ -209,7 +203,6 @@ async function editarPregunta() {
             text: null
         };
 
-        // Validar respuesta correcta
         if (!['A', 'B', 'C', 'D'].includes(preguntaEditada.correctAnswer)) {
             throw new Error('La respuesta correcta debe ser A, B, C o D');
         } else if (!['AB', 'AC', 'AD', 'BA', 'BC', 'BD', 'CA', 'CB', 'CD', 'DA', 'DB', 'DC'].includes(preguntaEditada.fiftyClue)) {
@@ -218,7 +211,6 @@ async function editarPregunta() {
 
 
 
-        // Enviar al servidor
         const response = await fetch('http://localhost:4000/editQuestion', {
             method: 'PUT',
             headers: {
@@ -243,14 +235,12 @@ async function editarPregunta() {
 
 async function borrarPregunta() {
     try {
-        // Obtener el ID de la pregunta del input correcto
         const id = document.getElementById('question-id-input').value.trim();
 
         if (!id) {
             throw new Error('Ingresá un ID válido');
         }
 
-        // Enviar solicitud DELETE al servidor
         const response = await fetch('http://localhost:4000/deleteQuestion', {
             method: 'DELETE',
             headers: {
@@ -267,7 +257,6 @@ async function borrarPregunta() {
 
         alert(result.message || 'Pregunta borrada correctamente');
 
-        // Limpiar el formulario después de borrar
         document.getElementById('question-id-input').value = '';
         document.getElementById('question-info').style.display = 'none';
         document.getElementById('edit-content').value = '';
@@ -288,17 +277,15 @@ async function borrarPregunta() {
 }
 
 function mostrarEditarPregunta() {
-    document.getElementById('admin-questions').style.display = 'block'
+    ui.adminQuestionsScreen();
 }
 
 function mostrarAdminUsuarios() {
-    const seccion3 = document.getElementById('admin-users');
-    seccion3.style.display = '';
+    ui.adminUsersScreen();
 }
 
 function mostrarAdminPartidas() {
-    const seccion4 = document.getElementById('admin-games');
-    seccion4.style.display = '';
+    ui.adminGamesScreen();
 }
 
 async function crearPregunta() {
@@ -345,16 +332,28 @@ async function crearPregunta() {
 }
 
 async function editarPregunta() {
-    const id = document.getElementById('question-id-input').value;
-    const content = document.getElementById('edit-content').value;
-    const answerA = document.getElementById('edit-answer-a').value;
-    const answerB = document.getElementById('edit-answer-b').value;
-    const answerC = document.getElementById('edit-answer-c').value;
-    const answerD = document.getElementById('edit-answer-d').value;
-    const correctAnswer = document.getElementById('edit-correct-answer').value;
-    const emojiClue = document.getElementById('edit-emoji-clue').value;
-    const textClue = document.getElementById('edit-text-clue').value;
-    const fiftyClue = document.getElementById('edit-fifty-clue').value;
+    const getValOrNull = id => {
+        const el = document.getElementById(id);
+        if (!el) return null;
+        const val = el.value.trim();
+        return val === "" ? null : val;
+    };
+
+
+    const id = getValOrNull('question-id-input');
+    const content = getValOrNull('edit-content');
+    const answerA = getValOrNull('edit-answer-a');
+    const answerB = getValOrNull('edit-answer-b');
+    const answerC = getValOrNull('edit-answer-c');
+    const answerD = getValOrNull('edit-answer-d');
+    const correctAnswer = getValOrNull('edit-correct-answer');
+    const emojiClue = getValOrNull('edit-emoji-clue');
+    const textClue = getValOrNull('edit-text-clue');
+    const fiftyClue = getValOrNull('edit-fifty-clue');
+
+    const largeQuestion = getValOrNull('edit-large-question'); 
+    const image = getValOrNull('edit-image'); 
+    const text = getValOrNull('edit-text');
 
     const preguntaEditada = {
         id,
@@ -415,7 +414,6 @@ async function borrarUsuario() {
 
         alert(result.message || 'Usuario borrado correctamente');
 
-        // Limpiar el campo después de borrar
         document.getElementById('username-to-delete').value = '';
 
     } catch (error) {
@@ -439,13 +437,11 @@ async function cargarDatosPartida() {
         if (result.response && result.response.id) {
             const partida = result.response;
 
-            // Mostrar los datos en los spans (no en inputs)
             document.getElementById('display-game-id').textContent = partida.id;
             document.getElementById('display-player-id').textContent = partida.idUser;
             document.getElementById('display-game-score').textContent = partida.score;
             document.getElementById('display-game-win').textContent = partida.win ? 'Sí' : 'No';
 
-            // Mostrar la sección de información
             document.getElementById('game-info').style.display = 'block';
         } else {
             alert(result.message || 'No se encontró la partida con ese ID');
@@ -460,7 +456,6 @@ async function borrarPartida() {
     const idInput = document.getElementById('game-id-input');
     const id = idInput.value.trim();
 
-    // Validación básica
     if (!id) {
         alert('Por favor ingresa un ID de partida');
         idInput.focus();
@@ -468,7 +463,7 @@ async function borrarPartida() {
     }
 
     try {
-        // Petición DELETE con el ID en el body
+
         const response = await fetch('http://localhost:4000/deleteGames', {
             method: 'DELETE',
             headers: {
@@ -486,7 +481,6 @@ async function borrarPartida() {
 
         alert(result.message || 'Partida borrada correctamente');
 
-        // Limpiar el campo después de borrar
         idInput.value = '';
         const gameInfoSection = document.getElementById('game-info');
         if (gameInfoSection) {
@@ -502,31 +496,416 @@ async function borrarPartida() {
 async function abrirRanking() {
     ui.rankingScreen();
 
-    const response = await fetch('http://localhost:4000/getAllGames', {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
+    try {
+        const response = await fetch('http://localhost:4000/getAllGames', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        const result = await response.json();
+        console.log(result);
+        const games = result.response;
+
+        if (!Array.isArray(games) || games.length === 0) {
+            alert("No hay partidas registradas.");
+            return;
         }
-    });
+        const mejoresPartidas = new Map();
 
-    const result = await response.json();
-    const games = result.data;
-    console.log(games);
+        for (let game of games) {
+            if (!mejoresPartidas.has(game.idUser) || game.score > mejoresPartidas.get(game.idUser).score) {
+                mejoresPartidas.set(game.idUser, game);
+            }
+        }
 
-    const contenedor = document.getElementById("ranking-data");
-    contenedor.innerHTML = "";
+        const rankingOrdenado = Array.from(mejoresPartidas.values()).sort((a, b) => b.score - a.score);
 
-    for (let i = 0; i < games.length; i++) {
-        contenedor.innerHTML += `
-            <ul>
-                <li class="score">Score: ${games[i].score}</li>
-                <li class="win">Win: ${games[i].win ? 'Sí' : 'No'}</li>
-            </ul>
-        `;
+        const contenedor = document.getElementById("ranking-data");
+        contenedor.innerHTML = "";
+
+        rankingOrdenado.forEach((game, index) => {
+            const div = document.createElement("div");
+            div.className = "ranking-user";
+            div.innerHTML = `
+                <p>#${index + 1}</p>
+                <div class="vertical-line"></div>
+                <p>Jugador ID: ${game.idUser}</p>
+                <div class="vertical-line"></div>
+                <p>${game.score} pts.</p>
+            `;
+            contenedor.appendChild(div);
+
+            const linea = document.createElement("div");
+            linea.className = "horizontal-line";
+            contenedor.appendChild(linea);
+        });
+
+    } catch (error) {
+        console.error("Error al cargar el ranking:", error);
+        alert("Hubo un problema al cargar el ranking.");
+    }
+}
+
+function logOut() {
+    console.log("hola");
+    ui.loginScreen();
+}
+
+async function cargarPreguntaRandom() {
+    try {
+        document.getElementById("text-clue").disabled = false;
+        document.getElementById("emoji-clue").disabled = false;
+        document.getElementById("fifty-clue").disabled = false;
+
+        const response = await fetch('http://localhost:4000/randomQuestion', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ excludedIds: preguntasUsadas })
+        });
+
+        const result = await response.json();
+
+        if (!result.response) {
+            if (preguntasUsadas.length > 0) {
+                preguntasUsadas = [];
+                return cargarPreguntaRandom();
+            }
+            alert("No hay preguntas disponibles en la base de datos.");
+            return;
+        }
+
+        const pregunta = result.response;
+        preguntaActual = pregunta;
+        preguntasUsadas.push(pregunta.id);
+
+        document.getElementById("question-number").textContent = preguntasUsadas.length;
+        document.getElementById("question-text").textContent = pregunta.content;
+
+        document.getElementById("answer-a-text").textContent = pregunta.answerA;
+        document.getElementById("answer-b-text").textContent = pregunta.answerB;
+        document.getElementById("answer-c-text").textContent = pregunta.answerC;
+        document.getElementById("answer-d-text").textContent = pregunta.answerD;
+        document.getElementById("volverEnunciado").style.display = "none";
+
+        if (pregunta.largeQuestion) {
+            document.getElementById("question-text").textContent = pregunta.text;
+
+        }
+        if (pregunta.image) {
+            const img = document.createElement("img");
+            img.src = pregunta.image;
+            document.getElementById("question-container").appendChild(img);
+        }
+
+        ["a", "b", "c", "d"].forEach(letra => {
+            const texto = document.getElementById(`answer-${letra}-text`);
+            texto.innerHTML = "";
+
+            switch (letra) {
+                case 'a': texto.textContent = pregunta.answerA; break;
+                case 'b': texto.textContent = pregunta.answerB; break;
+                case 'c': texto.textContent = pregunta.answerC; break;
+                case 'd': texto.textContent = pregunta.answerD; break;
+            }
+
+            document.getElementById(`answer-${letra}`).style.display = "inline-block";
+        });
+
+        document.getElementById("fifty-clue").disabled = false;
+
+
+    } catch (error) {
+        console.error("Error al traer pregunta aleatoria:", error);
+        alert("Error al traer pregunta.");
     }
 }
 
 
+function mostrarPistaTexto() {
+    const textImage = document.getElementById("text-clue");
+    if (!preguntaActual || !preguntaActual.textClue) {
+        alert("No hay pista de texto disponible.");
+        return;
+    }
+
+    alert("Pista de texto: " + preguntaActual.textClue);
+
+    textImage.style.backgroundImage = `url('../public/images/clues/cluesUsadas/text-gris.png')`;
+    textImage.style.backgroundSize = 'cover';
+    textImage.style.backgroundRepeat = 'no-repeat';
+    textImage.style.backgroundPosition = 'center';
+    textImage.disabled = true;
+}
+
+function mostrarPistaEmoji() {
+    const emojiClueButton = document.getElementById("emoji-clue");
+    if (!preguntaActual || !preguntaActual.emojiClue) {
+        alert("No hay pista de emojis disponible.");
+        return;
+    }
+
+    alert("Pista de emojis: " + preguntaActual.emojiClue);
+
+    emojiClueButton.style.backgroundImage = `url('../public/images/clues/cluesUsadas/emoji-gris.png')`;
+    emojiClueButton.style.backgroundSize = 'cover';
+    emojiClueButton.style.backgroundRepeat = 'no-repeat';
+    emojiClueButton.style.backgroundPosition = 'center';
+    emojiClueButton.disabled = true;
+}
+
+
+function mostrarPistaCincuenta() {
+    const fiftyClue = document.getElementById("fifty-clue");
+    if (!preguntaActual || !preguntaActual.fiftyClue) {
+        alert("No hay pista 50/50 disponible.");
+        return;
+    }
+
+    const letrasDisponibles = preguntaActual.fiftyClue.toUpperCase().split('');
+
+    ["A", "B", "C", "D"].forEach(letra => {
+        const boton = document.getElementById(`answer-${letra.toLowerCase()}`);
+        const texto = document.getElementById(`answer-${letra.toLowerCase()}-text`);
+
+        if (!letrasDisponibles.includes(letra)) {
+            texto.textContent = "";
+
+            boton.style.backgroundImage = `url('../public/images/answers/fifty-fifty/50-50-${letra}.png')`;
+            boton.style.backgroundSize = 'cover';
+            boton.style.backgroundRepeat = 'no-repeat';
+            boton.style.backgroundPosition = 'center';
+
+            boton.disabled = true;
+        }
+    });
+
+    fiftyClue.style.backgroundImage = `url('../public/images/clues/cluesUsadas/fifty-fifty-gris.png')`;
+    fiftyClue.style.backgroundSize = 'cover';
+    fiftyClue.style.backgroundRepeat = 'no-repeat';
+    fiftyClue.style.backgroundPosition = 'center';
+    fiftyClue.disabled = true;
+}
+
+
+async function cambiarAPregunta() {
+    try {
+        const response = await fetch('http://localhost:4000/randomQuestion', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ excludedIds: preguntasUsadas })
+        });
+
+        const result = await response.json();
+        if (!result.response) {
+            alert("¡No hay más preguntas! ");
+            finalizarJuego(true);
+            return;
+        }
+
+        const pregunta = result.response;
+        preguntaActual = pregunta;
+        preguntasUsadas.push(pregunta.id);
+        respuestaCorrecta = pregunta.correctAnswer;
+
+        document.getElementById("question-number").textContent = preguntasUsadas.length;
+
+        const textoPregunta = pregunta.largeQuestion
+            ? pregunta.text || pregunta.content
+            : pregunta.content;
+        document.getElementById("question-text").textContent = textoPregunta;
+
+        ["A", "B", "C", "D"].forEach(letra => {
+            const boton = document.getElementById(`answer-${letra.toLowerCase()}`);
+            const texto = document.getElementById(`answer-${letra.toLowerCase()}-text`);
+
+            boton.disabled = false;
+            boton.style.backgroundImage = "";
+            boton.style.backgroundColor = "";
+            texto.textContent = pregunta[`answer${letra}`];
+        });
+
+        const botonEnunciado = document.querySelector(".return-button:nth-child(2)");
+        botonEnunciado.style.display = pregunta.largeQuestion ? "inline-block" : "none";
+
+
+        ["text-clue", "emoji-clue", "fifty-clue"].forEach(id => {
+            document.getElementById(id).disabled = false;
+        });
+
+    } catch (error) {
+        console.error("Error al cambiar pregunta:", error);
+    }
+}
+
+
+function verificarRespuesta(letraSeleccionada) {
+    if (!preguntaActual) return;
+
+    const esCorrecta = letraSeleccionada === preguntaActual.correctAnswer;
+
+    resultadoPartida.push({
+        idPregunta: preguntaActual.id,
+        respuestaUsuario: letraSeleccionada,
+        respuestaCorrecta: preguntaActual.correctAnswer,
+        fueCorrecta: esCorrecta
+    });
+
+    if (esCorrecta) {
+        scoreActual += preguntaActual.largeQuestion ? 10 : 5;
+        alert(`¡Muy bien! Acertaste`);
+    } else {
+        alert(`Lo siento, la respuesta correcta era: '${preguntaActual.correctAnswer}'`);
+    }
+
+    ["A", "B", "C", "D"].forEach(letra => {
+        const boton = document.getElementById(`answer-${letra.toLowerCase()}`);
+        boton.disabled = true;
+
+        if (letra === preguntaActual.correctAnswer) {
+            boton.style.backgroundImage = `url('../public/images/answers/correct/correcta-${letra}.png')`;
+        } else {
+            boton.style.backgroundImage = `url('../public/images/answers/incorrect/incorrecta-${letra}.png')`;
+        }
+    });
+
+    setTimeout(() => {
+        if (resultadoPartida.length >= 20) {
+            finalizarJuego();
+        } else {
+            cambiarAPregunta();
+        }
+    }, 1500);
+}
+
+
+
+function finalizarJuego() {
+    document.getElementById("game-screen").style.display = "none";
+    document.getElementById("win").style.display = "block";
+
+    document.getElementById("win").innerHTML = `
+        <h2>¡Juego finalizado!</h2>
+        <p>Tu puntaje final fue: ${scoreActual} puntos.</p>
+        <button onclick="back()">Volver al menú</button>
+        <button onclick="nuevojuego()">Volver a Jugar</button
+    `;
+
+    subirPartida(scoreActual, 1);
+}
+
+function cambiarAJuego() {
+    reiniciarEstadoJuego();
+    ui.juegoScreen();
+    cargarPreguntaRandom();
+}
+
+function reiniciarEstadoJuego() {
+    scoreActual = 0;
+    preguntasUsadas = [];
+    preguntaActual = null;
+    resultadoPartida = [];
+    respuestaCorrecta = "";
+
+    document.getElementById("text-clue").disabled = false;
+    document.getElementById("emoji-clue").disabled = false;
+    document.getElementById("fifty-clue").disabled = false;
+
+    document.getElementById("question-number").textContent = "0";
+}
+
+function nuevojuego() {
+
+    reiniciarEstadoJuego();
+
+    document.getElementById("win").style.display = "none";
+    document.getElementById("game-screen").style.display = "block";
+
+    ["a", "b", "c", "d"].forEach(letra => {
+        const boton = document.getElementById(`answer-${letra}`);
+        boton.style.backgroundImage = `url('../public/images/answers/normal/respuesta-${letra}.png')`;
+        boton.disabled = false;
+        document.getElementById(`answer-${letra}-text`).textContent = "";
+    });
+
+    document.getElementById("question-text").textContent = "";
+    const questionContainer = document.getElementById("question-container");
+    const img = questionContainer.querySelector("img");
+    if (img) {
+        questionContainer.removeChild(img);
+    }
+
+    ui.juegoScreen();
+    cargarPreguntaRandom();
+}
+
+function reiniciarJuego() {
+    scoreActual = 0;
+    preguntasUsadas = [];
+    preguntaActual = null;
+    resultadoPartida = [];
+
+    document.getElementById("win").style.display = "none";
+    document.getElementById("game-screen").style.display = "block";
+    ["a", "b", "c", "d"].forEach(letra => {
+        const boton = document.getElementById(`answer-${letra}`);
+        boton.disabled = false;
+        boton.style.backgroundImage = ""; 
+    });
+    document.getElementById("text-clue").disabled = false;
+    document.getElementById("emoji-clue").disabled = false;
+    document.getElementById("fifty-clue").disabled = false;
+    cargarPreguntaRandom();
+}
+
+async function subirPartida(score, win) {
+    try {
+
+        console.log("Subiendo partida con:", { idUser: idLoggeado, score, win });
+
+        const response = await fetch("http://localhost:4000/addGame", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idUser: idUser,
+                score: score,
+                win: win
+            })
+        });
+
+        const result = await response.json();
+        console.log(result.message);
+        return result;
+    } catch (error) {
+        console.error("Error al subir partida:", error);
+        throw error;
+    }
+}
+
+async function back() {
+    const res = await fetch(`http://localhost:4000/checkAdminStatus/${idLoggeado}`);
+    const data = await res.json();
+
+    reiniciarEstadoJuego();
+
+    document.getElementById("win").style.display = "none";
+    document.getElementById("game-screen").style.display = "none";
+
+    ["a", "b", "c", "d"].forEach(letra => {
+        const boton = document.getElementById(`answer-${letra}`);
+        boton.style.backgroundImage = `url('../public/images/answers/normal/respuesta-${letra}.png')`;
+        boton.disabled = false;
+    });
+
+    if (data.isAdmin) {
+        ui.adminScreen();
+    } else {
+        ui.userScreen();
+    }
+}
 
 function logOut() {
     document.getElementById('username').value = ''
