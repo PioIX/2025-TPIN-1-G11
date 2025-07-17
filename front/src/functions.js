@@ -625,13 +625,14 @@ async function cargarPreguntaRandom() {
 
 function mostrarPistaTexto() {
     const textImage = document.getElementById("text-clue");
-    if (!preguntaActual || !preguntaActual.textClue) {
+    if (!preguntaActual?.textClue) {
         alert("No hay pista de texto disponible.");
         return;
     }
 
-    alert("Pista de texto: " + preguntaActual.textClue);
-
+    document.getElementById("text-clue-span").textContent = preguntaActual.textClue;
+    abrirModal("text-clue-modal");
+    
     textImage.style.backgroundImage = `url('../public/images/clues/cluesUsadas/text-gris.png')`;
     textImage.style.backgroundSize = 'cover';
     textImage.style.backgroundRepeat = 'no-repeat';
@@ -641,19 +642,20 @@ function mostrarPistaTexto() {
 
 function mostrarPistaEmoji() {
     const emojiClueButton = document.getElementById("emoji-clue");
-    if (!preguntaActual || !preguntaActual.emojiClue) {
+    if (!preguntaActual?.emojiClue) {
         alert("No hay pista de emojis disponible.");
         return;
     }
-
-    alert("Pista de emojis: " + preguntaActual.emojiClue);
-
+    document.getElementById("emoji-clue-span").textContent = preguntaActual.emojiClue;
+    abrirModal("emoji-clue-modal");
+    
     emojiClueButton.style.backgroundImage = `url('../public/images/clues/cluesUsadas/emoji-gris.png')`;
     emojiClueButton.style.backgroundSize = 'cover';
     emojiClueButton.style.backgroundRepeat = 'no-repeat';
     emojiClueButton.style.backgroundPosition = 'center';
     emojiClueButton.disabled = true;
 }
+
 
 
 function mostrarPistaCincuenta() {
@@ -782,13 +784,6 @@ function verificarRespuesta(letraSeleccionada) {
 function finalizarJuego() {
     document.getElementById("game-screen").style.display = "none";
     const gameDiv = document.getElementById("game");
-    gameDiv.innerHTML = `
-        <h2>¡Juego finalizado!</h2>
-        <p>Tu puntaje final fue: ${scoreActual} puntos.</p>
-        <button onclick="back()">Volver al menú</button>
-        <button onclick="nuevojuego()">Volver a Jugar</button>
-    `;
-
     subirPartida(scoreActual, 1);
 }
 
@@ -912,4 +907,22 @@ function logOut() {
     document.getElementById('main-menu').style.display = 'none'
     document.getElementById('user-registered').style.display = 'none';
     document.getElementById('login-container').style.display = 'flex';
+}
+
+function abrirModal(idModal) {
+    document.getElementById(idModal).style.display = "block";
+    document.getElementById("modal-blur").style.display = "block";
+}
+
+function cerrarModal(idModal) {
+    document.getElementById(idModal).style.display = "none";
+    document.getElementById("modal-blur").style.display = "none";
+}
+
+if (preguntaActual.largeQuestion) {
+    document.getElementById("long-question-text").textContent = preguntaActual.text;
+    if (preguntaActual.image) {
+        document.getElementById("long-question-image").src = preguntaActual.image;
+    }
+    abrirModal("long-question-modal");
 }
