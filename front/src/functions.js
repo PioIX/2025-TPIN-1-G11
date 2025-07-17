@@ -4,6 +4,8 @@ let preguntasUsadas = [];
 let preguntaActual = null;
 let resultadoPartida = [];
 let respuestaCorrecta = "";
+let idLoggeado = null;
+let adminUser = false;
 
 
 function loginForm() {
@@ -548,10 +550,6 @@ async function abrirRanking() {
     }
 }
 
-function logOut() {
-    console.log("hola");
-    ui.loginScreen();
-}
 
 async function cargarPreguntaRandom() {
     try {
@@ -878,41 +876,54 @@ async function subirPartida(score, win) {
     }
 }
 
-async function back() {
-    const res = await fetch(`http://localhost:4000/checkAdminStatus/${idLoggeado}`);
-    const data = await res.json();
+function back() {
+    document.getElementById("admin-questions").style.display = "none";
+    document.getElementById("admin-users").style.display = "none";
+    document.getElementById("admin-games").style.display = "none";
+    document.getElementById("ranking").style.display = "none";
+    document.getElementById("game").style.display = "none";
 
-    reiniciarEstadoJuego();
-
-    document.getElementById("win").style.display = "none";
-    document.getElementById("game-screen").style.display = "none";
-
-    ["a", "b", "c", "d"].forEach(letra => {
-        const boton = document.getElementById(`answer-${letra}`);
-        boton.style.backgroundImage = `url('../public/images/answers/normal/respuesta-${letra}.png')`;
-        boton.disabled = false;
-    });
-
-    if (data.isAdmin) {
-        ui.adminScreen();
+    if (typeof idLoggeado !== 'undefined' && typeof ui !== 'undefined') {
+        if (window.adminUser) {
+            ui.adminScreen();
+        } else {
+            ui.userScreen();
+        }
     } else {
-        ui.userScreen();
+        ui.loginScreen(); // Si no hay datos de sesión, volver al login
     }
 }
 
+
 function logOut() {
-    document.getElementById('username').value = ''
-    document.getElementById('password').value = ''
-    document.getElementById('admin-ui').style.display = 'none'
-    document.getElementById('main-menu').style.display = 'none'
-    document.getElementById('user-registered').style.display = 'none';
-    document.getElementById('login-container').style.display = 'flex';
+
+    idLoggeado = null;
+    window.adminUser = false;
+    const secciones = [
+        "admin-ui",
+        "main-menu",
+        "admin-questions",
+        "admin-users",
+        "admin-games",
+        "ranking",
+        "game",
+        "user-registered"
+    ];
+    secciones.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = "none";
+    });
+
+    loginForm();
+    ui.loginScreen();
 }
 
-function abrirModal(idModal) {
-    document.getElementById(idModal).style.display = "block";
-    document.getElementById("modal-blur").style.display = "block";
+
+function abrirModal(id) {
+  const modal = document.getElementById(id);
+  modal.style.display = "flex"; 
 }
+
 
 function cerrarModal(idModal) {
     document.getElementById(idModal).style.display = "none";
