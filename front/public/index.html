@@ -47,174 +47,270 @@
             </div>
         </div>
     </div>
-    <div id="admin-ui" style="display: none">
-        <header>
-            <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
-        </header>
-        <div id="admin-ui-body">
-            <div>
-                <img src="images/logo.png" id="logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'"
-                alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
-            </div>
-            <div id="administrate">
-                <h3>¿Qué desea hacer?</h3>
-                <div id="admin-buttons">
-                    <button onclick="mostrarEditarPregunta()">Administrar preguntas</button>
-                    <button onclick="mostrarAdminUsuarios()">Administrar usuarios</button>
-                    <button onclick="mostrarAdminPartidas()">Administrar partidas</button>
-                    <button onclick="">Jugar</button>
-                    <button onclick="">Ver ranking</button>
-                    <button onclick="">Cerrar sesión</button>
+    <div id="user-registered">
+        <div id="admin-ui" style="display: none">
+            <header>
+                <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
+            </header>
+            <div id="admin-ui-body">
+                <div>
+                    <img src="images/logo.png" id="logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'"
+                        alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
+                </div>
+                <div id="administrate">
+                    <h3>¿Qué desea hacer?</h3>
+                    <div id="admin-buttons">
+                        <button onclick="mostrarEditarPregunta()">Administrar preguntas</button>
+                        <button onclick="mostrarAdminUsuarios()">Administrar usuarios</button>
+                        <button onclick="mostrarAdminPartidas()">Administrar partidas</button>
+                        <button onclick="">Jugar</button>
+                        <button onclick="">Ver ranking</button>
+                        <button onclick="logOut()">Cerrar sesión</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div id="admin-questions" style="display: none">
-        <h1>Administre preguntas</h1>
-        <div id="question-manager">
-            <h2>Edite o elimine preguntas</h2>
-            <section id="select-question">
-                <input id="question-id-input" placeholder="Ingrese ID de pregunta">
-                <button type="button" onclick="cargarDatosPregunta()">Cargar pregunta</button>
-            </section>
-            <form id="question-info">
-                <p>ID: <span id="display-question-id"></span></p> <!-- Este queda como referencia -->
+        <div id="admin-questions" style="display: none">
+            <h1>Administre preguntas</h1>
+            <div id="question-manager">
+                <h2>Edite o elimine preguntas</h2>
+                <section id="select-question">
+                    <input id="question-id-input" placeholder="Ingrese ID de pregunta">
+                    <button type="button" onclick="cargarDatosPregunta()">Cargar pregunta</button>
+                </section>
+                <form id="question-info">
+                    <p>ID: <span id="display-question-id"></span></p> <!-- Este queda como referencia -->
 
-                <p>Enunciado:</p>
-                <input type="text" id="edit-text" class="form-control">
+                    <p>Enunciado:</p>
+                    <input type="text" id="edit-content" class="form-control">
 
-                <p>Respuesta A:</p>
-                <input type="text" id="edit-answer-a" class="form-control">
+                    <p>Respuesta A:</p>
+                    <input type="text" id="edit-answer-a" class="form-control">
 
-                <p>Respuesta B:</p>
-                <input type="text" id="edit-answer-b" class="form-control">
+                    <p>Respuesta B:</p>
+                    <input type="text" id="edit-answer-b" class="form-control">
 
-                <p>Respuesta C:</p>
-                <input type="text" id="edit-answer-c" class="form-control">
+                    <p>Respuesta C:</p>
+                    <input type="text" id="edit-answer-c" class="form-control">
 
-                <p>Respuesta D:</p>
-                <input type="text" id="edit-answer-d" class="form-control">
+                    <p>Respuesta D:</p>
+                    <input type="text" id="edit-answer-d" class="form-control">
 
-                <p>Respuesta correcta:</p>
-                <input type="text" id="edit-correct-answer" class="form-control" placeholder="A, B, C o D">
+                    <p>Respuesta correcta:</p>
+                    <input type="text" id="edit-correct-answer" class="form-control" placeholder="A, B, C o D">
+
+                    <p>Pista emoji:</p>
+                    <input type="text" id="edit-emoji-clue" class="form-control">
+
+                    <p>Pista texto:</p>
+                    <input type="text" id="edit-text-clue" class="form-control">
+
+                    <p>Pista 50/50:</p>
+                    <input type="text" id="edit-fifty-clue" class="form-control" placeholder="AB, AD, CD...">
+                </form>
+                <section id="question-buttons">
+                    <button onclick="borrarPregunta()">Borrar pregunta</button>
+                    <button onclick="editarPregunta()">Editar pregunta</button>
+                </section>
+            </div>
+            <form id="new-question">
+                <h2>Cree una nueva pregunta</h2>
+                <label for="new-question-text">Enunciado</label>
+                <input id="new-question-text">
+                <label for="new-question-a">Respuesta A</label>
+                <input id="new-question-a">
+                <label for="new-question-b">Respuesta B</label>
+                <input id="new-question-b">
+                <label for="new-question-c">Respuesta C</label>
+                <input id="new-question-c">
+                <label for="new-question-d">Respuesta D</label>
+                <input id="new-question-d">
+                <label for="new-correct-answer">Respuesta correcta (A, B, C o D)</label>
+                <input id="new-correct-answer">
+                <label for="new-emoji-clue">Pista de emojis</label>
+                <input id="new-emoji-clue">
+                <label for="new-text-clue">Pista de texto</label>
+                <input id="new-text-clue">
+                <label for="new-fifty-clue">Pista 50/50</label>
+                <input id="new-fifty-clue">
+                <label for="new-question-length">¿La pregunta es larga? (true/false)</label>
+                <input id="new-question-length">
+                <label for="new-question-image">URL de la imagen (si hay)</label>
+                <input id="new-question-image">
+                <label for="new-question-image">URL de la imagen (si hay)</label>
+                <input id="new-question-image">
+                <button type="button" onclick="crearPregunta()">Crear pregunta</button>
             </form>
-            <section id="question-buttons">
-                <button onclick="borrarPregunta()">Borrar pregunta</button>
-                <button onclick="editarPregunta()">Editar pregunta</button>
-            </section>
         </div>
-        <form id="new-question">
-            <h2>Cree una nueva pregunta</h2>
-            <label for="new-question-text">Enunciado</label>
-            <input id="new-question-text">
-            <label for="new-question-a">Respuesta A</label>
-            <input id="new-question-a">
-            <label for="new-question-b">Respuesta B</label>
-            <input id="new-question-b">
-            <label for="new-question-c">Respuesta C</label>
-            <input id="new-question-c">
-            <label for="new-question-d">Respuesta D</label>
-            <input id="new-question-d">
-            <label for="new-correct-answer">Respuesta correcta (A, B, C o D)</label>
-            <input id="new-correct-answer">
-            <label for="new-emoji-clue">Pista de emojis</label>
-            <input id="new-emoji-clue">
-            <label for="new-text-clue">Pista de texto</label>
-            <input id="new-text-clue">
-            <label for="new-fifty-clue">Pista 50/50</label>
-            <input id="new-fifty-clue">
-            <label for="new-question-length">¿La pregunta es larga? (true/false)</label>
-            <input id="new-question-length">
-            <label for="new-question-image">URL de la imagen (si hay)</label>
-            <input id="new-question-image">
-            <label for="new-question-image">URL de la imagen (si hay)</label>
-            <input id="new-question-image">
-            <button type="button" onclick="crearPregunta()">Crear pregunta</button>
-        </form>
-    </div>
-    <div id="admin-users" style="display: none">
-        <h1>Administre usuarios</h1>
-        <div id="user-manager">
-            <h2>Elimine usuarios</h2>
-            <section id="select-user">
-                <label for="username-to-delete">Introduzca el nombre de usuario a eliminar</label>
-                <input id="username-to-delete">
-            </section>
-            <section id="user-info" style="display: none">
-                <p>Nombre: <br><span id="user-name"></span></p>
-                <p>Contraseña: <br><span id="user-password"></span></p>
-                <p>ID: <br><span id="user-id"></span></p>
-                <p>¿Es administrador: <br><span id="user-admin-bool"></span></p>
-            </section>
-            <section id="user-buttons">
-                <button type="button" onclick="borrarUsuario()">Borrar usuario</button>
-            </section>
-        </div>
-    </div>
-    <div id="admin-games" style="display: none">
-        <h1>Administre partidas</h1>
-        <div id="game-manager">
-            <h2>Elimine partidas</h2>
-            <section id="select-game">
-                <label for="game-id-input">Introduzca el id de una partida existente</label>
-                <input id="game-id-input" type="number">
-                <button type="button" onclick="cargarDatosPartida()">Cargar partida</button>
-            </section>
-            <section id="game-info" style="display: none">
-                <p>ID: <br><span id="display-game-id"></span></p>
-                <p>ID del jugador: <br><span id="display-player-id"></span></p>
-                <p>Puntos: <br><span id="display-game-score"></span></p>
-                <p>¿Victoria?: <br><span id="display-game-win"></span></p>
-            </section>
-            <section id="game-buttons">
-                <button type="button" onclick="borrarPartida()">Borrar partida</button>
-            </section>
-        </div>
-    </div>
-    <div id = "main-menu" style="display: none">
-        <header>
-            <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
-        </header>
-        <div id = "main-menu-body">
-            <div>
-                <img src="images/logo.png" id="logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'"
-                alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
+        <div id="admin-users" style="display: none">
+            <h1>Administre usuarios</h1>
+            <div id="user-manager">
+                <h2>Elimine usuarios</h2>
+                <section id="select-user">
+                    <label for="username-to-delete">Introduzca el nombre de usuario a eliminar</label>
+                    <input id="username-to-delete">
+                </section>
+                <section id="user-info" style="display: none">
+                    <p>Nombre: <br><span id="user-name"></span></p>
+                    <p>Contraseña: <br><span id="user-password"></span></p>
+                    <p>ID: <br><span id="user-id"></span></p>
+                    <p>¿Es administrador: <br><span id="user-admin-bool"></span></p>
+                </section>
+                <section id="user-buttons">
+                    <button type="button" onclick="borrarUsuario()">Borrar usuario</button>
+                </section>
             </div>
-            <div id = "main-menu-options">
-                <h3>¿Qué desea hacer?</h3>
-                <div id = "main-menu-buttons">
-                    <button onclick="">Jugar</button>
-                    <button onclick="">Ver ranking</button>
-                    <button onclick="">Cerrar sesión</button>
+        </div>
+        <div id="admin-games" style="display: none">
+            <h1>Administre partidas</h1>
+            <div id="game-manager">
+                <h2>Elimine partidas</h2>
+                <section id="select-game">
+                    <label for="game-id-input">Introduzca el id de una partida existente</label>
+                    <input id="game-id-input" type="number">
+                    <button type="button" onclick="cargarDatosPartida()">Cargar partida</button>
+                </section>
+                <section id="game-info" style="display: none">
+                    <p>ID: <br><span id="display-game-id"></span></p>
+                    <p>ID del jugador: <br><span id="display-player-id"></span></p>
+                    <p>Puntos: <br><span id="display-game-score"></span></p>
+                    <p>¿Victoria?: <br><span id="display-game-win"></span></p>
+                </section>
+                <section id="game-buttons">
+                    <button type="button" onclick="borrarPartida()">Borrar partida</button>
+                </section>
+            </div>
+        </div>
+        <div id="main-menu" style="display: none">
+            <header>
+                <h2 id="loggedUsername">¡Bienvenido COMPLETAR CON NOMBRE DE USUARIO!</h2>
+            </header>
+            <div id="main-menu-body">
+                <div>
+                    <img src="images/logo.png" id="logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'"
+                        alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
+                </div>
+                <div id="main-menu-options">
+                    <h3>¿Qué desea hacer?</h3>
+                    <div id="main-menu-buttons">
+                        <button onclick="cambiarAJuego()">Jugar</button>
+                        <button onclick="abrirRanking()">Ver ranking</button>
+                        <button onclick="logOut()">Cerrar sesión</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div id = "ranking" style="display: none">
-        <header>
-            <h2>Ranking global de jugadores</h2>
-        </header>
-        <div id = "ranking-container">
-            <div id = "ranking-labels">
-                <p>Posición</p>
-                <div class = "vertical-line"></div>
-                <p>Jugador</p>
-                <div class = "vertical-line"></div>
-                <p>Mejor puntaje</p>
+        <div id="ranking" style="display: none">
+            <div>
+                <img src="images/logo.png" id="logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'"
+                    alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
             </div>
-            <div class = "horizontal-line"></div>
-            <div id = "ranking-data">
-<!-- Acá van los distintos jugadores con sus puntajes -->
-<!-- Ejemplo del html que se debería insertar mediante javascript para crear un nuevlo usuario (lógicamente lo que está entre paréntesis no va): -->
-            <!--<div class = "horizontal-line"></div>
+            <header>
+                <h2>Ranking global de jugadores</h2>
+            </header>
+            <div id="ranking-container">
+                <div id="ranking-labels">
+                    <p>Posición</p>
+                    <div class="vertical-line"></div>
+                    <p>Jugador</p>
+                    <div class="vertical-line"></div>
+                    <p>Mejor puntaje</p>
+                </div>
+                <div class="horizontal-line"></div>
+                <div id="ranking-data">
+                    <!-- Acá van los distintos jugadores con sus puntajes -->
+                    <!-- Ejemplo del html que se debería insertar mediante javascript para crear un nuevlo usuario: -->
+                    <!--             <div class = "horizontal-line"></div>
                     <div class = "ranking-user">
-                        <p>#1</p> (posición)
-                        <div class = "vertical-line"></div> (separador)
-                        <p>Messi</p> (nombre)
-                        <div class = "vertical-line"></div> (separador)
-                        <p>100000 pts.</p> (puntaje)
+                        <p>#1</p>
+                        <div class = "vertical-line"></div>
+                        <p>Messi</p>
+                        <div class = "vertical-line"></div>
+                        <p>100000 pts.</p>
                 </div> -->
+                    <ul>
+                        <li class="score"></li>
+                        <li class="win"></li>
+                    </ul>
+                </div>
+                <button onclick="ui.userScreen()" id = "return-menu-ranking">Volver</button>
             </div>
+        </div>
+        <div id="game" style="display: none">
+            <div id="game-screen" style="display: none">
+                <nav>
+                    <div id="return-buttons">
+                        <button onclick="ui.userScreen();" class="return-button">Volver al menu</button>
+                        <button onclick="" class="return-button" id="volverEnunciado">Volver al enunciado</button>
+                    </div>
+                    <div id="clues">
+                        <button onclick="mostrarPistaTexto()" class="clue" id="text-clue"></button>
+                        <button onclick="mostrarPistaEmoji()" class="clue" id="emoji-clue"></button>
+                        <button onclick="mostrarPistaCincuenta()" class="clue" id="fifty-clue"></button>
+                    </div>
+                </nav>
+                <header>
+                    <h2>Pregunta N°<span id="question-number"></span></h2>
+                </header>
+                <div>
+                    <img src="images/logo.png" id="logo" title="Logo 'Quién Quiere Restaurar el Orden Conservador'"
+                        alt="Logo 'Quién Quiere Restaurar el Orden Conservador'">
+                </div>
+                <main>
+                    <div id="question-container">
+                        <p id="question-text">
+                            ejemplo
+                        </p>
+                    </div>
+                    <div id="answers-container">
+                        <div class="answers-row">
+                            <button onclick="verificarRespuesta('A')" class="answer" id="answer-a">
+                                <p id="answer-a-text">ejemplo</p>
+                            </button>
+                            <button onclick="verificarRespuesta('B')" class="answer" id="answer-b">
+                                <p id="answer-b-text">ejemplo</p>
+                            </button>
+                            <button onclick="verificarRespuesta('C')" class="answer" id="answer-c">
+                                <p id="answer-c-text">ejemplo</p>
+                            </button>
+                            <button onclick="verificarRespuesta('D')" class="answer" id="answer-d">
+                                <p id="answer-d-text">ejemplo</p>
+                            </button>
+
+                        </div>
+                    </div>
+                </main>
+            </div>
+            <div id = "long-question-modal" style="display: none">
+                <h3>Pregunta Nº<span id="modal-question-number"></span></h3>
+                <img id = "long-question-image" src = "">
+                <p id = "long-question-text">Acá va el enunciado de la pregunta</p>
+                <button onclick = "" class = "continue-playing">Continuar</button>
+            </div>
+            <div id = "correct-answer" style="display: none">
+                <h3>¡Enhorabuena! :)</h3>
+                <h4>Respuesta correcta</h4>
+                <button onclick = "" class = "continue-playing">Continuar</button>
+            </div>
+            <div id = "incorrect-answer" style="display: none">
+                <h3>Enhoramala :(</h3>
+                <h4>Respuesta incorrecta</h4>
+                <p>La respuesta correcta era:<br><b><span id = "correct-answer-span">acá va la respuesta correcta</span></b></p>
+                <button onclick = "" class = "continue-playing">Continuar</button>
+            </div>
+            <div id="emoji-clue-modal" style="display: none">
+                <h3>Pista de emojis:</h3>
+                <h4 id = "emoji-clue-span">Acá va la pista de emojis</h4>
+                <button onclick = "" class = "continue-playing">Continuar</button>
+            </div>
+            <div id="text-clue-modal" style="display: none">
+                <h3>Pista de texto:</h3>
+                <h4 id = "text-clue-span">Acá va la pista de texto</h4>
+                <button onclick = "" class = "continue-playing">Continuar</button>
+            </div>
+            <div id = "modal-blur" style="display: none"></div> <!-- Esto es un filtro que oscurece lo que está atrás del modal y no te deja tocarlo. 
+            La idea es que se muestre y cierre al mismo tiempo que el propio modal.
+            Tenganlo en cuenta al crear las funciones. -->
         </div>
     </div>
     <div id = "game">
