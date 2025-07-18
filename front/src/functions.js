@@ -751,13 +751,6 @@ function verificarRespuesta(letraSeleccionada) {
         fueCorrecta: esCorrecta
     });
 
-    if (esCorrecta) {
-        scoreActual += preguntaActual.largeQuestion ? 10 : 5;
-        alert(`¡Muy bien! Acertaste`);
-    } else {
-        alert(`Lo siento, la respuesta correcta era: '${preguntaActual.correctAnswer}'`);
-    }
-
     ["A", "B", "C", "D"].forEach(letra => {
         const boton = document.getElementById(`answer-${letra.toLowerCase()}`);
         boton.disabled = true;
