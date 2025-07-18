@@ -636,6 +636,7 @@ function mostrarPistaTexto() {
     textImage.style.backgroundRepeat = 'no-repeat';
     textImage.style.backgroundPosition = 'center';
     textImage.disabled = true;
+    textImage.style.pointerEvents = 'none';
 }
 
 function mostrarPistaEmoji() {
@@ -652,40 +653,38 @@ function mostrarPistaEmoji() {
     emojiClueButton.style.backgroundRepeat = 'no-repeat';
     emojiClueButton.style.backgroundPosition = 'center';
     emojiClueButton.disabled = true;
+    emojiClueButton.style.pointerEvents = 'none';
 }
-
-
 
 function mostrarPistaCincuenta() {
     const fiftyClue = document.getElementById("fifty-clue");
-    if (!preguntaActual || !preguntaActual.fiftyClue) {
-        alert("No hay pista 50/50 disponible.");
+
+    if (!preguntaActual?.fiftyClue || preguntaActual.fiftyClue.length !== 2) {
+        alert("No hay pista 50/50 disponible o el formato es incorrecto.");
         return;
     }
 
-    const letrasDisponibles = preguntaActual.fiftyClue.toUpperCase().split('');
+    const letrasAOcultar = preguntaActual.fiftyClue.toUpperCase().split('');
 
     ["A", "B", "C", "D"].forEach(letra => {
         const boton = document.getElementById(`answer-${letra.toLowerCase()}`);
         const texto = document.getElementById(`answer-${letra.toLowerCase()}-text`);
 
-        if (!letrasDisponibles.includes(letra)) {
+        if (letrasAOcultar.includes(letra)) {
             texto.textContent = "";
 
-            boton.style.backgroundImage = `url('../public/images/answers/fifty-fifty/50-50-${letra}.png')`;
+            boton.style.backgroundImage =  `url('../public/images/answers/fifty-fifty/50-50-${letra}.png')`;
             boton.style.backgroundSize = 'cover';
             boton.style.backgroundRepeat = 'no-repeat';
             boton.style.backgroundPosition = 'center';
-
             boton.disabled = true;
+            fiftyClue.style.pointerEvents = 'none';
         }
     });
 
     fiftyClue.style.backgroundImage = `url('../public/images/clues/cluesUsadas/fifty-fifty-gris.png')`;
-    fiftyClue.style.backgroundSize = 'cover';
-    fiftyClue.style.backgroundRepeat = 'no-repeat';
-    fiftyClue.style.backgroundPosition = 'center';
     fiftyClue.disabled = true;
+    fiftyClue.style.pointerEvents = 'none';
 }
 
 
