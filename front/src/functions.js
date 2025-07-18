@@ -514,15 +514,9 @@ async function abrirRanking() {
             alert("No hay partidas registradas.");
             return;
         }
-        const mejoresPartidas = new Map();
 
-        for (let game of games) {
-            if (!mejoresPartidas.has(game.idUser) || game.score > mejoresPartidas.get(game.idUser).score) {
-                mejoresPartidas.set(game.idUser, game);
-            }
-        }
-
-        const rankingOrdenado = Array.from(mejoresPartidas.values()).sort((a, b) => b.score - a.score);
+        // Ordenar todas las partidas por score descendente
+        const rankingOrdenado = games.sort((a, b) => b.score - a.score);
 
         const contenedor = document.getElementById("ranking-data");
         contenedor.innerHTML = "";

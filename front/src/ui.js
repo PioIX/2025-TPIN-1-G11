@@ -85,6 +85,7 @@ class UserInterface {
 
   loginScreen() {
     document.getElementById("login-container").style.display = "flex";
+    document.getElementById("logo").style.display = "flex";
     document.getElementById("loginForm").style.display = "block";
     document.getElementById('admin-ui').style.display = "none";
     document.getElementById('main-menu').style.display = "none";

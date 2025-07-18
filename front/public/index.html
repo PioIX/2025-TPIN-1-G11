@@ -65,7 +65,7 @@
                         <button onclick="mostrarAdminPartidas()">Administrar partidas</button>
                         <button onclick="cambiarAJuego()">Jugar</button>
                         <button onclick="abrirRanking()">Ver ranking</button>
-                        <button onclick="logOut()">Cerrar sesión</button>
+                        <fieldset></fieldset>
                     </div>
                 </div>
             </div>
@@ -236,8 +236,8 @@
                         <li class="win"></li>
                     </ul>
                 </div>
-                <button onclick="back()">VOLVER</button>
             </div>
+            <button onclick="back()">VOLVER</button>
         </div>
         <div id="game" style="display: none">
             <div id="game-screen">
@@ -289,17 +289,6 @@
                 <img id = "long-question-image" src = "">
                 <p id = "long-question-text">Acá va el enunciado de la pregunta</p>
                 <button onclick="cerrarModal('long-question-modal')" class="continue-playing">Continuar</button>
-            </div>
-            <div id = "correct-answer" style="display: none">
-                <h3>¡Enhorabuena! :</h3>
-                <h4>Respuesta correcta</h4>
-                <<button onclick="cerrarModal('correct-answer')" class="continue-playing">Continuar</button>
-            </div>
-            <div id = "incorrect-answer" style="display: none">
-                <h3>Enhoramala :</h3>
-                <h4>Respuesta incorrecta</h4>
-                <p>La respuesta correcta era:<br><b><span id = "correct-answer-span">acá va la respuesta correcta</span></b></p>
-                <button onclick="cerrarModal('incorrect-answer')" class="continue-playing">Continuar</button>
             </div>
             <div id="emoji-clue-modal" style="display: none">
                 <h3>Pista de emojis:</h3>
