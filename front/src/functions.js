@@ -624,7 +624,7 @@ function mostrarPistaTexto() {
 
     document.getElementById("text-clue-span").textContent = preguntaActual.textClue;
     abrirModal("text-clue-modal");
-    
+
     textImage.style.backgroundImage = `url('../public/images/clues/cluesUsadas/text-gris.png')`;
     textImage.style.backgroundSize = 'cover';
     textImage.style.backgroundRepeat = 'no-repeat';
@@ -641,7 +641,7 @@ function mostrarPistaEmoji() {
     }
     document.getElementById("emoji-clue-span").textContent = preguntaActual.emojiClue;
     abrirModal("emoji-clue-modal");
-    
+
     emojiClueButton.style.backgroundImage = `url('../public/images/clues/cluesUsadas/emoji-gris.png')`;
     emojiClueButton.style.backgroundSize = 'cover';
     emojiClueButton.style.backgroundRepeat = 'no-repeat';
@@ -667,7 +667,7 @@ function mostrarPistaCincuenta() {
         if (letrasAOcultar.includes(letra)) {
             texto.textContent = "";
 
-            boton.style.backgroundImage =  `url('../public/images/answers/fifty-fifty/50-50-${letra}.png')`;
+            boton.style.backgroundImage = `url('../public/images/answers/fifty-fifty/50-50-${letra}.png')`;
             boton.style.backgroundSize = 'cover';
             boton.style.backgroundRepeat = 'no-repeat';
             boton.style.backgroundPosition = 'center';
@@ -692,7 +692,6 @@ async function cambiarAPregunta() {
 
         const result = await response.json();
         if (!result.response) {
-            alert("¡No hay más preguntas! ");
             finalizarJuego(true);
             return;
         }
@@ -765,10 +764,17 @@ function verificarRespuesta(letraSeleccionada) {
     }, 1500);
 }
 
-function finalizarJuego() {
+function finalizarJuego(gano = false) {
     document.getElementById("game-screen").style.display = "none";
-    const gameDiv = document.getElementById("game");
-    subirPartida(scoreActual, 1);
+    const victoria = gano || scoreActual > 20;
+    if (victoria) {
+        subirPartida(scoreActual, 1);
+        mostrarModalVictoria(scoreActual);
+    } else {
+        subirPartida(scoreActual, 0);
+        mostrarModalDerrota(scoreActual);
+    }
+
 }
 
 function cambiarAJuego() {
@@ -778,25 +784,66 @@ function cambiarAJuego() {
     document.getElementById("main-menu-body").style.display = "none";
 }
 
-function reiniciarEstadoJuego() {
+async function reiniciarEstadoJuego() {
+    try {
+        const response = await fetch('http://localhost:4000/randomQuestion', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ excludedIds: preguntasUsadas })
+        });
+
+        const result = await response.json();
+        if (!result.response) {
+            finalizarJuego(true);
+            return;
+        }
+
+
+        const pregunta = result.response;
+        preguntaActual = pregunta;
+        preguntasUsadas.push(pregunta.id);
+        respuestaCorrecta = pregunta.correctAnswer;
+
+        document.getElementById("question-number").textContent = preguntasUsadas.length;
+
+        const textoPregunta = pregunta.largeQuestion
+            ? pregunta.text || pregunta.content
+            : pregunta.content;
+        document.getElementById("question-text").textContent = textoPregunta;
+
+        ["A", "B", "C", "D"].forEach(letra => {
+            const boton = document.getElementById(`answer-${letra.toLowerCase()}`);
+            const texto = document.getElementById(`answer-${letra.toLowerCase()}-text`);
+
+            boton.disabled = false;
+            boton.style.backgroundImage = "";
+            boton.style.backgroundColor = "";
+            texto.textContent = pregunta[`answer${letra}`];
+        });
+
+        const botonEnunciado = document.querySelector(".return-button:nth-child(2)");
+        botonEnunciado.style.display = pregunta.largeQuestion ? "inline-block" : "none";
+
+
+        ["text-clue", "emoji-clue", "fifty-clue"].forEach(id => {
+            document.getElementById(id).disabled = false;
+        });
+
+    } catch (error) {
+        console.error("Error al cambiar pregunta:", error);
+    }
+}
+
+
+function nuevojuego() {
+    cerrarModales();
+
     scoreActual = 0;
     preguntasUsadas = [];
     preguntaActual = null;
     resultadoPartida = [];
-    respuestaCorrecta = "";
 
-    document.getElementById("text-clue").disabled = false;
-    document.getElementById("emoji-clue").disabled = false;
-    document.getElementById("fifty-clue").disabled = false;
-
-    document.getElementById("question-number").textContent = "0";
-}
-
-function nuevojuego() {
-
-    reiniciarEstadoJuego();
-
-    document.getElementById("win").style.display = "none";
+    document.getElementById("win-modal").style.display = "none";
     document.getElementById("game-screen").style.display = "block";
 
     ["a", "b", "c", "d"].forEach(letra => {
@@ -806,39 +853,17 @@ function nuevojuego() {
         document.getElementById(`answer-${letra}-text`).textContent = "";
     });
 
-    document.getElementById("question-text").textContent = "";
     const questionContainer = document.getElementById("question-container");
+    document.getElementById("question-text").textContent = "";
     const img = questionContainer.querySelector("img");
-    if (img) {
-        questionContainer.removeChild(img);
-    }
+    if (img) questionContainer.removeChild(img);
 
-    ui.juegoScreen();
     cargarPreguntaRandom();
 }
 
-function reiniciarJuego() {
-    scoreActual = 0;
-    preguntasUsadas = [];
-    preguntaActual = null;
-    resultadoPartida = [];
-
-    document.getElementById("win").style.display = "none";
-    document.getElementById("game-screen").style.display = "block";
-    ["a", "b", "c", "d"].forEach(letra => {
-        const boton = document.getElementById(`answer-${letra}`);
-        boton.disabled = false;
-        boton.style.backgroundImage = "";
-    });
-    document.getElementById("text-clue").disabled = false;
-    document.getElementById("emoji-clue").disabled = false;
-    document.getElementById("fifty-clue").disabled = false;
-    cargarPreguntaRandom();
-}
 
 async function subirPartida(score, win) {
     try {
-
         console.log("Subiendo partida con:", { idUser: idLoggeado, score, win });
 
         const response = await fetch("http://localhost:4000/addGame", {
@@ -847,7 +872,7 @@ async function subirPartida(score, win) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                idUser: idUser,
+                idUser: idLoggeado,
                 score: score,
                 win: win
             })
@@ -862,7 +887,9 @@ async function subirPartida(score, win) {
     }
 }
 
+
 function back() {
+    cerrarModales();
     document.getElementById("admin-questions").style.display = "none";
     document.getElementById("admin-users").style.display = "none";
     document.getElementById("admin-games").style.display = "none";
@@ -876,7 +903,7 @@ function back() {
             ui.userScreen();
         }
     } else {
-        ui.loginScreen(); // Si no hay datos de sesión, volver al login
+        ui.loginScreen();
     }
 }
 
@@ -888,8 +915,8 @@ function logOut() {
 
 
 function abrirModal(id) {
-  const modal = document.getElementById(id);
-  modal.style.display = "flex"; 
+    const modal = document.getElementById(id);
+    modal.style.display = "flex";
 }
 
 
@@ -904,4 +931,22 @@ if (preguntaActual.largeQuestion) {
         document.getElementById("long-question-image").src = preguntaActual.image;
     }
     abrirModal("long-question-modal");
+}
+
+function mostrarModalVictoria(score) {
+    document.getElementById("final-score-win").textContent = score;
+    document.getElementById("win-modal").style.display = "flex";
+    document.getElementById("modal-blur").style.display = "block";
+}
+
+function mostrarModalDerrota(score) {
+    document.getElementById("final-score-lose").textContent = score;
+    document.getElementById("lose-modal").style.display = "flex";
+    document.getElementById("modal-blur").style.display = "block";
+}
+
+function cerrarModales() {
+    document.getElementById("win-modal").style.display = "none";
+    document.getElementById("lose-modal").style.display = "none";
+    document.getElementById("modal-blur").style.display = "none";
 }

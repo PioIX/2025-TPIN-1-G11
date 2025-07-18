@@ -41,7 +41,7 @@ class UserInterface {
 
   userScreen() {
     document.getElementById("main-menu").style.display = "block";
-    document.getElementById("main-menu-body").style.display = "block";
+    document.getElementById("main-menu-body").style.display = "flex";
     document.getElementById("user-registered").style.display = "block";
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("logo").style.display = "none";
