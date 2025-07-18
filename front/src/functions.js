@@ -77,11 +77,13 @@ async function userVerify(user) {
             document.getElementById('user-registered').style.display = '';
             ui.setUser(result.username);
             idLoggeado = result.userId;
+            adminUser = false;
             return result;
         } if (result.message === 'admin') {
             ui.adminScreen();
             ui.setUser(result.username);
             idLoggeado = result.userId;
+            adminUser = true;
             return result;
 
         } else {
@@ -515,7 +517,6 @@ async function abrirRanking() {
             return;
         }
 
-        // Ordenar todas las partidas por score descendente
         const rankingOrdenado = games.sort((a, b) => b.score - a.score);
 
         const contenedor = document.getElementById("ranking-data");
@@ -896,11 +897,11 @@ function back() {
     document.getElementById("ranking").style.display = "none";
     document.getElementById("game").style.display = "none";
 
-    if (typeof idLoggeado !== 'undefined' && typeof ui !== 'undefined') {
-        if (window.adminUser) {
-            ui.adminScreen();
+    if (idLoggeado !== null) {
+        if (adminUser) {
+            ui.adminScreen(); 
         } else {
-            ui.userScreen();
+            ui.userScreen(); 
         }
     } else {
         ui.loginScreen();
@@ -911,6 +912,8 @@ function back() {
 function logOut() {
     loginForm();
     ui.loginScreen();
+    adminUser = false;
+    idLoggeado = null;
 }
 
 

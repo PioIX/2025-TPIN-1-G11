@@ -64,7 +64,7 @@ app.post("/regUser", async (req, res) => {
         console.log(req.body.name.length)
         if (check.length < 1 && req.body.name.length > 0) {
             realizarQuery(
-                `insert Users(name,password) Values("${req.body.name}","${req.body.password}");`
+                `insert Users(name,password,adminUser) Values("${req.body.name}","${req.body.password}", 0);`
             )
             res.send({
                 message: "ok",
