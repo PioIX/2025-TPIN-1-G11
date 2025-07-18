@@ -896,24 +896,6 @@ function back() {
 
 
 function logOut() {
-
-    idLoggeado = null;
-    window.adminUser = false;
-    const secciones = [
-        "admin-ui",
-        "main-menu",
-        "admin-questions",
-        "admin-users",
-        "admin-games",
-        "ranking",
-        "game",
-        "user-registered"
-    ];
-    secciones.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = "none";
-    });
-
     loginForm();
     ui.loginScreen();
 }
